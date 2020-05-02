@@ -1,4 +1,4 @@
-# writeAlizer: An R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
+# writeAlizer: R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
 
 This repository hosts code for a R package to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the repository wiki.
 
@@ -88,5 +88,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTExNzQ1OTU0XX0=
+eyJoaXN0b3J5IjpbLTEwMTM0MDA5NzddfQ==
 -->

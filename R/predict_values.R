@@ -10,6 +10,7 @@
 #' Correct Word Sequences and Correct Minus Incorrect
 #' Word Sequences can be generated from a combined
 #' Readerbench and GAMET file.
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils write.table
 #' @import caretEnsemble
 #' @param model A string telling which scoring model to use.

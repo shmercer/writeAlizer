@@ -2,6 +2,7 @@
 # and to pre-process Coh-Metrix, ReaderBench, and GAMET input files
 
 #' @title Download scoring models to the working directory.
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils download.file
 #' @export
 #' @param mod A string telling which model group to download. Options are
@@ -66,6 +67,7 @@ download_model <- function(mod) {
 
 #' Import a GAMET output file into R.
 #'
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
 #' @importFrom stats setNames
 #' @importFrom utils read.csv tail
 #' @param path A string giving the path and filename to import.
@@ -103,6 +105,7 @@ import_gamet <- function(path) {
 
 #' Import a Coh-Metrix output file(.csv) into R.
 #'
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
 #' @importFrom stats setNames
 #' @importFrom utils read.csv tail
 #' @param path A string giving the path and filename to import.
@@ -137,6 +140,7 @@ import_coh <- function(path) {
 #' Import a ReaderBench output file(.xlsx) into R. ReaderBench output files (.csv)
 #' should be converted to Excel format (.xlsx) before import.
 #'
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
 #' @importFrom magrittr %>%
 #' @importFrom utils modifyList
 #' @export
@@ -163,6 +167,7 @@ import_rb <- function(path) {
 #' Import a ReaderBench output file(.xlsx) and GAMET output file (.csv) into R, and merge the two files.
 #' ReaderBench output files (.csv) should be converted to Excel format (.xlsx) before import.
 #'
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
 #' @importFrom magrittr %>%
 #' @importFrom utils modifyList read.csv tail
 #' @importFrom stats setNames

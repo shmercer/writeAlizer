@@ -83,6 +83,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
+##
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
@@ -93,5 +94,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MTAzMTU4ODgsNzQ3Nzg3MDI1XX0=
+eyJoaXN0b3J5IjpbOTU5Mjc4OTc4LDc0Nzc4NzAyNV19
 -->

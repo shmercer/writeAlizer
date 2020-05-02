@@ -8,11 +8,6 @@ The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
 
 ### Installing
 
@@ -94,6 +89,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ1NTMzODk3NywtMTA1NTI2ODAwOCwtMj
+eyJoaXN0b3J5IjpbLTg1Nzg1NDE2NCwtMTA1NTI2ODAwOCwtMj
 g3NjUxMDY0LC0xNjY1MjMxMjAwLDc0Nzc4NzAyNV19
 -->

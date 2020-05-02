@@ -51,3 +51,6 @@ rb_quality <- predict_quality('rb_mod1', rb_data, store = FALSE)
 predict_quality('coh_mod1', coh_data, store = TRUE, name = "output.csv")
 }
 }
+\author{
+Sterett H. Mercer <sterett.mercer@ubc.ca>
+}

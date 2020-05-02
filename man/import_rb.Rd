@@ -21,3 +21,6 @@ should be converted to Excel format (.xlsx) before import.
 rb_file <- import_rb('rb_output.xlsx')
 }
 }
+\author{
+Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji
+}

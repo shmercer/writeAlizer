@@ -31,3 +31,6 @@ download_model('coh_mod1')
 download_model('rb_gamet_cws1')
 }
 }
+\author{
+Sterett H. Mercer <sterett.mercer@ubc.ca>
+}

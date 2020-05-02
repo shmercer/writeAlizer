@@ -24,3 +24,6 @@ ReaderBench output files (.csv) should be converted to Excel format (.xlsx) befo
 rb_gam_file <- import_merge_gamet_rb('rb_output.xlsx', 'gamet_output.csv')
 }
 }
+\author{
+Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji
+}

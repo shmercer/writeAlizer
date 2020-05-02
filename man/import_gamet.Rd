@@ -19,3 +19,6 @@ Import a GAMET output file into R.
 gamet_file <- import_gamet('gamet_output.csv')
 }
 }
+\author{
+Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji
+}

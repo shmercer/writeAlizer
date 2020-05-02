@@ -19,3 +19,6 @@ Import a Coh-Metrix output file(.csv) into R.
 coh_file <- import_coh('coh_output.csv')
 }
 }
+\author{
+Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji
+}

@@ -85,6 +85,9 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## References
 
+# Heading
+
+Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296) 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
@@ -95,5 +98,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NjUyMzEyMDAsNzQ3Nzg3MDI1XX0=
+eyJoaXN0b3J5IjpbMTc1MDAzMjc4NSwtMTY2NTIzMTIwMCw3ND
+c3ODcwMjVdfQ==
 -->

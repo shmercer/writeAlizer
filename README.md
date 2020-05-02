@@ -91,6 +91,14 @@ Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (20
 
 ### Conference Presentations
 
+Mercer, S. H., Keller-Margulis, M. A., & Matta, M. (2020, February). _Validity of automated vs. hand-scored written expression curriculum-based measurement samples._ Poster presented at the Pacific Coast Research Conference, Coronado, CA, USA.
+
+Mercer, S. H., & Cannon, J. E. (2020, February). _Monitoring the written expression gains of learners during intensive writing intervention._ Poster presented at the Pacific Coast Research Conference, Coronado, CA, USA.
+
+Keller-Margulis, M. A., & Mercer, S. H. (2019, August). _Validity of automated scoring for written expression curriculum-based measurement._ Poster presented at the meeting of the American Psychological Association, Chicago, IL, USA.
+
+Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _Evaluating elementary students' response to intervention in written expression._ Paper presented at the meeting of the Canadian Association for Educational Psychology (Canadian Society of the Study of Education), Vancouver, BC, Canada.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
@@ -101,6 +109,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE5MDQ2MjQ4MywtMTY2NTIzMTIwMCw3ND
-c3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbMzk3Mzc3NDQzLC0xNjY1MjMxMjAwLDc0Nz
+c4NzAyNV19
 -->

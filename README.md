@@ -9,7 +9,7 @@ The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/
 writeAlizer is not yet available on CRAN. To install writeAlizer in R, first make sure that the package *devtools* is installed in R
 
     install.packages("devtools")
-With *devtools* installed, you can install writeAlizer from this Github repository.
+With *devtools* installed, you can install writeAlizer in R directly from this Github repository.
 
     devtools::install_github("shmercer/writeAlizer")
 
@@ -93,5 +93,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzQ3Nzg3MDI1XX0=
+eyJoaXN0b3J5IjpbLTE4MTAzMTU4ODgsNzQ3Nzg3MDI1XX0=
 -->

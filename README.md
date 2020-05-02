@@ -91,13 +91,13 @@ Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (20
 
 ### Conference Presentations
 
-Mercer, S. H., Keller-Margulis, M. A., & Matta, M. (2020, February). _Validity of automated vs. hand-scored written expression curriculum-based measurement samples._ Poster presented at the Pacific Coast Research Conference, Coronado, CA, USA.
+Mercer, S. H., Keller-Margulis, M. A., & Matta, M. (2020, February). _[Validity of automated vs. hand-scored written expression curriculum-based measurement samples](https://blogs.ubc.ca/mercer/2020/02/11/pcrc-2020-poster-automated-text-eval-for-screening/)._ Poster presented at the Pacific Coast Research Conference, Coronado, CA, USA.
 
 Mercer, S. H., & Cannon, J. E. (2020, February). _[Monitoring the written expression gains of learners during intensive writing intervention](https://blogs.ubc.ca/mercer/2020/02/11/pcrc-2020-automated-text-eval-for-progress-monitoring/)._ Poster presented at the Pacific Coast Research Conference, Coronado, CA, USA.
 
-Keller-Margulis, M. A., & Mercer, S. H. (2019, August). _Validity of automated scoring for written expression curriculum-based measurement._ Poster presented at the meeting of the American Psychological Association, Chicago, IL, USA.
+Keller-Margulis, M. A., & Mercer, S. H. (2019, August). _[Validity of automated scoring for written expression curriculum-based measurement](https://blogs.ubc.ca/mercer/2019/12/18/ies-pi-meeting-2020/)._ Poster presented at the meeting of the American Psychological Association, Chicago, IL, USA.
 
-Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _Evaluating elementary students' response to intervention in written expression._ Paper presented at the meeting of the Canadian Association for Educational Psychology (Canadian Society of the Study of Education), Vancouver, BC, Canada.
+Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _[Evaluating elementary students' response to intervention in written expression](https://blogs.ubc.ca/mercer/2019/06/01/csse-2019-presentation-paper-and-slides/)._ Paper presented at the meeting of the Canadian Association for Educational Psychology (Canadian Society of the Study of Education), Vancouver, BC, Canada.
 
 ## License
 
@@ -109,6 +109,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI4NzY1MTA2NCwtMTY2NTIzMTIwMCw3ND
-c3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMT
+Y2NTIzMTIwMCw3NDc3ODcwMjVdfQ==
 -->

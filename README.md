@@ -13,6 +13,7 @@ writeAlizer accepts the following output files as inputs:
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
 
 
+
 ### Installing
 
 writeAlizer is not yet available on CRAN. To install writeAlizer in R, first make sure that the package *devtools* is installed in R
@@ -93,7 +94,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDg2Mjc1OTgwLC0xOTk4ODUyMjQ0LC04NT
-c4NTQxNjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIz
-MTIwMCw3NDc3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbLTgzNjkxMTg0MiwtMTk5ODg1MjI0NCwtOD
+U3ODU0MTY0LC0xMDU1MjY4MDA4LC0yODc2NTEwNjQsLTE2NjUy
+MzEyMDAsNzQ3Nzg3MDI1XX0=
 -->

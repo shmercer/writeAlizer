@@ -8,7 +8,8 @@ The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/
 
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment). Although ReaderBench output files are comma separated (.csv), writeAlizer needs the output file to be saved in Excel format (.xlsx) 
+ 1. ReaderBench: writeAlizer supports output files generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment). Although ReaderBench output files are comma separated (.csv), writeAlizer needs the output file to be saved in Excel format (.xlsx) for the file to be imported into R correctly.
+ 2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.
 
 ### Installing
 
@@ -90,7 +91,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTU4OTk0ODkwLC0xOTk4ODUyMjQ0LC04NT
-c4NTQxNjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIz
-MTIwMCw3NDc3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbMTQ4ODgzODA2OCwtMTk5ODg1MjI0NCwtOD
+U3ODU0MTY0LC0xMDU1MjY4MDA4LC0yODc2NTEwNjQsLTE2NjUy
+MzEyMDAsNzQ3Nzg3MDI1XX0=
 -->

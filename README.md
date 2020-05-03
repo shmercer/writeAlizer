@@ -8,7 +8,7 @@ The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/
 
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) [https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench)
+ 1. ReaderBench: writeAlizer supports output files generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment). Although ReaderBench output files are comma separated (.csv), writeAlizer needs the output file to be saved in Excel format (.xlsx) 
 
 ### Installing
 
@@ -90,7 +90,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2OTQ3ODY5NjAsLTE5OTg4NTIyNDQsLT
-g1Nzg1NDE2NCwtMTA1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1
-MjMxMjAwLDc0Nzc4NzAyNV19
+eyJoaXN0b3J5IjpbNTU4OTk0ODkwLC0xOTk4ODUyMjQ0LC04NT
+c4NTQxNjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIz
+MTIwMCw3NDc3ODcwMjVdfQ==
 -->

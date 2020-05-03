@@ -7,7 +7,8 @@ The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/
 ## Getting Started
 
 ### Prerequisites
-writeAlizer requires output files generated from (a) ReaderBench, 
+writeAlizer accepts the following output files as inputs:
+ 1. List item
 
 ### Installing
 
@@ -89,7 +90,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyOTI4MTA1NTQsLTg1Nzg1NDE2NCwtMT
+eyJoaXN0b3J5IjpbLTE5OTg4NTIyNDQsLTg1Nzg1NDE2NCwtMT
 A1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1MjMxMjAwLDc0Nzc4
 NzAyNV19
 -->

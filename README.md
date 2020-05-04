@@ -16,7 +16,7 @@ writeAlizer accepts the following output files as inputs:
 
 ### Installing
 
-writeAlizer is not yet available on CRAN. To install writeAlizer in R, first make sure that the package *devtools* is installed in R
+writeAlizer is not yet available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
 ```
 install.packages("devtools")
 ```
@@ -74,8 +74,8 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQzMTQzMTE5MSw3NDk5NTIxMzMsLTkzMj
-k1MTU0NiwtODM2OTExODQyLC0xOTk4ODUyMjQ0LC04NTc4NTQx
-NjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIzMTIwMC
-w3NDc3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbLTIwMjE2ODU1OTgsNzQ5OTUyMTMzLC05Mz
+I5NTE1NDYsLTgzNjkxMTg0MiwtMTk5ODg1MjI0NCwtODU3ODU0
+MTY0LC0xMDU1MjY4MDA4LC0yODc2NTEwNjQsLTE2NjUyMzEyMD
+AsNzQ3Nzg3MDI1XX0=
 -->

@@ -1,6 +1,6 @@
-# writeAlizer: R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
+# writeAlizer: An R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
 
-This repository hosts code for a [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the repository wiki.
+This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the repository wiki.
 
 The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/ReaderBench/ReaderBench), [Coh-Metrix](http://cohmetrix.com/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
 
@@ -58,8 +58,8 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTM3ODU2NTA3LDMxMTUyMzE4OSw3NDk5NT
-IxMzMsLTkzMjk1MTU0NiwtODM2OTExODQyLC0xOTk4ODUyMjQ0
-LC04NTc4NTQxNjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMT
-Y2NTIzMTIwMCw3NDc3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbMTgzMTk4ODA0NCwzMTE1MjMxODksNzQ5OT
+UyMTMzLC05MzI5NTE1NDYsLTgzNjkxMTg0MiwtMTk5ODg1MjI0
+NCwtODU3ODU0MTY0LC0xMDU1MjY4MDA4LC0yODc2NTEwNjQsLT
+E2NjUyMzEyMDAsNzQ3Nzg3MDI1XX0=
 -->

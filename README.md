@@ -44,7 +44,7 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Package Author and Maintainer
+## Package Author
 
 * **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/person/sterett-mercer/) [ResearchGate](https://www.researchgate.net/profile/Sterett_Mercer)     [Google Scholar](https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en)
 
@@ -74,8 +74,8 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMjE2ODU1OTgsNzQ5OTUyMTMzLC05Mz
-I5NTE1NDYsLTgzNjkxMTg0MiwtMTk5ODg1MjI0NCwtODU3ODU0
-MTY0LC0xMDU1MjY4MDA4LC0yODc2NTEwNjQsLTE2NjUyMzEyMD
-AsNzQ3Nzg3MDI1XX0=
+eyJoaXN0b3J5IjpbMzExNTIzMTg5LDc0OTk1MjEzMywtOTMyOT
+UxNTQ2LC04MzY5MTE4NDIsLTE5OTg4NTIyNDQsLTg1Nzg1NDE2
+NCwtMTA1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1MjMxMjAwLD
+c0Nzc4NzAyNV19
 -->

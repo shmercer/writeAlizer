@@ -64,7 +64,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Package Author
 
-* **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/person/sterett-mercer/) ResearchGate profile
+* **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/person/sterett-mercer/) [ResearchGate](https://www.researchgate.net/profile/Sterett_Mercer)     [Google Scholar](https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
@@ -94,8 +94,8 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTY4ODQ1ODgzMiw3NDk5NTIxMzMsLTkzMj
-k1MTU0NiwtODM2OTExODQyLC0xOTk4ODUyMjQ0LC04NTc4NTQx
-NjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIzMTIwMC
-w3NDc3ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbNzUwMjAyMDY2LDc0OTk1MjEzMywtOTMyOT
+UxNTQ2LC04MzY5MTE4NDIsLTE5OTg4NTIyNDQsLTg1Nzg1NDE2
+NCwtMTA1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1MjMxMjAwLD
+c0Nzc4NzAyNV19
 -->

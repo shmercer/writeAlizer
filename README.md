@@ -92,11 +92,14 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 * Funding support for development of writeAlizer:
 			(a)  The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant [R305A190100](https://ies.ed.gov/funding/grantsearch/details.asp?ID=3339). The opinions expressed are those of the authors and do not represent views of the Institute or the U.S. Department of Education.
-			(b) 
+			
+			Principal Investigator: [Milena Keller-Margulis](http://voyager.coe.uh.edu/dir/faculty_template.cfm?id=504) (University of Houston). Co-Principal Investigator: [Jorge Gonzalez](http://www.uh.edu/education/about/directory/employee-profile/index.php?id=725) (University of Houston). Co-Investigator: [Bruno Zumbo](https://ecps.educ.ubc.ca/person/bruno-zumbo/) (UBC).
+			
+			(b) This work was supported by a Partnership Development Grant from the Social Sciences and Humanities Research Council of Canada
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIxMzI3MzE1ODEsLTgzNjkxMTg0MiwtMT
+eyJoaXN0b3J5IjpbLTIwMDk1MzUzNjMsLTgzNjkxMTg0MiwtMT
 k5ODg1MjI0NCwtODU3ODU0MTY0LC0xMDU1MjY4MDA4LC0yODc2
 NTEwNjQsLTE2NjUyMzEyMDAsNzQ3Nzg3MDI1XX0=
 -->

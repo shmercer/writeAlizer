@@ -11,7 +11,8 @@ writeAlizer accepts the following output files as inputs:
  1. ReaderBench: writeAlizer supports output files generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment). Although ReaderBench output files are comma separated (.csv), writeAlizer needs the output file to be saved in Excel format (.xlsx) for the file to be imported into R correctly.
  2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
-The writeAlizer scoring models assumes that column names in the output files are unchanged. For programs that list file paths in the first column, the writeAlizer file import functions will parse 
+
+The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file name from the file path and store the file name as an identification variable (ID).
 ### Installing
 
 writeAlizer is not available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
@@ -58,9 +59,9 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ2MTk3MDY3MiwtMTc0NzM5MDY1MCwxOD
-MxOTg4MDQ0LDMxMTUyMzE4OSw3NDk5NTIxMzMsLTkzMjk1MTU0
-NiwtODM2OTExODQyLC0xOTk4ODUyMjQ0LC04NTc4NTQxNjQsLT
-EwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIzMTIwMCw3NDc3
-ODcwMjVdfQ==
+eyJoaXN0b3J5IjpbLTU0NTQ3MzA2LC0xNzQ3MzkwNjUwLDE4Mz
+E5ODgwNDQsMzExNTIzMTg5LDc0OTk1MjEzMywtOTMyOTUxNTQ2
+LC04MzY5MTE4NDIsLTE5OTg4NTIyNDQsLTg1Nzg1NDE2NCwtMT
+A1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1MjMxMjAwLDc0Nzc4
+NzAyNV19
 -->

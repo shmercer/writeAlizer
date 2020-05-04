@@ -90,12 +90,13 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Development of this R package was supported, in part, by funding from the following sources:
-			(a) The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant R305A190100. The opinions expressed are those of the authors and do not represent views of the Institute or the U.S. Department of Education.
+* Funding support for development of writeAlizer:
+			(a)  The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant [R305A190100](https://ies.ed.gov/funding/grantsearch/details.asp?ID=3339). The opinions expressed are those of the authors and do not represent views of the Institute or the U.S. Department of Education.
+			(b) 
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjk1MzAyODIxLC04MzY5MTE4NDIsLTE5OT
-g4NTIyNDQsLTg1Nzg1NDE2NCwtMTA1NTI2ODAwOCwtMjg3NjUx
-MDY0LC0xNjY1MjMxMjAwLDc0Nzc4NzAyNV19
+eyJoaXN0b3J5IjpbLTIxMzI3MzE1ODEsLTgzNjkxMTg0MiwtMT
+k5ODg1MjI0NCwtODU3ODU0MTY0LC0xMDU1MjY4MDA4LC0yODc2
+NTEwNjQsLTE2NjUyMzEyMDAsNzQ3Nzg3MDI1XX0=
 -->

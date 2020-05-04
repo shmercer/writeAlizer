@@ -86,7 +86,7 @@ Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _[Evalua
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU General Public License Version 3 ([GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)).
 
 ## Acknowledgments
 
@@ -94,8 +94,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzQ5OTUyMTMzLC05MzI5NTE1NDYsLTgzNj
-kxMTg0MiwtMTk5ODg1MjI0NCwtODU3ODU0MTY0LC0xMDU1MjY4
-MDA4LC0yODc2NTEwNjQsLTE2NjUyMzEyMDAsNzQ3Nzg3MDI1XX
-0=
+eyJoaXN0b3J5IjpbMTg4OTE4MDMyNSw3NDk5NTIxMzMsLTkzMj
+k1MTU0NiwtODM2OTExODQyLC0xOTk4ODUyMjQ0LC04NTc4NTQx
+NjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMTY2NTIzMTIwMC
+w3NDc3ODcwMjVdfQ==
 -->

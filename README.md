@@ -90,11 +90,12 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
+* Development of this R package was supported, in part, by funding from the following sources:
+			(a) 
 * Inspiration
 * etc
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTgzNjkxMTg0MiwtMTk5ODg1MjI0NCwtOD
-U3ODU0MTY0LC0xMDU1MjY4MDA4LC0yODc2NTEwNjQsLTE2NjUy
-MzEyMDAsNzQ3Nzg3MDI1XX0=
+eyJoaXN0b3J5IjpbNDA0NjYyODUzLC04MzY5MTE4NDIsLTE5OT
+g4NTIyNDQsLTg1Nzg1NDE2NCwtMTA1NTI2ODAwOCwtMjg3NjUx
+MDY0LC0xNjY1MjMxMjAwLDc0Nzc4NzAyNV19
 -->

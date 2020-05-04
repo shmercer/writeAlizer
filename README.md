@@ -12,11 +12,9 @@ writeAlizer accepts the following output files as inputs:
  2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
 
-
-
 ### Installing
 
-writeAlizer is not yet available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
+writeAlizer is not available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
 ```
 install.packages("devtools")
 ```
@@ -60,8 +58,8 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2ODkzMjU4NDksMzExNTIzMTg5LDc0OT
-k1MjEzMywtOTMyOTUxNTQ2LC04MzY5MTE4NDIsLTE5OTg4NTIy
-NDQsLTg1Nzg1NDE2NCwtMTA1NTI2ODAwOCwtMjg3NjUxMDY0LC
-0xNjY1MjMxMjAwLDc0Nzc4NzAyNV19
+eyJoaXN0b3J5IjpbNTM3ODU2NTA3LDMxMTUyMzE4OSw3NDk5NT
+IxMzMsLTkzMjk1MTU0NiwtODM2OTExODQyLC0xOTk4ODUyMjQ0
+LC04NTc4NTQxNjQsLTEwNTUyNjgwMDgsLTI4NzY1MTA2NCwtMT
+Y2NTIzMTIwMCw3NDc3ODcwMjVdfQ==
 -->

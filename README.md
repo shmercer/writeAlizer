@@ -26,8 +26,9 @@ devtools::install_github("shmercer/writeAlizer")
 ## Documentation
 
 Information on the various scoring models available and how they were developed is in this respository's [wiki](https://github.com/shmercer/writeAlizer/wiki).
+The following information is available on the wi:
+1. [Description of the general process used to develop scoring algorithms](https://github.com/shmercer/writeAlizer/wiki/Scoring-Model-Development).
 
-A worked example with sample code is also presented in the [wiki.](https://github.com/shmercer/writeAlizer/wiki)
 
 ## Package Author
 
@@ -59,9 +60,9 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
  * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjg3MDQ0NDYzLC0xNzQ3MzkwNjUwLDE4Mz
-E5ODgwNDQsMzExNTIzMTg5LDc0OTk1MjEzMywtOTMyOTUxNTQ2
-LC04MzY5MTE4NDIsLTE5OTg4NTIyNDQsLTg1Nzg1NDE2NCwtMT
-A1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1MjMxMjAwLDc0Nzc4
-NzAyNV19
+eyJoaXN0b3J5IjpbLTEyNjA2MDEyMjEsMjg3MDQ0NDYzLC0xNz
+Q3MzkwNjUwLDE4MzE5ODgwNDQsMzExNTIzMTg5LDc0OTk1MjEz
+MywtOTMyOTUxNTQ2LC04MzY5MTE4NDIsLTE5OTg4NTIyNDQsLT
+g1Nzg1NDE2NCwtMTA1NTI2ODAwOCwtMjg3NjUxMDY0LC0xNjY1
+MjMxMjAwLDc0Nzc4NzAyNV19
 -->

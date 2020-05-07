@@ -37,7 +37,7 @@ The following sections are available on the wiki:
 
 ### Journal Articles
 
-Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296) 
+Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)
 
 ### Conference Presentations
 
@@ -51,7 +51,7 @@ Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _[Evalua
 
 ## License
 
-This project is licensed under the GNU General Public License Version 3 ([GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)).
+This project is licensed under the GNU General Public License Version 3 ([GPLv3](LICENSE)).
 
 ## Acknowledgments
 

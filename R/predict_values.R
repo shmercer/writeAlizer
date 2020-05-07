@@ -15,8 +15,8 @@
 # along with this program.  If not, see https://www.gnu.org/licenses/.
 #
 # This file includes functions to generate predicted writing quality values
-#from Readerbench and CohMetrix files. There is also a function to generate
-#writing quality composites that include GAMET spelling and grammar scores
+# from Readerbench and CohMetrix files. There is also a function to generate
+# writing quality composites that include GAMET spelling and grammar scores
 
 #' @title Apply scoring models for predictions
 #' @description Apply scoring models to ReaderBench, CohMetrix, and/or

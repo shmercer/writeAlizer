@@ -14,72 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see https://www.gnu.org/licenses/.
 #
-# This file includes functions to load model objects to generate predictions
-# and to pre-process Coh-Metrix, ReaderBench, and GAMET input files
-
-#' @title Download scoring models to the working directory.
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
-#' @importFrom utils download.file
-#' @export
-#' @param mod A string telling which model group to download. Options are
-#' 'rb_mod1' for ReaderBench files to generate holistic quality,
-#' 'coh_mod1' for Coh-Metrix files to generate holistic quality,
-#' and 'rb_gamet_cws1' for a merged ReaderBench and GAMET file
-#' to generate Correct Word Sequences (CWS) and Correct Minus Incorrect
-#' Word Sequences (CIWS) scores
-#' @examples
-#' #To download models to process ReaderBench files:
-#' \dontrun{
-#' download_model('rb_mod1')
-#' }
-#' #To download models to process Coh-Metrix files:
-#' \dontrun{
-#' download_model('coh_mod1')
-#' }
-#' #To download models to generate CWS/CIWS scores from ReaderBench and GAMET files:
-#' \dontrun{
-#' download_model('rb_gamet_cws1')
-#' }
-download_model <- function(mod) {
-  if (mod == 'rb_mod1') {
-    download.file(url="https://www.dropbox.com/s/yhz7uld7ifpy5na/rb_ensemble_fall7min_all.rds?dl=1",
-                  destfile="./rb_mod1a.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/jnzkhkylrps74db/rb_ensemble_win7min_all.rds?dl=1",
-                  destfile="./rb_mod1b.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/m98j8j122m5kazw/rb_ensemble_spr7min_all.rds?dl=1",
-                  destfile="./rb_mod1c.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/rreoqqip7w60vwe/rb_ensemble_fall7min_pca.rds?dl=1",
-                  destfile="./rb_mod1d.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/8ir43kfttgtv814/rb_ensemble_win7min_pca.rds?dl=1",
-                  destfile="./rb_mod1e.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/te2e9mwyywdvs5u/rb_ensemble_spr7min_pca.rds?dl=1",
-                  destfile="./rb_mod1f.rds", mode = "wb")
-  }  else if (mod == 'coh_mod1') {
-    download.file(url="https://www.dropbox.com/s/mq2nse1717ik871/coh_ensemble_fall7min_all.rds?dl=1",
-                  destfile="./coh_mod1a.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/hbocz18y8sjkb2g/coh_ensemble_win7min_all.rds?dl=1",
-                  destfile="./coh_mod1b.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/f4hn59js6ed159e/coh_ensemble_spr7min_all.rds?dl=1",
-                  destfile="./coh_mod1c.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/uk60a3zecaelwqk/coh_ensemble_fall7min_pca.rds?dl=1",
-                  destfile="./coh_mod1d.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/v3pmoptyymnr96r/coh_ensemble_win7min_pca.rds?dl=1",
-                  destfile="./coh_mod1e.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/dczd34qfvbecli9/coh_ensemble_spr7min_pca.rds?dl=1",
-                  destfile="./coh_mod1f.rds", mode = "wb")
-  } else if (mod == 'rb_gamet_cws1') {
-    download.file(url="https://www.dropbox.com/s/9qjbnp47g7uij0v/CIWS_ensemble_all7min.rds?dl=1",
-                  destfile="./CIWS_mod1a.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/u9fp961t5xsf28l/CIWS_pca_ensemble_all7min.rds?dl=1",
-                  destfile="./CIWS_mod1b.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/v88pfekdnxr3cox/CWS_ensemble_all7min.rds?dl=1",
-                  destfile="./CWS_mod1a.rds", mode = "wb")
-    download.file(url="https://www.dropbox.com/s/baipp2z1nloooid/CWS_pca_ensemble_all7min.rds?dl=1",
-                  destfile="./CWS_mod1b.rds", mode = "wb")
-  } else {
-    print("Not a valid model name")
-  }
-}
+# This file includes functions to import and pre-process Coh-Metrix, ReaderBench,
+# and GAMET output files
 
 #' Import a GAMET output file into R.
 #'

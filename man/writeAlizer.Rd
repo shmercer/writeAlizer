@@ -11,21 +11,15 @@ and \href{https://github.com/shmercer/writeAlizer/wiki}{wiki}
 \details{
 The writeAlizer R package (a) imports \href{https://git.readerbench.com/ReaderBench/ReaderBench}{ReaderBench},
 \href{http://cohmetrix.com/}{Coh-Metrix}, and \href{https://www.linguisticanalysistools.org/gamet.html}{GAMET} output files into R,
-(b) downloads existing predictive scoring models to the local machine, and
-(c) uses the predictive scoring models to generate predicted writing quality scores or
-Correct Word Sequences and Correct Minus Incorrect Word Sequences scores
-from the ReaderBench, Coh-Metrix, and/or GAMET files.
+and (b) uses research-developed scoring models to generate predicted writing
+quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences
+scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
 
-The writeAlizer package includes functions to do three types of tasks:
-(1) downloading scoring models; (2) importing ReaderBench, Coh-Metrix, and/or GAMET output files into R;
-and (3) generating predicted quality scores based on the scoring models and imported output files.
+The writeAlizer package includes functions to do two types of tasks:
+(1) importing ReaderBench, Coh-Metrix, and/or GAMET output files into R;
+and (2) generating predicted quality scores using the imported output files.
 }
-\section{1. Download scoring models}{
-
-\code{\link{download_model}}
-}
-
-\section{2. Import output files}{
+\section{1. Import output files}{
 
 \code{\link{import_rb}}
 
@@ -36,7 +30,7 @@ and (3) generating predicted quality scores based on the scoring models and impo
 \code{\link{import_merge_gamet_rb}}
 }
 
-\section{3. Generate predicted quality scores}{
+\section{2. Generate predicted quality scores}{
 
 \code{\link{predict_quality}}
 }

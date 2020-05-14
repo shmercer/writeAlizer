@@ -16,7 +16,8 @@ to generate Correct Word Sequences (CWS) and Correct Minus Incorrect
 Word Sequences (CIWS) scores}
 
 \item{data}{The name of the R object corresponding to the data file. The
-import_gamet(), import_coh(), import_rb(), and import_merge_gamet_rb()
+\code{\link{import_gamet}}import_gamet(), \code{\link{import_coh}}import_coh(),
+\code{\link{import_rb}}import_rb(), and \code{\link{import_merge_gamet_rb}}import_merge_gamet_rb()
 functions should be used before this function
 to generate these data objects.}
 
@@ -39,17 +40,66 @@ Word Sequences can be generated from a combined
 Readerbench and GAMET file.
 }
 \examples{
-#To generate holistic quality from a ReaderBench file ('rb_data')
-#and return scores to an object called 'rb_quality':
-\dontrun{
-rb_quality <- predict_quality('rb_mod1', rb_data, store = FALSE)
-}
-#To generate holistic quality from a Coh-Metrix file ('coh_data'), merge
-#predicted scores with the data file, and store as "output.csv" in the
+###Examples using sample data included in writeAlizer package
+
+##Example 1: ReaderBench output file
+#load package
+library(writeAlizer)
+
+#get path of sample ReaderBench output file
+file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+
+#see path to sample file
+file_path1
+
+#import file and store as "rb_file"
+rb_file <- import_rb(file_path1)
+
+#Generate holistic quality from "rb_file"
+#and return scores to an object called "rb_quality":
+rb_quality <- predict_quality('rb_mod1', rb_file, store = FALSE)
+
+#display quality scores
+rb_quality
+
+##Example 2: Coh-Metrix output file
+#get path of sample Coh-Metrix output file
+file_path2 <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+
+#see path to sample file
+file_path2
+
+#import file and store as "coh_file"
+coh_file <- import_coh(file_path2)
+
+#Generate holistic quality from a Coh-Metrix file (coh_file),
+#return scores to an object called "coh_quality", merge
+#predicted scores with the data file, and store data as "output.csv" in the
 #working directory
-\dontrun{
-predict_quality('coh_mod1', coh_data, store = TRUE, name = "output.csv")
+coh_quality <- predict_quality('coh_mod1', coh_file, store = TRUE, name = "output.csv")
+
+##Example 3: Merged ReaderBench and GAMET files
+#see path to sample ReaderBench file
+file_path1
+
+#get path of sample GAMET output file
+file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+
+#see path to sample GAMET file
+file_path3
+
+#import files, merge, and store as "rb_gam_file"
+rb_gam_file <- import_merge_gamet_rb(file_path1, file_path3)
+
+#Generate CWS and CIWS scores from a merged ReaderBench and GAMET file
+#(rb_gam_file) and return scores to an object called "rb_gamet_CWS_CIWS"
+rb_gamet_CWS_CIWS <- predict_quality('rb_gamet_cws1', rb_gam_file, store = FALSE)
 }
+\seealso{
+\code{\link{import_rb}}
+\code{\link{import_coh}}
+\code{\link{import_gamet}}
+\code{\link{import_merge_gamet_rb}}
 }
 \author{
 Sterett H. Mercer <sterett.mercer@ubc.ca>

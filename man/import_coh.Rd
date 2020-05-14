@@ -13,12 +13,31 @@ import_coh(path)
 Import a Coh-Metrix output file(.csv) into R.
 }
 \examples{
+##Example 1:
+#Using a sample data file included with writeAlizer package
+
+#load package
+library(writeAlizer)
+
+#get path of sample Coh-Metrix output file
+file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+
+#see path to sample file
+file_path
+
+#import file and store as "coh_file"
+coh_file <- import_coh(file_path)
+
+##Example 2:
 #To import as 'coh_file' a Coh-Metrix file (sample name: coh_output.csv)
 #that is stored in the working directory
 \dontrun{
-coh_file <- import_coh('coh_output.csv')
+coh_file <- import_coh("coh_output.csv")
 }
+}
+\seealso{
+\code{\link{predict_quality}}
 }
 \author{
-Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji
+Sterett H. Mercer <sterett.mercer@ubc.ca>
 }

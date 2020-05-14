@@ -15,11 +15,30 @@ Import a ReaderBench output file(.xlsx) into R. ReaderBench output files (.csv)
 should be converted to Excel format (.xlsx) before import.
 }
 \examples{
-#To import as 'rb_file' a ReaderBench file (sample name: rb_output.xlsx)
+#' ##Example 1:
+#Using a sample data file included with writeAlizer package
+
+#load package
+library(writeAlizer)
+
+#get path of sample ReaderBench output file
+file_path <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+
+#see path to sample file
+file_path
+
+#import file and store as "rb_file"
+rb_file <- import_rb(file_path)
+
+##Example 2:
+#To import as "rb_file" a ReaderBench file (sample name: rb_output.xlsx)
 #that is stored in the working directory
 \dontrun{
-rb_file <- import_rb('rb_output.xlsx')
+rb_file <- import_rb("rb_output.xlsx")
 }
+}
+\seealso{
+\code{\link{predict_quality}}
 }
 \author{
 Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji

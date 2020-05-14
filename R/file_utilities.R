@@ -19,74 +19,95 @@
 
 #' Import a GAMET output file into R.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
-#' @importFrom stats setNames
-#' @importFrom utils read.csv tail
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
+#' @importFrom utils read.csv
+#' @importFrom tools file_path_sans_ext
 #' @param path A string giving the path and filename to import.
 #' @export
+#' @seealso
+#' \code{\link{predict_quality}}
 #' @examples
-#' #To import as 'gamet_file' a GAMET file (sample name: gamet_output.csv)
-#' # that is stored in the working directory
+#' ##Example 1:
+#' #Using a sample data file included with writeAlizer package
+#'
+#' #load package
+#' library(writeAlizer)
+#'
+#' #get path of sample GAMET output file
+#' file_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#'
+#' #see path to sample file
+#' file_path
+#'
+#' #import file and store as "gamet_file"
+#' gamet_file <- import_gamet(file_path)
+#'
+#' ##Example 2:
+#' #To import as "gamet_file" a GAMET file (sample name: gamet_output.csv)
+#' #that is stored in the working directory
 #' \dontrun{
 #' gamet_file <- import_gamet('gamet_output.csv')
 #' }
 import_gamet <- function(path) {
-  #message
-  print('Multiple instances of this error message are normal: number of items to replace is not a multiple of replacement length')
-
-  #import GAMET
   dat1<-read.csv(path, header = T)
-  col<-as.vector(dat1$filename)
-  unit<-list()
-  for(i in 1:length(col)) {
-    ## parsing the file path into units
-    ## select the last unint in the list
-    unit[i]<-tail(unlist(strsplit(col[i], "[\\,.]")),2)
-  }
-  temp<-data.table::transpose(unit) # transpose the list to vector
-  temp<-setNames(data.frame(temp),'ID')
-  #convert into dataframe and rename it
-  dat1_merge<-cbind(temp,dat1[-1])
-  dat1_merge_r<-dplyr::mutate_all(dat1_merge, function(x) {
+  #strip filename from path
+  dat1$filename<-basename(tools::file_path_sans_ext(dat1$filename))
+  #rename filename variable
+  names(dat1)[names(dat1) == "filename"] <- "ID"
+  #make any factors numeric and sort by ID
+  dat2<-dplyr::mutate_all(dat1, function(x) {
     if(is.factor(x)) as.numeric(as.character(x)) else x
   })
-  dat2 <- dat1_merge_r[,1:5]
   dat3 <- dat2[order(dat2$ID),]
-  return(dat3)
+  dat4 <- dat3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
+  dat4$per_gram <- dat4$grammar/dat4$word_count
+  dat4$per_spell <- dat4$misspelling/dat4$word_count
+  return(dat4)
 }
 
 #' Import a Coh-Metrix output file(.csv) into R.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
-#' @importFrom stats setNames
-#' @importFrom utils read.csv tail
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
+#' @importFrom utils read.csv
+#' @importFrom tools file_path_sans_ext
 #' @param path A string giving the path and filename to import.
 #' @export
+#' @seealso
+#' \code{\link{predict_quality}}
 #' @examples
+#' ##Example 1:
+#' #Using a sample data file included with writeAlizer package
+#'
+#' #load package
+#' library(writeAlizer)
+#'
+#' #get path of sample Coh-Metrix output file
+#' file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+#'
+#' #see path to sample file
+#' file_path
+#'
+#' #import file and store as "coh_file"
+#' coh_file <- import_coh(file_path)
+#'
+#' ##Example 2:
 #' #To import as 'coh_file' a Coh-Metrix file (sample name: coh_output.csv)
 #' #that is stored in the working directory
 #' \dontrun{
-#' coh_file <- import_coh('coh_output.csv')
+#' coh_file <- import_coh("coh_output.csv")
 #' }
 import_coh <- function(path) {
   dat1<-read.csv(path, header = T)
-  #TextID is field in Coh file
-  col<-as.vector(dat1$TextID)
-  unit<-list()
-  for(i in 1:length(col)) {
-    ## parsing the file path into units
-    ## select the last unint in the list
-    unit[i]<-tail(unlist(strsplit(col[i], "[\\,.]")),2)
-  }
-  temp<-data.table::transpose(unit) # transpose the list to vector
-  temp<-setNames(data.frame(temp),'ID')
-  #convert into dataframe and rename it
-  dat1_merge<-cbind(temp,dat1[-1])
-  dat1_merge_r<-dplyr::mutate_all(dat1_merge, function(x) {
+  #strip filename from path
+  dat1$TextID<-basename(tools::file_path_sans_ext(dat1$TextID))
+  #rename TextID variable
+  names(dat1)[names(dat1) == "TextID"] <- "ID"
+  #make any factors numeric and sort by ID
+  dat2<-dplyr::mutate_all(dat1, function(x) {
     if(is.factor(x)) as.numeric(as.character(x)) else x
   })
-  dat2 <- dat1_merge_r[order(dat1_merge_r$ID),]
-  return(dat2)
+  dat3 <- dat2[order(dat2$ID),]
+  return(dat3)
 }
 
 #' Import a ReaderBench output file(.xlsx) into R. ReaderBench output files (.csv)
@@ -96,12 +117,30 @@ import_coh <- function(path) {
 #' @importFrom magrittr %>%
 #' @importFrom utils modifyList
 #' @export
+#' @seealso
+#' \code{\link{predict_quality}}
 #' @param path A string giving the path and filename to import.
 #' @examples
-#' #To import as 'rb_file' a ReaderBench file (sample name: rb_output.xlsx)
+#' #' ##Example 1:
+#' #Using a sample data file included with writeAlizer package
+#'
+#' #load package
+#' library(writeAlizer)
+#'
+#' #get path of sample ReaderBench output file
+#' file_path <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+#'
+#' #see path to sample file
+#' file_path
+#'
+#' #import file and store as "rb_file"
+#' rb_file <- import_rb(file_path)
+#'
+#' ##Example 2:
+#' #To import as "rb_file" a ReaderBench file (sample name: rb_output.xlsx)
 #' #that is stored in the working directory
 #' \dontrun{
-#' rb_file <- import_rb('rb_output.xlsx')
+#' rb_file <- import_rb("rb_output.xlsx")
 #' }
 import_rb <- function(path) {
   dat_RB<-xlsx::read.xlsx(path, header = T,1)
@@ -119,24 +158,45 @@ import_rb <- function(path) {
 #' Import a ReaderBench output file(.xlsx) and GAMET output file (.csv) into R, and merge the two files.
 #' ReaderBench output files (.csv) should be converted to Excel format (.xlsx) before import.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
+#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom magrittr %>%
-#' @importFrom utils modifyList read.csv tail
-#' @importFrom stats setNames
+#' @importFrom utils modifyList read.csv
+#' @importFrom tools file_path_sans_ext
 #' @export
+#' @seealso
+#' \code{\link{predict_quality}}
 #' @param rb_path A string giving the path and ReaderBench filename to import.
 #' @param gamet_path A string giving the path and GAMET filename to import.
 #' @examples
-#' #To import as 'rb_gam_file' a ReaderBench file (sample name: rb_output.xlsx)
+#' ##Example 1:
+#' #Using a sample data files included with writeAlizer package
+#'
+#' #load package
+#' library(writeAlizer)
+#'
+#' #get path of sample ReaderBench output file
+#' file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+#'
+#' #see path to sample ReaderBench file
+#' file_path1
+#'
+#' #get path of sample GAMET output file
+#' file_path2 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#'
+#' #see path to sample GAMET file
+#' file_path2
+#'
+#' #import files, merge, and store as "rb_gam_file"
+#' rb_gam_file <- import_merge_gamet_rb(file_path1, file_path2)
+#'
+#' ##Example 2:
+#' #To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.xlsx)
 #' #and GAMET file (sample name: gamet_output.csv) stored in the working
 #' #directory and then merge them
 #' \dontrun{
-#' rb_gam_file <- import_merge_gamet_rb('rb_output.xlsx', 'gamet_output.csv')
+#' rb_gam_file <- import_merge_gamet_rb("rb_output.xlsx", "gamet_output.csv")
 #' }
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
-  #message
-  print('Multiple instances of this error message are normal: number of items to replace is not a multiple of replacement length')
-
   #import RB data
   dat_RB<-xlsx::read.xlsx(rb_path, header = T,1)
   dat_RB <- dat_RB %>% dplyr::na_if("NaN")
@@ -150,25 +210,19 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
 
   #import GAMET data
   datG<-read.csv(gamet_path, header = T)
-  col<-as.vector(datG$filename)
-  unit<-list()
-  for(i in 1:length(col)) {
-    ## parsing the file path into units
-    ## select the last unint in the list
-    unit[i]<-tail(unlist(strsplit(col[i], "[\\,.]")),2)
-  }
-  temp<-data.table::transpose(unit) # transpose the list to vector
-  temp<-setNames(data.frame(temp),'ID')
-  #convert into dataframe and rename it
-  datG_merge<-cbind(temp,datG[-1])
-  datG_merge_r<-dplyr::mutate_all(datG_merge, function(x) {
+  #strip filename from path
+  datG$filename<-basename(tools::file_path_sans_ext(datG$filename))
+  #rename TextID variable
+  names(datG)[names(datG) == "filename"] <- "ID"
+  #make any factors numeric and sort by ID
+  datG2<-dplyr::mutate_all(datG, function(x) {
     if(is.factor(x)) as.numeric(as.character(x)) else x
   })
-  datG2 <- datG_merge_r[,1:5]
-  datG2$per_gram <- datG2$grammar/datG2$word_count
-  datG2$per_spell <- datG2$misspelling/datG2$word_count
   datG3 <- datG2[order(datG2$ID),]
+  datG4 <- datG3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
+  datG4$per_gram <- datG4$grammar/datG4$word_count
+  datG4$per_spell <- datG4$misspelling/datG4$word_count
 
   #merge RB and GAMET
-  merge(datG3, dat_RB3, by.x="ID", by.y="ID")
+  merge(datG4, dat_RB3, by.x="ID", by.y="ID")
 }

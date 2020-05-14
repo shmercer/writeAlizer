@@ -14,9 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see https://www.gnu.org/licenses/.
 #
-# This file includes functions to generate predicted writing quality values
-# from Readerbench and CohMetrix files. There is also a function to generate
-# writing quality composites that include GAMET spelling and grammar scores
+# This file includes functions to generate predicted writing quality scores
+# and written expression curriculum-based measurement scores (CWS and CIWS)
+# from Readerbench, CohMetrix, and/or GAMET files. There is also a function
+# to generate writing quality composites that include
+# GAMET spelling and grammar scores
 
 #' @title Apply scoring models for predictions
 #' @description Apply scoring models to ReaderBench, CohMetrix, and/or
@@ -37,7 +39,8 @@
 #' to generate Correct Word Sequences (CWS) and Correct Minus Incorrect
 #' Word Sequences (CIWS) scores
 #' @param data The name of the R object corresponding to the data file. The
-#' import_gamet(), import_coh(), import_rb(), and import_merge_gamet_rb()
+#' \code{\link{import_gamet}}import_gamet(), \code{\link{import_coh}}import_coh(),
+#' \code{\link{import_rb}}import_rb(), and \code{\link{import_merge_gamet_rb}}import_merge_gamet_rb()
 #' functions should be used before this function
 #' to generate these data objects.
 #' @param store When store = TRUE, this function will generate scores, merge
@@ -48,28 +51,74 @@
 #' the .csv file (for example, "filename.csv") that is
 #' generated to the working directory.
 #' @export
+#' @seealso
+#' \code{\link{import_rb}}
+#' \code{\link{import_coh}}
+#' \code{\link{import_gamet}}
+#' \code{\link{import_merge_gamet_rb}}
 #' @examples
-#' #To generate holistic quality from a ReaderBench file ('rb_data')
-#' #and return scores to an object called 'rb_quality':
-#' \dontrun{
-#' rb_quality <- predict_quality('rb_mod1', rb_data, store = FALSE)
-#' }
-#' #To generate holistic quality from a Coh-Metrix file ('coh_data'), merge
-#' #predicted scores with the data file, and store as "output.csv" in the
+#' ###Examples using sample data included in writeAlizer package
+#'
+#' ##Example 1: ReaderBench output file
+#' #load package
+#' library(writeAlizer)
+#'
+#' #get path of sample ReaderBench output file
+#' file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+#'
+#' #see path to sample file
+#' file_path1
+#'
+#' #import file and store as "rb_file"
+#' rb_file <- import_rb(file_path1)
+#'
+#' #Generate holistic quality from "rb_file"
+#' #and return scores to an object called "rb_quality":
+#' rb_quality <- predict_quality('rb_mod1', rb_file, store = FALSE)
+#'
+#' #display quality scores
+#' rb_quality
+#'
+#' ##Example 2: Coh-Metrix output file
+#' #get path of sample Coh-Metrix output file
+#' file_path2 <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+#'
+#' #see path to sample file
+#' file_path2
+#'
+#' #import file and store as "coh_file"
+#' coh_file <- import_coh(file_path2)
+#'
+#' #Generate holistic quality from a Coh-Metrix file (coh_file),
+#' #return scores to an object called "coh_quality", merge
+#' #predicted scores with the data file, and store data as "output.csv" in the
 #' #working directory
-#' \dontrun{
-#' predict_quality('coh_mod1', coh_data, store = TRUE, name = "output.csv")
-#' }
+#' coh_quality <- predict_quality('coh_mod1', coh_file, store = TRUE, name = "output.csv")
+#'
+#' ##Example 3: Merged ReaderBench and GAMET files
+#' #see path to sample ReaderBench file
+#' file_path1
+#'
+#' #get path of sample GAMET output file
+#' file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#'
+#' #see path to sample GAMET file
+#' file_path3
+#'
+#' #import files, merge, and store as "rb_gam_file"
+#' rb_gam_file <- import_merge_gamet_rb(file_path1, file_path3)
+#'
+#' #Generate CWS and CIWS scores from a merged ReaderBench and GAMET file
+#' #(rb_gam_file) and return scores to an object called "rb_gamet_CWS_CIWS"
+#' rb_gamet_CWS_CIWS <- predict_quality('rb_gamet_cws1', rb_gam_file, store = FALSE)
 predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
-
   if (model=='rb_mod1' & store == FALSE){
-    rb_mod1a <- readRDS('rb_mod1a.rds')
-    rb_mod1b <- readRDS('rb_mod1b.rds')
-    rb_mod1c <- readRDS('rb_mod1c.rds')
-    rb_mod1d <- readRDS('rb_mod1d.rds')
-    rb_mod1e <- readRDS('rb_mod1e.rds')
-    rb_mod1f <- readRDS('rb_mod1f.rds')
-
+    load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
 
     pred.1 <- predict(rb_mod1a,data)
     pred.2 <- predict(rb_mod1b,data)
@@ -80,13 +129,12 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
   } else if (model=='rb_mod1' & store == TRUE){
-    rb_mod1a <- readRDS('rb_mod1a.rds')
-    rb_mod1b <- readRDS('rb_mod1b.rds')
-    rb_mod1c <- readRDS('rb_mod1c.rds')
-    rb_mod1d <- readRDS('rb_mod1d.rds')
-    rb_mod1e <- readRDS('rb_mod1e.rds')
-    rb_mod1f <- readRDS('rb_mod1f.rds')
-
+    load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
+    load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
 
     pred.1 <- predict(rb_mod1a,data)
     pred.2 <- predict(rb_mod1b,data)
@@ -98,13 +146,15 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     predicted_quality <- (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
     data.2 <- cbind(predicted_quality,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
+
+    return(predicted_quality)
   } else if (model == 'coh_mod1' & store == FALSE){
-    coh_mod1a <- readRDS('coh_1a.rds')
-    coh_mod1b <- readRDS('coh_1b.rds')
-    coh_mod1c <- readRDS('coh_1c.rds')
-    coh_mod1d <- readRDS('coh_1d.rds')
-    coh_mod1e <- readRDS('coh_1e.rds')
-    coh_mod1f <- readRDS('coh_1f.rds')
+    load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
 
     pred.1 <- predict(coh_mod1a,data)
     pred.2 <- predict(coh_mod1b,data)
@@ -115,12 +165,12 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
   } else if (model=='coh_mod1' & store == TRUE){
-    coh_mod1a <- readRDS('coh_1a.rds')
-    coh_mod1b <- readRDS('coh_1b.rds')
-    coh_mod1c <- readRDS('coh_1c.rds')
-    coh_mod1d <- readRDS('coh_1d.rds')
-    coh_mod1e <- readRDS('coh_1e.rds')
-    coh_mod1f <- readRDS('coh_1f.rds')
+    load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
+    load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
 
     pred.1 <- predict(coh_mod1a,data)
     pred.2 <- predict(coh_mod1b,data)
@@ -132,11 +182,13 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     predicted_quality <- (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
     data.2 <- cbind(predicted_quality,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
+
+    return(predicted_quality)
   } else if (model == 'rb_gamet_cws1' & store == FALSE) {
-    CWS_mod1a <- readRDS('CWS_mod1a.rds')
-    CWS_mod1b <- readRDS('CWS_mod1b.rds')
-    CIWS_mod1a <- readRDS('CIWS_mod1a.rds')
-    CIWS_mod1b <- readRDS('CIWS_mod1b.rds')
+    load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
+    load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
 
     cws.pred.1 <- predict(CWS_mod1a, data)
     cws.pred.2 <- predict(CWS_mod1b, data)
@@ -149,10 +201,10 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     cbind(predicted_cws,predicted_ciws)
   } else if (model == 'rb_gamet_cws1' & store == TRUE) {
-    CWS_mod1a <- readRDS('CWS_mod1a.rds')
-    CWS_mod1b <- readRDS('CWS_mod1b.rds')
-    CIWS_mod1a <- readRDS('CIWS_mod1a.rds')
-    CIWS_mod1b <- readRDS('CIWS_mod1b.rds')
+    load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
+    load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
+    load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
 
     cws.pred.1 <- predict(CWS_mod1a, data)
     cws.pred.2 <- predict(CWS_mod1b, data)
@@ -165,5 +217,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     data.2 <- cbind(predicted_cws,predicted_ciws,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
+
+    return(cbind(predicted_cws,predicted_ciws))
   }
 }

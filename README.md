@@ -19,7 +19,7 @@ writeAlizer accepts the following output files as inputs:
 The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID).
 ### Installing
 
-writeAlizer is not available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
+writeAlizer is not available on [CRAN](https://cran.r-project.org/) due to file size (~500 mb). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
 ```
 install.packages("devtools")
 ```
@@ -27,6 +27,8 @@ With *devtools* installed, you can install writeAlizer in R directly from this G
 ```
 devtools::install_github("shmercer/writeAlizer")
 ```
+Due to the large file size, it may take a while for writeAlizer to download and install.
+
 ## Documentation
 
 Information on the various scoring models available and how they were developed is in this respository's [wiki](https://github.com/shmercer/writeAlizer/wiki):

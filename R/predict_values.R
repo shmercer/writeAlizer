@@ -50,6 +50,9 @@
 #' @param name When store = TRUE, the name parameter gives the filename for
 #' the .csv file (for example, "filename.csv") that is
 #' generated to the working directory.
+#' @return Depending on the model parameter option selected, predicted quality (or CWS/CIWS scores)
+#' and the ID variable (parsed from the file names used when generating the ReaderBench, Coh-Metrix,
+#' and/or GAMET output files) are returned.
 #' @export
 #' @seealso
 #' \code{\link{import_rb}}
@@ -127,7 +130,9 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     pred.5 <- predict(rb_mod1e,data)
     pred.6 <- predict(rb_mod1f,data)
 
-    (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
+    predicted_quality <- (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
   } else if (model=='rb_mod1' & store == TRUE){
     load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
     load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
@@ -147,7 +152,8 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     data.2 <- cbind(predicted_quality,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
-    return(predicted_quality)
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
   } else if (model == 'coh_mod1' & store == FALSE){
     load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
     load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
@@ -163,7 +169,9 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     pred.5 <- predict(coh_mod1e,data)
     pred.6 <- predict(coh_mod1f,data)
 
-    (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
+    predicted_quality <- (pred.1 + pred.2 + pred.3 + pred.4 + pred.5 + pred.6)/6
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
   } else if (model=='coh_mod1' & store == TRUE){
     load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
     load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
@@ -183,7 +191,8 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     data.2 <- cbind(predicted_quality,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
-    return(predicted_quality)
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
   } else if (model == 'rb_gamet_cws1' & store == FALSE) {
     load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
@@ -199,7 +208,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     predicted_cws <- (cws.pred.1 + cws.pred.2)/2
     predicted_ciws <- (ciws.pred.1 + ciws.pred.2)/2
 
-    cbind(predicted_cws,predicted_ciws)
+    return(data.frame(cbind(ID=data$ID,predicted_cws,predicted_ciws)))
   } else if (model == 'rb_gamet_cws1' & store == TRUE) {
     load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
@@ -218,6 +227,6 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     data.2 <- cbind(predicted_cws,predicted_ciws,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
-    return(cbind(predicted_cws,predicted_ciws))
+    return(data.frame(cbind(ID=data$ID,predicted_cws,predicted_ciws)))
   }
 }

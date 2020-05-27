@@ -30,6 +30,11 @@ are returned to a user-specified object or the R console.}
 the .csv file (for example, "filename.csv") that is
 generated to the working directory.}
 }
+\value{
+Depending on the model parameter option selected, predicted quality (or CWS/CIWS scores)
+and the ID variable (parsed from the file names used when generating the ReaderBench, Coh-Metrix,
+and/or GAMET output files) are returned.
+}
 \description{
 Apply scoring models to ReaderBench, CohMetrix, and/or
 GAMET files. Holistic writing quality can be

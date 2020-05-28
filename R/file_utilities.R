@@ -116,6 +116,7 @@ import_coh <- function(path) {
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
 #' @importFrom magrittr %>%
 #' @importFrom utils modifyList
+#' @importFrom openxlsx read.xlsx
 #' @export
 #' @seealso
 #' \code{\link{predict_quality}}
@@ -143,7 +144,7 @@ import_coh <- function(path) {
 #' rb_file <- import_rb("rb_output.xlsx")
 #' }
 import_rb <- function(path) {
-  dat_RB<-xlsx::read.xlsx(path, header = T,1)
+  dat_RB<-openxlsx::read.xlsx(path, colNames=TRUE, sheet=1)
   dat_RB <- dat_RB %>% dplyr::na_if("NaN")
   asNumeric <- function(x) as.numeric(as.character(x))
   factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
@@ -152,6 +153,15 @@ import_rb <- function(path) {
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
   dat_RB3 <- dat_RB2[order(dat_RB2$ID),]
+
+  #function to remove parentheses from column names and replace with .
+  colClean <- function(x){
+    colnames(x) <- gsub("(", ".", colnames(x), fixed=TRUE)
+    colnames(x) <- gsub(")", ".", colnames(x), fixed=TRUE)
+  }
+
+  #run function
+  colnames(dat_RB3)<- colClean(dat_RB3)
   return(dat_RB3)
 }
 
@@ -162,6 +172,7 @@ import_rb <- function(path) {
 #' @importFrom magrittr %>%
 #' @importFrom utils modifyList read.csv
 #' @importFrom tools file_path_sans_ext
+#' @importFrom openxlsx read.xlsx
 #' @export
 #' @seealso
 #' \code{\link{predict_quality}}
@@ -198,7 +209,7 @@ import_rb <- function(path) {
 #' }
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
   #import RB data
-  dat_RB<-xlsx::read.xlsx(rb_path, header = T,1)
+  dat_RB<-openxlsx::read.xlsx(rb_path, colNames=TRUE, sheet=1)
   dat_RB <- dat_RB %>% dplyr::na_if("NaN")
   asNumeric <- function(x) as.numeric(as.character(x))
   factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
@@ -207,6 +218,14 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
   dat_RB3 <- dat_RB2[order(dat_RB2$ID),]
+
+  #function to remove parentheses from column names and replace with .
+  colClean <- function(x){
+    colnames(x) <- gsub("(", ".", colnames(x), fixed=TRUE)
+    colnames(x) <- gsub(")", ".", colnames(x), fixed=TRUE)
+  }
+  #run function
+  colnames(dat_RB3)<- colClean(dat_RB3)
 
   #import GAMET data
   datG<-read.csv(gamet_path, header = T)

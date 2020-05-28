@@ -22,6 +22,7 @@
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
+#' @importFrom dplyr mutate_all
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso
@@ -55,7 +56,7 @@ import_gamet <- function(path) {
   #rename filename variable
   names(dat1)[names(dat1) == "filename"] <- "ID"
   #make any factors numeric and sort by ID
-  dat2<-dplyr::mutate_all(dat1, function(x) {
+  dat2<-mutate_all(dat1, function(x) {
     if(is.factor(x)) as.numeric(as.character(x)) else x
   })
   dat3 <- dat2[order(dat2$ID),]
@@ -70,6 +71,7 @@ import_gamet <- function(path) {
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
+#' @importFrom dplyr mutate_all
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso
@@ -103,7 +105,7 @@ import_coh <- function(path) {
   #rename TextID variable
   names(dat1)[names(dat1) == "TextID"] <- "ID"
   #make any factors numeric and sort by ID
-  dat2<-dplyr::mutate_all(dat1, function(x) {
+  dat2<-mutate_all(dat1, function(x) {
     if(is.factor(x)) as.numeric(as.character(x)) else x
   })
   dat3 <- dat2[order(dat2$ID),]
@@ -117,6 +119,7 @@ import_coh <- function(path) {
 #' @importFrom magrittr %>%
 #' @importFrom utils modifyList
 #' @importFrom openxlsx read.xlsx
+#' @importFrom dplyr na_if
 #' @export
 #' @seealso
 #' \code{\link{predict_quality}}
@@ -145,7 +148,7 @@ import_coh <- function(path) {
 #' }
 import_rb <- function(path) {
   dat_RB<-openxlsx::read.xlsx(path, colNames=TRUE, sheet=1)
-  dat_RB <- dat_RB %>% dplyr::na_if("NaN")
+  dat_RB <- dat_RB %>% na_if("NaN")
   asNumeric <- function(x) as.numeric(as.character(x))
   factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
                                                      asNumeric))
@@ -173,6 +176,7 @@ import_rb <- function(path) {
 #' @importFrom utils modifyList read.csv
 #' @importFrom tools file_path_sans_ext
 #' @importFrom openxlsx read.xlsx
+#' @importFrom dplyr na_if mutate_all
 #' @export
 #' @seealso
 #' \code{\link{predict_quality}}
@@ -210,7 +214,7 @@ import_rb <- function(path) {
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
   #import RB data
   dat_RB<-openxlsx::read.xlsx(rb_path, colNames=TRUE, sheet=1)
-  dat_RB <- dat_RB %>% dplyr::na_if("NaN")
+  dat_RB <- dat_RB %>% na_if("NaN")
   asNumeric <- function(x) as.numeric(as.character(x))
   factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
                                                      asNumeric))
@@ -234,7 +238,7 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
   #rename TextID variable
   names(datG)[names(datG) == "filename"] <- "ID"
   #make any factors numeric and sort by ID
-  datG2<-dplyr::mutate_all(datG, function(x) {
+  datG2<-mutate_all(datG, function(x) {
     if(is.factor(x)) as.numeric(as.character(x)) else x
   })
   datG3 <- datG2[order(datG2$ID),]

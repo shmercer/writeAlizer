@@ -98,6 +98,9 @@
 #' #working directory
 #' coh_quality <- predict_quality('coh_mod1', coh_file, store = TRUE, name = "output.csv")
 #'
+#' #display quality scores
+#' coh_quality
+#'
 #' ##Example 3: Merged ReaderBench and GAMET files
 #' #see path to sample ReaderBench file
 #' file_path1
@@ -114,6 +117,9 @@
 #' #Generate CWS and CIWS scores from a merged ReaderBench and GAMET file
 #' #(rb_gam_file) and return scores to an object called "rb_gamet_CWS_CIWS"
 #' rb_gamet_CWS_CIWS <- predict_quality('rb_gamet_cws1', rb_gam_file, store = FALSE)
+#'
+#' #display quality scores
+#' rb_gamet_CWS_CIWS
 predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
   if (model=='rb_mod1' & store == FALSE){
     load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))

@@ -5,6 +5,7 @@ This repository hosts code for an [R package](https://cran.r-project.org/) to ap
 The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/ReaderBench/ReaderBench), [Coh-Metrix](http://cohmetrix.com/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
 
 ### Versions
+* 1.0.3 (May-29-2020): Accepts ReaderBench output files as .csv
 * 1.0.2 (May-27-2020): predict_quality() also returns an ID variable
 * 1.0.1 (May-14-2020): Added model fit objects to package and test data
 * 1.0.0 (May-1-2020): Initial Version
@@ -13,11 +14,12 @@ The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/
 
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment). Although ReaderBench output files are comma separated (.csv), writeAlizer needs the output file to be saved in Excel format (.xlsx) for the file to be imported into R correctly.
+ 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment).
  2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
 
-The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID).
+The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). File names/ID variables need to be numeric.
+
 ### Installing
 
 writeAlizer is not available on [CRAN](https://cran.r-project.org/) due to file size (~500 mb). To install writeAlizer in R, first make sure that the package *devtools* is installed in R

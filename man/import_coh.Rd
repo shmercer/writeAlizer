@@ -38,6 +38,3 @@ coh_file <- import_coh("coh_output.csv")
 \seealso{
 \code{\link{predict_quality}}
 }
-\author{
-Sterett H. Mercer <sterett.mercer@ubc.ca>
-}

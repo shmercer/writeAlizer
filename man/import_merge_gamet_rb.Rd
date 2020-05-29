@@ -2,8 +2,7 @@
 % Please edit documentation in R/file_utilities.R
 \name{import_merge_gamet_rb}
 \alias{import_merge_gamet_rb}
-\title{Import a ReaderBench output file(.xlsx) and GAMET output file (.csv) into R, and merge the two files.
-ReaderBench output files (.csv) should be converted to Excel format (.xlsx) before import.}
+\title{Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.}
 \usage{
 import_merge_gamet_rb(rb_path, gamet_path)
 }
@@ -13,8 +12,7 @@ import_merge_gamet_rb(rb_path, gamet_path)
 \item{gamet_path}{A string giving the path and GAMET filename to import.}
 }
 \description{
-Import a ReaderBench output file(.xlsx) and GAMET output file (.csv) into R, and merge the two files.
-ReaderBench output files (.csv) should be converted to Excel format (.xlsx) before import.
+Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.
 }
 \examples{
 ##Example 1:
@@ -24,7 +22,7 @@ ReaderBench output files (.csv) should be converted to Excel format (.xlsx) befo
 library(writeAlizer)
 
 #get path of sample ReaderBench output file
-file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 
 #see path to sample ReaderBench file
 file_path1
@@ -39,16 +37,13 @@ file_path2
 rb_gam_file <- import_merge_gamet_rb(file_path1, file_path2)
 
 ##Example 2:
-#To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.xlsx)
+#To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.csv)
 #and GAMET file (sample name: gamet_output.csv) stored in the working
 #directory and then merge them
 \dontrun{
-rb_gam_file <- import_merge_gamet_rb("rb_output.xlsx", "gamet_output.csv")
+rb_gam_file <- import_merge_gamet_rb("rb_output.csv", "gamet_output.csv")
 }
 }
 \seealso{
 \code{\link{predict_quality}}
-}
-\author{
-Sterett H. Mercer <sterett.mercer@ubc.ca>
 }

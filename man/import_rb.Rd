@@ -2,8 +2,7 @@
 % Please edit documentation in R/file_utilities.R
 \name{import_rb}
 \alias{import_rb}
-\title{Import a ReaderBench output file(.xlsx) into R. ReaderBench output files (.csv)
-should be converted to Excel format (.xlsx) before import.}
+\title{Import a ReaderBench output file(.csv) into R.}
 \usage{
 import_rb(path)
 }
@@ -11,8 +10,7 @@ import_rb(path)
 \item{path}{A string giving the path and filename to import.}
 }
 \description{
-Import a ReaderBench output file(.xlsx) into R. ReaderBench output files (.csv)
-should be converted to Excel format (.xlsx) before import.
+Import a ReaderBench output file(.csv) into R.
 }
 \examples{
 #' ##Example 1:
@@ -22,7 +20,7 @@ should be converted to Excel format (.xlsx) before import.
 library(writeAlizer)
 
 #get path of sample ReaderBench output file
-file_path <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 
 #see path to sample file
 file_path
@@ -31,15 +29,12 @@ file_path
 rb_file <- import_rb(file_path)
 
 ##Example 2:
-#To import as "rb_file" a ReaderBench file (sample name: rb_output.xlsx)
+#To import as "rb_file" a ReaderBench file (sample name: rb_output.csv)
 #that is stored in the working directory
 \dontrun{
-rb_file <- import_rb("rb_output.xlsx")
+rb_file <- import_rb("rb_output.csv")
 }
 }
 \seealso{
 \code{\link{predict_quality}}
-}
-\author{
-Sterett H. Mercer <sterett.mercer@ubc.ca> and Xuejun Ji
 }

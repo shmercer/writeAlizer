@@ -38,6 +38,3 @@ gamet_file <- import_gamet('gamet_output.csv')
 \seealso{
 \code{\link{predict_quality}}
 }
-\author{
-Sterett H. Mercer <sterett.mercer@ubc.ca>
-}

@@ -20,6 +20,11 @@
 # to generate writing quality composites that include
 # GAMET spelling and grammar scores
 
+#declare global vars for the model objects used in predict_quality
+if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "rb_mod1c","rb_mod1d", "rb_mod1e", "rb_mod1f",
+                                                      "coh_mod1a","coh_mod1b","coh_mod1c","coh_mod1d","coh_mod1e","coh_mod1f",
+                                                      "CWS_mod1a", "CWS_mod1b", "CIWS_mod1a", "CIWS_mod1b"))
+
 #' @title Apply scoring models for predictions
 #' @description Apply scoring models to ReaderBench, CohMetrix, and/or
 #' GAMET files. Holistic writing quality can be
@@ -67,7 +72,7 @@
 #' library(writeAlizer)
 #'
 #' #get path of sample ReaderBench output file
-#' file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+#' file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 #'
 #' #see path to sample file
 #' file_path1

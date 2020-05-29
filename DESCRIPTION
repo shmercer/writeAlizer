@@ -1,7 +1,7 @@
 Package: writeAlizer
 Type: Package
 Title: Generate Predicted Writing Quality and Written Expression CBM Scores
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: person("Mercer", "Sterett H.", email = "sterett.mercer@ubc.ca",
   role = c("aut", "cre"))
 Description: This package (a) imports ReaderBench, Coh-Metrix, and GAMET
@@ -15,17 +15,16 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
   caretEnsemble,
-  gbm,
-  randomForest,
-  earth,
-  kernlab,
-  pls,
-  Cubist, 
-  glmnet,
-  dplyr,
+  Cubist,
   data.table,
-  openxlsx,
-  magrittr
+  dplyr,
+  earth,
+  gbm,
+  glmnet,
+  kernlab,
+  magrittr,
+  pls,
+  randomForest
 RoxygenNote: 7.1.0
 URL: https://github.com/shmercer/writeAlizer/
 BugReports: https://github.com/shmercer/writeAlizer/issues

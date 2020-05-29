@@ -52,7 +52,7 @@ Readerbench and GAMET file.
 library(writeAlizer)
 
 #get path of sample ReaderBench output file
-file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 
 #see path to sample file
 file_path1

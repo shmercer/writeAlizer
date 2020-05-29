@@ -19,7 +19,6 @@
 
 #' Import a GAMET output file into R.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
 #' @importFrom dplyr mutate_all
@@ -68,7 +67,6 @@ import_gamet <- function(path) {
 
 #' Import a Coh-Metrix output file(.csv) into R.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
 #' @importFrom dplyr mutate_all
@@ -112,13 +110,10 @@ import_coh <- function(path) {
   return(dat3)
 }
 
-#' Import a ReaderBench output file(.xlsx) into R. ReaderBench output files (.csv)
-#' should be converted to Excel format (.xlsx) before import.
+#' Import a ReaderBench output file(.csv) into R.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca> and Xuejun Ji
 #' @importFrom magrittr %>%
-#' @importFrom utils modifyList
-#' @importFrom openxlsx read.xlsx
+#' @importFrom utils modifyList read.table
 #' @importFrom dplyr na_if
 #' @export
 #' @seealso
@@ -132,7 +127,7 @@ import_coh <- function(path) {
 #' library(writeAlizer)
 #'
 #' #get path of sample ReaderBench output file
-#' file_path <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+#' file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 #'
 #' #see path to sample file
 #' file_path
@@ -141,13 +136,17 @@ import_coh <- function(path) {
 #' rb_file <- import_rb(file_path)
 #'
 #' ##Example 2:
-#' #To import as "rb_file" a ReaderBench file (sample name: rb_output.xlsx)
+#' #To import as "rb_file" a ReaderBench file (sample name: rb_output.csv)
 #' #that is stored in the working directory
 #' \dontrun{
-#' rb_file <- import_rb("rb_output.xlsx")
+#' rb_file <- import_rb("rb_output.csv")
 #' }
 import_rb <- function(path) {
-  dat_RB<-openxlsx::read.xlsx(path, colNames=TRUE, sheet=1)
+  dat_RB<-read.table(
+    text = readLines(path, warn = FALSE),
+    header = TRUE,
+    sep = ",", skip=1
+  )
   dat_RB <- dat_RB %>% na_if("NaN")
   asNumeric <- function(x) as.numeric(as.character(x))
   factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
@@ -156,26 +155,14 @@ import_rb <- function(path) {
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
   dat_RB3 <- dat_RB2[order(dat_RB2$ID),]
-
-  #function to remove parentheses from column names and replace with .
-  colClean <- function(x){
-    colnames(x) <- gsub("(", ".", colnames(x), fixed=TRUE)
-    colnames(x) <- gsub(")", ".", colnames(x), fixed=TRUE)
-  }
-
-  #run function
-  colnames(dat_RB3)<- colClean(dat_RB3)
   return(dat_RB3)
 }
 
-#' Import a ReaderBench output file(.xlsx) and GAMET output file (.csv) into R, and merge the two files.
-#' ReaderBench output files (.csv) should be converted to Excel format (.xlsx) before import.
+#' Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.
 #'
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom magrittr %>%
-#' @importFrom utils modifyList read.csv
+#' @importFrom utils modifyList read.csv read.table
 #' @importFrom tools file_path_sans_ext
-#' @importFrom openxlsx read.xlsx
 #' @importFrom dplyr na_if mutate_all
 #' @export
 #' @seealso
@@ -190,7 +177,7 @@ import_rb <- function(path) {
 #' library(writeAlizer)
 #'
 #' #get path of sample ReaderBench output file
-#' file_path1 <- system.file("extdata", "sample_rb.xlsx", package = "writeAlizer")
+#' file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 #'
 #' #see path to sample ReaderBench file
 #' file_path1
@@ -205,15 +192,19 @@ import_rb <- function(path) {
 #' rb_gam_file <- import_merge_gamet_rb(file_path1, file_path2)
 #'
 #' ##Example 2:
-#' #To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.xlsx)
+#' #To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.csv)
 #' #and GAMET file (sample name: gamet_output.csv) stored in the working
 #' #directory and then merge them
 #' \dontrun{
-#' rb_gam_file <- import_merge_gamet_rb("rb_output.xlsx", "gamet_output.csv")
+#' rb_gam_file <- import_merge_gamet_rb("rb_output.csv", "gamet_output.csv")
 #' }
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
   #import RB data
-  dat_RB<-openxlsx::read.xlsx(rb_path, colNames=TRUE, sheet=1)
+  dat_RB<-read.table(
+    text = readLines(rb_path, warn = FALSE),
+    header = TRUE,
+    sep = ",", skip=1
+  )
   dat_RB <- dat_RB %>% na_if("NaN")
   asNumeric <- function(x) as.numeric(as.character(x))
   factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
@@ -222,14 +213,6 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
   dat_RB3 <- dat_RB2[order(dat_RB2$ID),]
-
-  #function to remove parentheses from column names and replace with .
-  colClean <- function(x){
-    colnames(x) <- gsub("(", ".", colnames(x), fixed=TRUE)
-    colnames(x) <- gsub(")", ".", colnames(x), fixed=TRUE)
-  }
-  #run function
-  colnames(dat_RB3)<- colClean(dat_RB3)
 
   #import GAMET data
   datG<-read.csv(gamet_path, header = T)

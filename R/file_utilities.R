@@ -56,7 +56,7 @@ import_gamet <- function(path) {
   names(dat1)[names(dat1) == "filename"] <- "ID"
   #make any factors numeric and sort by ID
   dat2<-mutate_all(dat1, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else x
+    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
   })
   dat3 <- dat2[order(dat2$ID),]
   dat4 <- dat3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
@@ -104,7 +104,7 @@ import_coh <- function(path) {
   names(dat1)[names(dat1) == "TextID"] <- "ID"
   #make any factors numeric and sort by ID
   dat2<-mutate_all(dat1, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else x
+    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
   })
   dat3 <- dat2[order(dat2$ID),]
   return(dat3)
@@ -148,14 +148,14 @@ import_rb <- function(path) {
     sep = ",", skip=1
   )
   dat_RB <- dat_RB %>% na_if("NaN")
-  asNumeric <- function(x) as.numeric(as.character(x))
-  factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
-                                                     asNumeric))
-  dat_RB<-factorsNumeric(dat_RB)
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
-  dat_RB3 <- dat_RB2[order(dat_RB2$ID),]
-  return(dat_RB3)
+  #make any factors numeric and sort by ID
+  dat_RB3<-mutate_all(dat_RB2, function(x) {
+    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
+  })
+  dat_RB4 <- dat_RB3[order(dat_RB3$ID),]
+  return(dat_RB4)
 }
 
 #' Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.
@@ -206,13 +206,13 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
     sep = ",", skip=1
   )
   dat_RB <- dat_RB %>% na_if("NaN")
-  asNumeric <- function(x) as.numeric(as.character(x))
-  factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.factor)],
-                                                     asNumeric))
-  dat_RB<-factorsNumeric(dat_RB)
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
-  dat_RB3 <- dat_RB2[order(dat_RB2$ID),]
+  #make any factors numeric and sort by ID
+  dat_RB3<-mutate_all(dat_RB2, function(x) {
+    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
+  })
+  dat_RB4 <- dat_RB3[order(dat_RB3$ID),]
 
   #import GAMET data
   datG<-read.csv(gamet_path, header = T)
@@ -222,7 +222,7 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
   names(datG)[names(datG) == "filename"] <- "ID"
   #make any factors numeric and sort by ID
   datG2<-mutate_all(datG, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else x
+    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
   })
   datG3 <- datG2[order(datG2$ID),]
   datG4 <- datG3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
@@ -230,5 +230,5 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
   datG4$per_spell <- datG4$misspelling/datG4$word_count
 
   #merge RB and GAMET
-  merge(datG4, dat_RB3, by.x="ID", by.y="ID")
+  merge(datG4, dat_RB4, by.x="ID", by.y="ID")
 }

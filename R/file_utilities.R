@@ -142,11 +142,24 @@ import_coh <- function(path) {
 #' rb_file <- import_rb("rb_output.csv")
 #' }
 import_rb <- function(path) {
-  dat_RB<-read.table(
-    text = readLines(path, warn = FALSE),
-    header = TRUE,
-    sep = ",", skip=1
-  )
+  #check first line for "SEP=,"; if there, exclude line during import
+  con <- file(path,"r")
+  first_line <- readLines(con,n=1)
+  close(con)
+
+  if (first_line=="SEP=,"){
+    dat_RB<-read.table(
+      text = readLines(path, warn = FALSE),
+      header = TRUE,
+      sep = ",", skip=1
+    )
+  }
+  if (first_line!="SEP=,"){
+    dat_RB<-read.table(
+      text = readLines(path, warn = FALSE),
+      header = TRUE,
+      sep = ",")
+  }
   dat_RB <- dat_RB %>% na_if("NaN")
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
@@ -200,11 +213,24 @@ import_rb <- function(path) {
 #' }
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
   #import RB data
-  dat_RB<-read.table(
-    text = readLines(rb_path, warn = FALSE),
-    header = TRUE,
-    sep = ",", skip=1
-  )
+  #check first line for "SEP=,"; if there, exclude line during import
+  con <- file(rb_path,"r")
+  first_line <- readLines(con,n=1)
+  close(con)
+
+  if (first_line=="SEP=,"){
+    dat_RB<-read.table(
+      text = readLines(rb_path, warn = FALSE),
+      header = TRUE,
+      sep = ",", skip=1
+    )
+  }
+  if (first_line!="SEP=,"){
+    dat_RB<-read.table(
+      text = readLines(rb_path, warn = FALSE),
+      header = TRUE,
+      sep = ",")
+  }
   dat_RB <- dat_RB %>% na_if("NaN")
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"

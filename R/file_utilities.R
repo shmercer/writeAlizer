@@ -141,34 +141,42 @@ import_coh <- function(path) {
 #' \dontrun{
 #' rb_file <- import_rb("rb_output.csv")
 #' }
-import_rb <- function(path) {
-  #check first line for "SEP=,"; if there, exclude line during import
-  con <- file(path,"r")
-  first_line <- readLines(con,n=1)
-  close(con)
+#'
+import_rb <-function(x){
+  # handling the string in the readerbench outputs
+  dat_read<-function(x){
+    con <- file(x,"r")
+    first_line <- readLines(con,n=1)
+    close(con)
 
-  if (first_line=="SEP=,"){
-    dat_RB<-read.table(
-      text = readLines(path, warn = FALSE),
-      header = TRUE,
-      sep = ",", skip=1
-    )
+    if (first_line=="SEP=,"){
+      d<-read.table(
+        text = readLines(x, warn = FALSE),
+        header = TRUE,
+        sep = ",", skip=1
+      )
+    }
+
+    if (first_line!="SEP=,"){
+      d<-read.table(
+        text = readLines(x, warn = FALSE),
+        header = TRUE,
+        sep = ",")
+    }
+    return(d)
   }
-  if (first_line!="SEP=,"){
-    dat_RB<-read.table(
-      text = readLines(path, warn = FALSE),
-      header = TRUE,
-      sep = ",")
+  # truncating the outputs
+  dat_prep<-function(d) {
+    d %>%
+      na_if("NaN") %>%
+      dplyr::select(!contains("AvgWordsList")) %>%
+      #exclude sentiment analysis results for readerbench with any length
+      dplyr::rename(ID = File.name)  %>%
+      dplyr::mutate_if(is.factor, as.numeric) %>%
+      #make any factors numeric
+      arrange(ID)
   }
-  dat_RB <- dat_RB %>% na_if("NaN")
-  dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
-  names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
-  #make any factors numeric and sort by ID
-  dat_RB3<-mutate_all(dat_RB2, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat_RB4 <- dat_RB3[order(dat_RB3$ID),]
-  return(dat_RB4)
+  dat_prep(dat_read(x))
 }
 
 #' Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.

@@ -22,6 +22,8 @@
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
 #' @importFrom dplyr mutate_all
+#' @importFrom dplyr mutate_if
+#' @importFrom magrittr %>%
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso
@@ -48,28 +50,37 @@
 #' \dontrun{
 #' gamet_file <- import_gamet('gamet_output.csv')
 #' }
-import_gamet <- function(path) {
-  dat1<-read.csv(path, header = T)
-  #strip filename from path
-  dat1$filename<-basename(tools::file_path_sans_ext(dat1$filename))
-  #rename filename variable
-  names(dat1)[names(dat1) == "filename"] <- "ID"
-  #make any factors numeric and sort by ID
-  dat2<-mutate_all(dat1, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat3 <- dat2[order(dat2$ID),]
-  dat4 <- dat3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
-  dat4$per_gram <- dat4$grammar/dat4$word_count
-  dat4$per_spell <- dat4$misspelling/dat4$word_count
-  return(dat4)
+import_gamet<-function(x){
+  #read the dataset
+  dat_read<-function(x){
+    # read data and modify the path
+    d<-read.csv(x, header=T)
+    d.name <-basename(d$filename)
+    d.ID<- tools::file_path_sans_ext(d.name)
+    d$ID <- do.call(rbind, strsplit(d.ID,"\\\\"))[, 2]
+    return(d)
+  }
+  #data preparationn
+  dat_prep<-function(d){
+    # select the variables
+    d %>%
+      na_if("NaN") %>%
+      select("ID","error_count","word_count","grammar","misspelling") %>%
+      mutate_if(is.factor, as.numeric) %>%
+      mutate_if(is.character, as.numeric) %>%
+      mutate(per_gram=round(grammar/word_count,6)) %>%
+      mutate(per_misspell=round(misspelling/word_count,6)) %>%
+      arrange(ID)
+  }
+  dat_prep(dat_read(x))
 }
 
 #' Import a Coh-Metrix output file(.csv) into R.
-#'
+#' @importFrom magrittr %>%
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
 #' @importFrom dplyr mutate_all
+#' @importFrom dplyr mutate_if
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso
@@ -96,19 +107,28 @@ import_gamet <- function(path) {
 #' \dontrun{
 #' coh_file <- import_coh("coh_output.csv")
 #' }
-import_coh <- function(path) {
-  dat1<-read.csv(path, header = T)
-  #strip filename from path
-  dat1$TextID<-basename(tools::file_path_sans_ext(dat1$TextID))
-  #rename TextID variable
-  names(dat1)[names(dat1) == "TextID"] <- "ID"
-  #make any factors numeric and sort by ID
-  dat2<-mutate_all(dat1, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat3 <- dat2[order(dat2$ID),]
-  return(dat3)
-}
+
+import_coh<-function(x){
+    #read the dataset
+    dat_read<-function(x){
+      # read data and modify the path
+      d<-read.csv(x, header=T)
+      d.name <-basename(d$filename)
+      d.ID<- tools::file_path_sans_ext(d.name)
+      d$ID <- do.call(rbind, strsplit(d.ID,"\\\\"))[, 2]
+      return(d)
+    }
+    #data preparationn
+    dat_prep<-function(d){
+      # select the variables
+      d %>%
+        na_if("NaN") %>%
+        mutate_if(is.factor, as.numeric) %>%
+        mutate_if(is.character, as.numeric) %>%
+        arrange(ID)
+    }
+    dat_prep(dat_read(x))
+  }
 
 #' Import a ReaderBench output file(.csv) into R.
 #'
@@ -173,7 +193,8 @@ import_rb <-function(x){
       #exclude sentiment analysis results for readerbench with any length
       dplyr::rename(ID = File.name)  %>%
       dplyr::mutate_if(is.factor, as.numeric) %>%
-      #make any factors numeric
+      dplyr::mutate_if(is.character, as.numeric) %>%
+      #make any factors and chars numeric
       arrange(ID)
   }
   dat_prep(dat_read(x))
@@ -219,50 +240,10 @@ import_rb <-function(x){
 #' \dontrun{
 #' rb_gam_file <- import_merge_gamet_rb("rb_output.csv", "gamet_output.csv")
 #' }
-import_merge_gamet_rb <- function(rb_path, gamet_path) {
-  #import RB data
-  #check first line for "SEP=,"; if there, exclude line during import
-  con <- file(rb_path,"r")
-  first_line <- readLines(con,n=1)
-  close(con)
 
-  if (first_line=="SEP=,"){
-    dat_RB<-read.table(
-      text = readLines(rb_path, warn = FALSE),
-      header = TRUE,
-      sep = ",", skip=1
-    )
-  }
-  if (first_line!="SEP=,"){
-    dat_RB<-read.table(
-      text = readLines(rb_path, warn = FALSE),
-      header = TRUE,
-      sep = ",")
-  }
-  dat_RB <- dat_RB %>% na_if("NaN")
-  dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
-  names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
-  #make any factors numeric and sort by ID
-  dat_RB3<-mutate_all(dat_RB2, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat_RB4 <- dat_RB3[order(dat_RB3$ID),]
-
-  #import GAMET data
-  datG<-read.csv(gamet_path, header = T)
-  #strip filename from path
-  datG$filename<-basename(tools::file_path_sans_ext(datG$filename))
-  #rename TextID variable
-  names(datG)[names(datG) == "filename"] <- "ID"
-  #make any factors numeric and sort by ID
-  datG2<-mutate_all(datG, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  datG3 <- datG2[order(datG2$ID),]
-  datG4 <- datG3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
-  datG4$per_gram <- datG4$grammar/datG4$word_count
-  datG4$per_spell <- datG4$misspelling/datG4$word_count
-
-  #merge RB and GAMET
-  merge(datG4, dat_RB4, by.x="ID", by.y="ID")
+import_merge_gamet_rb <- function(x, y) {
+  f.rb<- import_rb(x)
+  f.gmt<-import_gamet(y)
+  merge<-merge(f.rb, f.gmt, by.x="ID", by.y="ID")
+  return(merge)
 }

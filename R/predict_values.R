@@ -424,10 +424,13 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     ciws.pred.1 <- predict(CIWS_mod1a, data)
     ciws.pred.2 <- predict(CIWS_mod1b, data)
 
+    predicted_tww <- data$word_count
+    predicted_wsc <- data$word_count - data$misspelling
+
     predicted_cws <- (cws.pred.1 + cws.pred.2)/2
     predicted_ciws <- (ciws.pred.1 + ciws.pred.2)/2
 
-    return(data.frame(cbind(ID=data$ID,predicted_cws,predicted_ciws)))
+    return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
   } else if (model == 'rb_gamet_cws1' & store == TRUE) {
     #check if each model object exists, if so, load it; if not, download and load it
     path_cws1a <- system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer")
@@ -469,12 +472,15 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     ciws.pred.1 <- predict(CIWS_mod1a, data)
     ciws.pred.2 <- predict(CIWS_mod1b, data)
 
+    predicted_tww <- data$word_count
+    predicted_wsc <- data$word_count - data$misspelling
+
     predicted_cws <- (cws.pred.1 + cws.pred.2)/2
     predicted_ciws <- (ciws.pred.1 + ciws.pred.2)/2
 
-    data.2 <- cbind(predicted_cws,predicted_ciws,data)
+    data.2 <- cbind(predicted_tww, predicted_wsc,predicted_cws,predicted_ciws,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
-    return(data.frame(cbind(ID=data$ID,predicted_cws,predicted_ciws)))
+    return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
   }
 }

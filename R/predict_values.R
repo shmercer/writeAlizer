@@ -34,7 +34,7 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' Word Sequences can be generated from a combined
 #' Readerbench and GAMET file.
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
-#' @importFrom utils write.table
+#' @importFrom utils write.table download.file
 #' @import caretEnsemble
 #' @param model A string telling which scoring model to use.
 #' Options are:

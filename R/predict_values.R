@@ -126,13 +126,64 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' #display quality scores
 #' rb_gamet_CWS_CIWS
 predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
+  #download function
+  download <- function(mod, url){
+    path <- system.file("extdata", package = "writeAlizer")
+    file <- paste(path, mod, sep = "/")
+    download.file(url= url,
+                  destfile=file, mode = "wb")
+  }
+
   if (model=='rb_mod1' & store == FALSE){
-    load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_1a <- system.file("extdata", "rb_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_1a) == TRUE){
+      load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1a.rda",
+               "https://www.dropbox.com/s/qse8olc328ax54w/rb_mod1a.rda?dl=1")
+      load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
+    }
+    path_1b <- system.file("extdata", "rb_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_1b) == TRUE){
+      load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1b.rda",
+               "https://www.dropbox.com/s/8w9yvnbx30zqzh2/rb_mod1b.rda?dl=1")
+      load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
+    }
+    path_1c <- system.file("extdata", "rb_mod1c.rda", package = "writeAlizer")
+    if (file.exists(path_1c) == TRUE){
+      load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1c.rda",
+               "https://www.dropbox.com/s/35img463zipn3ch/rb_mod1c.rda?dl=1")
+      load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
+    }
+    path_1d <- system.file("extdata", "rb_mod1d.rda", package = "writeAlizer")
+    if (file.exists(path_1d) == TRUE){
+      load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1d.rda",
+               "https://www.dropbox.com/s/70no3hgu1rbad0t/rb_mod1d.rda?dl=1")
+      load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
+    }
+    path_1e <- system.file("extdata", "rb_mod1e.rda", package = "writeAlizer")
+    if (file.exists(path_1e) == TRUE){
+      load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1e.rda",
+               "https://www.dropbox.com/s/1iy2t8ldok7x7jt/rb_mod1e.rda?dl=1")
+      load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
+    }
+    path_1f <- system.file("extdata", "rb_mod1f.rda", package = "writeAlizer")
+    if (file.exists(path_1f) == TRUE){
+      load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1f.rda",
+               "https://www.dropbox.com/s/w50pv4ozd1feo8j/rb_mod1f.rda?dl=1")
+      load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
+    }
 
     pred.1 <- predict(rb_mod1a,data)
     pred.2 <- predict(rb_mod1b,data)
@@ -145,12 +196,55 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
     return(id_quality)
   } else if (model=='rb_mod1' & store == TRUE){
-    load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
-    load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_1a <- system.file("extdata", "rb_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_1a) == TRUE){
+      load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1a.rda",
+               "https://www.dropbox.com/s/qse8olc328ax54w/rb_mod1a.rda?dl=1")
+      load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
+    }
+    path_1b <- system.file("extdata", "rb_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_1b) == TRUE){
+      load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1b.rda",
+               "https://www.dropbox.com/s/8w9yvnbx30zqzh2/rb_mod1b.rda?dl=1")
+      load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
+    }
+    path_1c <- system.file("extdata", "rb_mod1c.rda", package = "writeAlizer")
+    if (file.exists(path_1c) == TRUE){
+      load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1c.rda",
+               "https://www.dropbox.com/s/35img463zipn3ch/rb_mod1c.rda?dl=1")
+      load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
+    }
+    path_1d <- system.file("extdata", "rb_mod1d.rda", package = "writeAlizer")
+    if (file.exists(path_1d) == TRUE){
+      load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1d.rda",
+               "https://www.dropbox.com/s/70no3hgu1rbad0t/rb_mod1d.rda?dl=1")
+      load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
+    }
+    path_1e <- system.file("extdata", "rb_mod1e.rda", package = "writeAlizer")
+    if (file.exists(path_1e) == TRUE){
+      load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1e.rda",
+               "https://www.dropbox.com/s/1iy2t8ldok7x7jt/rb_mod1e.rda?dl=1")
+      load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
+    }
+    path_1f <- system.file("extdata", "rb_mod1f.rda", package = "writeAlizer")
+    if (file.exists(path_1f) == TRUE){
+      load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod1f.rda",
+               "https://www.dropbox.com/s/w50pv4ozd1feo8j/rb_mod1f.rda?dl=1")
+      load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
+    }
 
     pred.1 <- predict(rb_mod1a,data)
     pred.2 <- predict(rb_mod1b,data)
@@ -166,12 +260,55 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
     return(id_quality)
   } else if (model == 'coh_mod1' & store == FALSE){
-    load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_1a <- system.file("extdata", "coh_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_1a) == TRUE){
+      load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1a.rda",
+               "https://www.dropbox.com/s/4666echdjxj3bie/coh_mod1a.rda?dl=1")
+      load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
+    }
+    path_1b <- system.file("extdata", "coh_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_1b) == TRUE){
+      load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1b.rda",
+               "https://www.dropbox.com/s/3qdy9mgqk0tg59n/coh_mod1b.rda?dl=1")
+      load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
+    }
+    path_1c <- system.file("extdata", "coh_mod1c.rda", package = "writeAlizer")
+    if (file.exists(path_1c) == TRUE){
+      load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1c.rda",
+               "https://www.dropbox.com/s/7yh9yuldzo7fth4/coh_mod1c.rda?dl=1")
+      load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
+    }
+    path_1d <- system.file("extdata", "coh_mod1d.rda", package = "writeAlizer")
+    if (file.exists(path_1d) == TRUE){
+      load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1d.rda",
+               "https://www.dropbox.com/s/owe4u5yu1tbaumk/coh_mod1d.rda?dl=1")
+      load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
+    }
+    path_1e <- system.file("extdata", "coh_mod1e.rda", package = "writeAlizer")
+    if (file.exists(path_1e) == TRUE){
+      load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1e.rda",
+               "https://www.dropbox.com/s/ifmrz1j6i9phjry/coh_mod1e.rda?dl=1")
+      load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
+    }
+    path_1f <- system.file("extdata", "coh_mod1f.rda", package = "writeAlizer")
+    if (file.exists(path_1f) == TRUE){
+      load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1f.rda",
+               "https://www.dropbox.com/s/qftbg2mbig0urvr/coh_mod1f.rda?dl=1")
+      load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
+    }
 
     pred.1 <- predict(coh_mod1a,data)
     pred.2 <- predict(coh_mod1b,data)
@@ -184,13 +321,55 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
     return(id_quality)
   } else if (model=='coh_mod1' & store == TRUE){
-    load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
-    load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
-
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_1a <- system.file("extdata", "coh_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_1a) == TRUE){
+      load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1a.rda",
+               "https://www.dropbox.com/s/4666echdjxj3bie/coh_mod1a.rda?dl=1")
+      load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
+    }
+    path_1b <- system.file("extdata", "coh_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_1b) == TRUE){
+      load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1b.rda",
+               "https://www.dropbox.com/s/3qdy9mgqk0tg59n/coh_mod1b.rda?dl=1")
+      load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
+    }
+    path_1c <- system.file("extdata", "coh_mod1c.rda", package = "writeAlizer")
+    if (file.exists(path_1c) == TRUE){
+      load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1c.rda",
+               "https://www.dropbox.com/s/7yh9yuldzo7fth4/coh_mod1c.rda?dl=1")
+      load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
+    }
+    path_1d <- system.file("extdata", "coh_mod1d.rda", package = "writeAlizer")
+    if (file.exists(path_1d) == TRUE){
+      load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1d.rda",
+               "https://www.dropbox.com/s/owe4u5yu1tbaumk/coh_mod1d.rda?dl=1")
+      load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
+    }
+    path_1e <- system.file("extdata", "coh_mod1e.rda", package = "writeAlizer")
+    if (file.exists(path_1e) == TRUE){
+      load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1e.rda",
+               "https://www.dropbox.com/s/ifmrz1j6i9phjry/coh_mod1e.rda?dl=1")
+      load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
+    }
+    path_1f <- system.file("extdata", "coh_mod1f.rda", package = "writeAlizer")
+    if (file.exists(path_1f) == TRUE){
+      load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod1f.rda",
+               "https://www.dropbox.com/s/qftbg2mbig0urvr/coh_mod1f.rda?dl=1")
+      load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
+    }
     pred.1 <- predict(coh_mod1a,data)
     pred.2 <- predict(coh_mod1b,data)
     pred.3 <- predict(coh_mod1c,data)
@@ -205,10 +384,39 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
     return(id_quality)
   } else if (model == 'rb_gamet_cws1' & store == FALSE) {
-    load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
-    load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_cws1a <- system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_cws1a) == TRUE){
+      load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("CWS_mod1a.rda",
+               "https://www.dropbox.com/s/gmqrc9keio5wnku/CWS_mod1a.rda?dl=1")
+      load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
+    }
+    path_cws1b <- system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_cws1b) == TRUE){
+      load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("CWS_mod1b.rda",
+               "https://www.dropbox.com/s/dzfeaa6g7lh8owm/CWS_mod1b.rda?dl=1")
+      load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
+    }
+    path_ciws1a <- system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_ciws1a) == TRUE){
+      load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("CIWS_mod1a.rda",
+               "https://www.dropbox.com/s/b9k8jxh6pyqfs4o/CIWS_mod1a.rda?dl=1")
+      load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
+    }
+    path_ciws1b <- system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_ciws1b) == TRUE){
+      load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("CIWS_mod1b.rda",
+               "https://www.dropbox.com/s/kwb19wgpjyfw89w/CIWS_mod1b.rda?dl=1")
+      load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
+    }
 
     cws.pred.1 <- predict(CWS_mod1a, data)
     cws.pred.2 <- predict(CWS_mod1b, data)
@@ -221,10 +429,39 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     return(data.frame(cbind(ID=data$ID,predicted_cws,predicted_ciws)))
   } else if (model == 'rb_gamet_cws1' & store == TRUE) {
-    load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
-    load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
-    load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_cws1a <- system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_cws1a) == TRUE){
+      load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("CWS_mod1a.rda",
+               "https://www.dropbox.com/s/gmqrc9keio5wnku/CWS_mod1a.rda?dl=1")
+      load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
+    }
+    path_cws1b <- system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_cws1b) == TRUE){
+      load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("CWS_mod1b.rda",
+               "https://www.dropbox.com/s/dzfeaa6g7lh8owm/CWS_mod1b.rda?dl=1")
+      load(system.file("extdata", "CWS_mod1b.rda", package = "writeAlizer"))
+    }
+    path_ciws1a <- system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer")
+    if (file.exists(path_ciws1a) == TRUE){
+      load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
+    } else {
+      download("CIWS_mod1a.rda",
+               "https://www.dropbox.com/s/b9k8jxh6pyqfs4o/CIWS_mod1a.rda?dl=1")
+      load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
+    }
+    path_ciws1b <- system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer")
+    if (file.exists(path_ciws1b) == TRUE){
+      load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
+    } else {
+      download("CIWS_mod1b.rda",
+               "https://www.dropbox.com/s/kwb19wgpjyfw89w/CIWS_mod1b.rda?dl=1")
+      load(system.file("extdata", "CIWS_mod1b.rda", package = "writeAlizer"))
+    }
 
     cws.pred.1 <- predict(CWS_mod1a, data)
     cws.pred.2 <- predict(CWS_mod1b, data)

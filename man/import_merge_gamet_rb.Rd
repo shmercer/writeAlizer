@@ -4,7 +4,7 @@
 \alias{import_merge_gamet_rb}
 \title{Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.}
 \usage{
-import_merge_gamet_rb(rb_path, gamet_path)
+import_merge_gamet_rb(x, y)
 }
 \arguments{
 \item{rb_path}{A string giving the path and ReaderBench filename to import.}

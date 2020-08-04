@@ -21,8 +21,7 @@
 #'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
-#' @importFrom dplyr mutate_all
-#' @importFrom dplyr mutate_if
+#' @importFrom dplyr mutate_all mutate_if arrange select mutate
 #' @importFrom magrittr %>%
 #' @param path A string giving the path and filename to import.
 #' @export
@@ -55,9 +54,11 @@ import_gamet<-function(x){
   dat_read<-function(x){
     # read data and modify the path
     d<-read.csv(x, header=T)
+    d[, "filename"] <- sapply(d[, "filename"], as.character)
     d.name <-basename(d$filename)
     d.ID<- tools::file_path_sans_ext(d.name)
-    d$ID <- do.call(rbind, strsplit(d.ID,"\\\\"))[, 2]
+    d$ID <- do.call(rbind, strsplit(d.ID,"\\\\"))[, 1]
+    d <- subset(d, select = -c(filename))
     return(d)
   }
   #data preparationn
@@ -69,7 +70,7 @@ import_gamet<-function(x){
       mutate_if(is.factor, as.numeric) %>%
       mutate_if(is.character, as.numeric) %>%
       mutate(per_gram=round(grammar/word_count,6)) %>%
-      mutate(per_misspell=round(misspelling/word_count,6)) %>%
+      mutate(per_spell=round(misspelling/word_count,6)) %>%
       arrange(ID)
   }
   dat_prep(dat_read(x))
@@ -79,8 +80,7 @@ import_gamet<-function(x){
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
-#' @importFrom dplyr mutate_all
-#' @importFrom dplyr mutate_if
+#' @importFrom dplyr mutate_all mutate_if arrange
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso
@@ -107,15 +107,16 @@ import_gamet<-function(x){
 #' \dontrun{
 #' coh_file <- import_coh("coh_output.csv")
 #' }
-
 import_coh<-function(x){
     #read the dataset
     dat_read<-function(x){
       # read data and modify the path
       d<-read.csv(x, header=T)
-      d.name <-basename(d$filename)
+      d[, "TextID"] <- sapply(d[, "TextID"], as.character)
+      d.name <-basename(d$TextID)
       d.ID<- tools::file_path_sans_ext(d.name)
-      d$ID <- do.call(rbind, strsplit(d.ID,"\\\\"))[, 2]
+      d$ID <- do.call(rbind, strsplit(d.ID,"\\\\"))[, 1]
+      d <- subset(d, select = -c(TextID))
       return(d)
     }
     #data preparationn
@@ -195,7 +196,7 @@ import_rb <-function(x){
       dplyr::mutate_if(is.factor, as.numeric) %>%
       dplyr::mutate_if(is.character, as.numeric) %>%
       #make any factors and chars numeric
-      arrange(ID)
+      dplyr::arrange(ID)
   }
   dat_prep(dat_read(x))
 }
@@ -240,7 +241,6 @@ import_rb <-function(x){
 #' \dontrun{
 #' rb_gam_file <- import_merge_gamet_rb("rb_output.csv", "gamet_output.csv")
 #' }
-
 import_merge_gamet_rb <- function(x, y) {
   f.rb<- import_rb(x)
   f.gmt<-import_gamet(y)

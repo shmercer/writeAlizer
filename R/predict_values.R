@@ -497,7 +497,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod2a.rda",
-               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=1")
+               "https://www.dropbox.com/s/jaemizeh5sd945v/CIWS_mod2a.rda?dl=1")
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     }
 
@@ -523,7 +523,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod2a.rda",
-               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=1")
+               "https://www.dropbox.com/s/jaemizeh5sd945v/CIWS_mod2a.rda?dl=1")
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     }
 

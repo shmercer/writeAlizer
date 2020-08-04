@@ -482,5 +482,60 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
     return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
+  } else if (model == 'rb_gamet_cws2' & store == FALSE) {
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_cws1a <- system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer")
+    if (file.exists(path_cws2a) == TRUE){
+      load(system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer"))
+    } else {
+      download("CWS_mod2a.rda",
+               "https://www.dropbox.com/s/agzvnd7czl0h9vl/CWS_mod2a.rda?dl=1")
+      load(system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer"))
+    }
+    path_ciws2a <- system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer")
+    if (file.exists(path_ciws2a) == TRUE){
+      load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
+    } else {
+      download("CIWS_mod2a.rda",
+               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=0")
+      load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
+    }
+
+    predicted_tww <- data$word_count
+    predicted_wsc <- data$word_count - data$misspelling
+
+    predicted_cws <- predict(CWS_mod2a, data)
+    predicted_ciws <- predict(CIWS_mod2a, data)
+
+    return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
+  } else if (model == 'rb_gamet_cws2' & store == TRUE) {
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_cws1a <- system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer")
+    if (file.exists(path_cws2a) == TRUE){
+      load(system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer"))
+    } else {
+      download("CWS_mod2a.rda",
+               "https://www.dropbox.com/s/agzvnd7czl0h9vl/CWS_mod2a.rda?dl=1")
+      load(system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer"))
+    }
+    path_ciws2a <- system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer")
+    if (file.exists(path_ciws2a) == TRUE){
+      load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
+    } else {
+      download("CIWS_mod2a.rda",
+               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=0")
+      load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
+    }
+
+    predicted_tww <- data$word_count
+    predicted_wsc <- data$word_count - data$misspelling
+
+    predicted_cws <- predict(CWS_mod2a, data)
+    predicted_ciws <- predict(CIWS_mod2a, data)
+
+    data.2 <- cbind(predicted_tww, predicted_wsc,predicted_cws,predicted_ciws,data)
+    write.table(data.2, file = name, sep = ",", row.names = FALSE)
+
+    return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
   }
 }

@@ -484,7 +484,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
   } else if (model == 'rb_gamet_cws2' & store == FALSE) {
     #check if each model object exists, if so, load it; if not, download and load it
-    path_cws1a <- system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer")
+    path_cws2a <- system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer")
     if (file.exists(path_cws2a) == TRUE){
       load(system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer"))
     } else {
@@ -497,7 +497,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod2a.rda",
-               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=0")
+               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=1")
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     }
 
@@ -510,7 +510,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     return(data.frame(cbind(ID=data$ID,predicted_tww, predicted_wsc, predicted_cws,predicted_ciws)))
   } else if (model == 'rb_gamet_cws2' & store == TRUE) {
     #check if each model object exists, if so, load it; if not, download and load it
-    path_cws1a <- system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer")
+    path_cws2a <- system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer")
     if (file.exists(path_cws2a) == TRUE){
       load(system.file("extdata", "CWS_mod2a.rda", package = "writeAlizer"))
     } else {
@@ -523,7 +523,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod2a.rda",
-               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=0")
+               "https://www.dropbox.com/s/eznr4ifwih85ous/CIWS_mod2a.rda?dl=1")
       load(system.file("extdata", "CIWS_mod2a.rda", package = "writeAlizer"))
     }
 

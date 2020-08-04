@@ -5,7 +5,7 @@ This repository hosts code for an [R package](https://cran.r-project.org/) to ap
 The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/ReaderBench/ReaderBench), [Coh-Metrix](http://cohmetrix.com/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
 
 ### Versions
-* 1.0.5 (Aug03-2020): Revised ReaderBench file import to allow for input with any length 
+* 1.1.0 (Aug-03-2020): Model objects now download during first predict call
 * 1.0.4 (July-29-2020): Fixed ReaderBench file import
 * 1.0.3 (May-29-2020): Accepts ReaderBench output files as .csv
 * 1.0.2 (May-27-2020): predict_quality() also returns an ID variable

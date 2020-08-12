@@ -47,6 +47,8 @@ Information on the various scoring models available and how they were developed 
 
 * **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/person/sterett-mercer/) - [ResearchGate](https://www.researchgate.net/profile/Sterett_Mercer) - [Google Scholar](https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en)
 
+Also see the list of [contributors](https://github.com/shmercer/writeAlizer/contributors) for this project.
+
 ## References
 
 ### Journal Articles

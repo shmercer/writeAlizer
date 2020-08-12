@@ -136,6 +136,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_1a) == TRUE){
       load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
     } else {
+      print("Because this is the first time 'rb_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod1' for predictions.")
       download("rb_mod1a.rda",
                "https://www.dropbox.com/s/qse8olc328ax54w/rb_mod1a.rda?dl=1")
       load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
@@ -197,6 +198,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_1a) == TRUE){
       load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
     } else {
+      print("Because this is the first time 'rb_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod1' for predictions.")
       download("rb_mod1a.rda",
                "https://www.dropbox.com/s/qse8olc328ax54w/rb_mod1a.rda?dl=1")
       load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
@@ -261,6 +263,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_1a) == TRUE){
       load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
     } else {
+      print("Because this is the first time 'coh_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod1' for predictions.")
       download("coh_mod1a.rda",
                "https://www.dropbox.com/s/4666echdjxj3bie/coh_mod1a.rda?dl=1")
       load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
@@ -322,6 +325,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_1a) == TRUE){
       load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
     } else {
+      print("Because this is the first time 'coh_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod1' for predictions.")
       download("coh_mod1a.rda",
                "https://www.dropbox.com/s/4666echdjxj3bie/coh_mod1a.rda?dl=1")
       load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
@@ -385,6 +389,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_cws1a) == TRUE){
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     } else {
+      print("Because this is the first time 'gamet_cws1' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'gamet_cws1' for predictions.")
       download("CWS_mod1a.rda",
                "https://www.dropbox.com/s/8nl11r7zrevp5x8/CWS_mod1a.rda?dl=1")
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
@@ -411,6 +416,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_cws1a) == TRUE){
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     } else {
+      print("Because this is the first time 'gamet_cws1' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'gamet_cws1' for predictions.")
       download("CWS_mod1a.rda",
                "https://www.dropbox.com/s/8nl11r7zrevp5x8/CWS_mod1a.rda?dl=1")
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))

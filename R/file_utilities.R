@@ -59,7 +59,8 @@ import_gamet <- function(path) {
     if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
   })
   dat3 <- dat2[order(dat2$ID),]
-  dat4 <- dat3[,c("ID", "error_count", "word_count", "grammar", "misspelling")]
+  dat4 <- dat3[,c("ID", "error_count", "word_count", "grammar", "misspelling", "duplication",
+                  "typographical", "whitespace")]
   dat4$per_gram <- dat4$grammar/dat4$word_count
   dat4$per_spell <- dat4$misspelling/dat4$word_count
   return(dat4)

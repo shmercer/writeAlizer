@@ -4,7 +4,7 @@
 \alias{import_coh}
 \title{Import a Coh-Metrix output file(.csv) into R.}
 \usage{
-import_coh(x)
+import_coh(path)
 }
 \arguments{
 \item{path}{A string giving the path and filename to import.}

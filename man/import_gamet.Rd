@@ -4,7 +4,7 @@
 \alias{import_gamet}
 \title{Import a GAMET output file into R.}
 \usage{
-import_gamet(x)
+import_gamet(path)
 }
 \arguments{
 \item{path}{A string giving the path and filename to import.}

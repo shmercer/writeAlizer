@@ -4,7 +4,7 @@
 \alias{import_rb}
 \title{Import a ReaderBench output file(.csv) into R.}
 \usage{
-import_rb(x)
+import_rb(path)
 }
 \arguments{
 \item{path}{A string giving the path and filename to import.}
@@ -34,7 +34,6 @@ rb_file <- import_rb(file_path)
 \dontrun{
 rb_file <- import_rb("rb_output.csv")
 }
-
 }
 \seealso{
 \code{\link{predict_quality}}

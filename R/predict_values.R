@@ -33,7 +33,7 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' Readerbench and GAMET file.
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils write.table download.file
-#' @import caretEnsemble
+#' @importFrom stats predict
 #' @param model A string telling which scoring model to use.
 #' Options are:
 #' 'rb_mod1' for ReaderBench files to generate holistic quality,
@@ -425,7 +425,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     predicted_wsc <- data$word_count - data$misspelling
 
     predicted_cws <- predict(CWS_mod1a, data)
-    predicted_ciws <- predict(CIWS_mod1a, data)
+    predicted_ciws <- predict.caretEnsemble(CIWS_mod1a, data)
 
     data.2 <- cbind(predicted_tww, predicted_wsc,predicted_cws,predicted_ciws,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)

@@ -11,13 +11,12 @@ predict_quality(model, data, store = FALSE, name = "filename.csv")
 Options are:
 'rb_mod1' for ReaderBench files to generate holistic quality,
 'coh_mod1' for Coh-Metrix files to generate holistic quality,
-and 'rb_gamet_cws1' for a merged ReaderBench and GAMET file
-to generate Correct Word Sequences (CWS) and Correct Minus Incorrect
-Word Sequences (CIWS) scores}
+and 'gamet_cws1' to generate Correct Word Sequences (CWS)
+and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 
 \item{data}{The name of the R object corresponding to the data file. The
-\code{\link{import_gamet}}import_gamet(), \code{\link{import_coh}}import_coh(),
-\code{\link{import_rb}}import_rb(), and \code{\link{import_merge_gamet_rb}}import_merge_gamet_rb()
+\code{\link{import_gamet}}import_gamet(), \code{\link{import_coh}}import_coh(), or
+\code{\link{import_rb}}import_rb()
 functions should be used before this function
 to generate these data objects.}
 
@@ -86,10 +85,7 @@ coh_quality <- predict_quality('coh_mod1', coh_file, store = TRUE, name = "outpu
 #display quality scores
 coh_quality
 
-##Example 3: Merged ReaderBench and GAMET files
-#see path to sample ReaderBench file
-file_path1
-
+##Example 3: GAMET output file
 #get path of sample GAMET output file
 file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
 
@@ -97,20 +93,19 @@ file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer"
 file_path3
 
 #import files, merge, and store as "rb_gam_file"
-rb_gam_file <- import_merge_gamet_rb(file_path1, file_path3)
+gam_file <- import_gamet(file_path3)
 
-#Generate CWS and CIWS scores from a merged ReaderBench and GAMET file
-#(rb_gam_file) and return scores to an object called "rb_gamet_CWS_CIWS"
-rb_gamet_CWS_CIWS <- predict_quality('rb_gamet_cws1', rb_gam_file, store = FALSE)
+#Generate CWS and CIWS scores from a GAMET file
+#(gam_file) and return scores to an object called "gamet_CWS_CIWS"
+gamet_CWS_CIWS <- predict_quality('gamet_cws1', gam_file, store = FALSE)
 
 #display quality scores
-rb_gamet_CWS_CIWS
+gamet_CWS_CIWS
 }
 \seealso{
 \code{\link{import_rb}}
 \code{\link{import_coh}}
 \code{\link{import_gamet}}
-\code{\link{import_merge_gamet_rb}}
 }
 \author{
 Sterett H. Mercer <sterett.mercer@ubc.ca>

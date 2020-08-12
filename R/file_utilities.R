@@ -217,5 +217,6 @@ import_merge_gamet_rb <- function(rb_path, gamet_path) {
   #import GAMET
   dat.G <- import_gamet(gamet_path)
   #merge RB and GAMET
-  merge(dat.G, dat.RB, by.x="ID", by.y="ID")
+  dat.merge<-merge(dat.G, dat.RB, by.x="ID", by.y="ID")
+  return(merge)
 }

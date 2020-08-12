@@ -119,6 +119,9 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' #display quality scores
 #' gamet_CWS_CIWS
 predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
+  #to get predict s3 method from caretEnsemble
+  requireNamespace("caretEnsemble", quietly = TRUE)
+
   #download function
   download <- function(mod, url){
     path <- system.file("extdata", package = "writeAlizer")
@@ -425,7 +428,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     predicted_wsc <- data$word_count - data$misspelling
 
     predicted_cws <- predict(CWS_mod1a, data)
-    predicted_ciws <- predict.caretEnsemble(CIWS_mod1a, data)
+    predicted_ciws <- predict(CIWS_mod1a, data)
 
     data.2 <- cbind(predicted_tww, predicted_wsc,predicted_cws,predicted_ciws,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)

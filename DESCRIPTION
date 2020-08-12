@@ -13,7 +13,7 @@ Description: This package (a) imports ReaderBench, Coh-Metrix, and GAMET
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
   caretEnsemble,
   Cubist,
   data.table,
@@ -30,5 +30,5 @@ RoxygenNote: 7.1.0
 URL: https://github.com/shmercer/writeAlizer/
 BugReports: https://github.com/shmercer/writeAlizer/issues
 Depends: 
-    R (>= 2.10),
-    caretEnsemble
+    R (>= 2.10)
+    

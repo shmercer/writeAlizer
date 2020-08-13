@@ -391,7 +391,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'gamet_cws1' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'gamet_cws1' for predictions.")
       download("CWS_mod1a.rda",
-               "https://www.dropbox.com/s/cxkboev1ri039iw/CWS_mod1a.rda?dl=1")
+               "https://www.dropbox.com/s/e9zhp6gc7v680zx/CWS_mod1a.rda?dl=1")
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     }
     path_ciws1a <- system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer")
@@ -399,7 +399,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod1a.rda",
-               "https://www.dropbox.com/s/ofr9oooal2h22sl/CIWS_mod1a.rda?dl=1")
+               "https://www.dropbox.com/s/frgf04jz77srod2/CIWS_mod1a.rda?dl=0")
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     }
 
@@ -418,7 +418,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'gamet_cws1' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'gamet_cws1' for predictions.")
       download("CWS_mod1a.rda",
-               "https://www.dropbox.com/s/cxkboev1ri039iw/CWS_mod1a.rda?dl=1")
+               "https://www.dropbox.com/s/e9zhp6gc7v680zx/CWS_mod1a.rda?dl=1")
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     }
     path_ciws1a <- system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer")
@@ -426,7 +426,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod1a.rda",
-               "https://www.dropbox.com/s/ofr9oooal2h22sl/CIWS_mod1a.rda?dl=1")
+               "https://www.dropbox.com/s/frgf04jz77srod2/CIWS_mod1a.rda?dl=0")
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     }
 

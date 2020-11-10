@@ -138,7 +138,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'rb_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod1' for predictions.")
       download("rb_mod1a.rda",
-               "https://www.dropbox.com/s/qse8olc328ax54w/rb_mod1a.rda?dl=1")
+               "https://osf.io/eq9rw/download")
       load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
     }
     path_1b <- system.file("extdata", "rb_mod1b.rda", package = "writeAlizer")
@@ -146,7 +146,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1b.rda",
-               "https://www.dropbox.com/s/8w9yvnbx30zqzh2/rb_mod1b.rda?dl=1")
+               "https://osf.io/sy4dw/download")
       load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
     }
     path_1c <- system.file("extdata", "rb_mod1c.rda", package = "writeAlizer")
@@ -154,7 +154,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1c.rda",
-               "https://www.dropbox.com/s/35img463zipn3ch/rb_mod1c.rda?dl=1")
+               "https://osf.io/64dxf/download")
       load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
     }
     path_1d <- system.file("extdata", "rb_mod1d.rda", package = "writeAlizer")
@@ -162,7 +162,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1d.rda",
-               "https://www.dropbox.com/s/70no3hgu1rbad0t/rb_mod1d.rda?dl=1")
+               "https://osf.io/5yghv/download")
       load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
     }
     path_1e <- system.file("extdata", "rb_mod1e.rda", package = "writeAlizer")
@@ -170,7 +170,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1e.rda",
-               "https://www.dropbox.com/s/1iy2t8ldok7x7jt/rb_mod1e.rda?dl=1")
+               "https://osf.io/kgxtu/download")
       load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
     }
     path_1f <- system.file("extdata", "rb_mod1f.rda", package = "writeAlizer")
@@ -178,7 +178,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1f.rda",
-               "https://www.dropbox.com/s/w50pv4ozd1feo8j/rb_mod1f.rda?dl=1")
+               "https://osf.io/5wdet/download")
       load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
     }
 
@@ -200,7 +200,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'rb_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod1' for predictions.")
       download("rb_mod1a.rda",
-               "https://www.dropbox.com/s/qse8olc328ax54w/rb_mod1a.rda?dl=1")
+               "https://osf.io/eq9rw/download")
       load(system.file("extdata", "rb_mod1a.rda", package = "writeAlizer"))
     }
     path_1b <- system.file("extdata", "rb_mod1b.rda", package = "writeAlizer")
@@ -208,7 +208,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1b.rda",
-               "https://www.dropbox.com/s/8w9yvnbx30zqzh2/rb_mod1b.rda?dl=1")
+               "https://osf.io/sy4dw/download")
       load(system.file("extdata", "rb_mod1b.rda", package = "writeAlizer"))
     }
     path_1c <- system.file("extdata", "rb_mod1c.rda", package = "writeAlizer")
@@ -216,7 +216,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1c.rda",
-               "https://www.dropbox.com/s/35img463zipn3ch/rb_mod1c.rda?dl=1")
+               "https://osf.io/64dxf/download")
       load(system.file("extdata", "rb_mod1c.rda", package = "writeAlizer"))
     }
     path_1d <- system.file("extdata", "rb_mod1d.rda", package = "writeAlizer")
@@ -224,7 +224,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1d.rda",
-               "https://www.dropbox.com/s/70no3hgu1rbad0t/rb_mod1d.rda?dl=1")
+               "https://osf.io/5yghv/download")
       load(system.file("extdata", "rb_mod1d.rda", package = "writeAlizer"))
     }
     path_1e <- system.file("extdata", "rb_mod1e.rda", package = "writeAlizer")
@@ -232,7 +232,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1e.rda",
-               "https://www.dropbox.com/s/1iy2t8ldok7x7jt/rb_mod1e.rda?dl=1")
+               "https://osf.io/kgxtu/download")
       load(system.file("extdata", "rb_mod1e.rda", package = "writeAlizer"))
     }
     path_1f <- system.file("extdata", "rb_mod1f.rda", package = "writeAlizer")
@@ -240,7 +240,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
     } else {
       download("rb_mod1f.rda",
-               "https://www.dropbox.com/s/w50pv4ozd1feo8j/rb_mod1f.rda?dl=1")
+               "https://osf.io/5wdet/download")
       load(system.file("extdata", "rb_mod1f.rda", package = "writeAlizer"))
     }
 
@@ -265,7 +265,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'coh_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod1' for predictions.")
       download("coh_mod1a.rda",
-               "https://www.dropbox.com/s/4666echdjxj3bie/coh_mod1a.rda?dl=1")
+               "https://osf.io/qws5x/download")
       load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
     }
     path_1b <- system.file("extdata", "coh_mod1b.rda", package = "writeAlizer")
@@ -273,7 +273,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1b.rda",
-               "https://www.dropbox.com/s/3qdy9mgqk0tg59n/coh_mod1b.rda?dl=1")
+               "https://osf.io/rdmfw/download")
       load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
     }
     path_1c <- system.file("extdata", "coh_mod1c.rda", package = "writeAlizer")
@@ -281,7 +281,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1c.rda",
-               "https://www.dropbox.com/s/7yh9yuldzo7fth4/coh_mod1c.rda?dl=1")
+               "https://osf.io/dq2s9/download")
       load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
     }
     path_1d <- system.file("extdata", "coh_mod1d.rda", package = "writeAlizer")
@@ -289,7 +289,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1d.rda",
-               "https://www.dropbox.com/s/owe4u5yu1tbaumk/coh_mod1d.rda?dl=1")
+               "https://osf.io/be6qv/download")
       load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
     }
     path_1e <- system.file("extdata", "coh_mod1e.rda", package = "writeAlizer")
@@ -297,7 +297,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1e.rda",
-               "https://www.dropbox.com/s/ifmrz1j6i9phjry/coh_mod1e.rda?dl=1")
+               "https://osf.io/pv3gm/download")
       load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
     }
     path_1f <- system.file("extdata", "coh_mod1f.rda", package = "writeAlizer")
@@ -305,7 +305,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1f.rda",
-               "https://www.dropbox.com/s/qftbg2mbig0urvr/coh_mod1f.rda?dl=1")
+               "https://osf.io/myk6f/download")
       load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
     }
 
@@ -327,7 +327,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'coh_mod1' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod1' for predictions.")
       download("coh_mod1a.rda",
-               "https://www.dropbox.com/s/4666echdjxj3bie/coh_mod1a.rda?dl=1")
+               "https://osf.io/qws5x/download")
       load(system.file("extdata", "coh_mod1a.rda", package = "writeAlizer"))
     }
     path_1b <- system.file("extdata", "coh_mod1b.rda", package = "writeAlizer")
@@ -335,7 +335,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1b.rda",
-               "https://www.dropbox.com/s/3qdy9mgqk0tg59n/coh_mod1b.rda?dl=1")
+               "https://osf.io/rdmfw/download")
       load(system.file("extdata", "coh_mod1b.rda", package = "writeAlizer"))
     }
     path_1c <- system.file("extdata", "coh_mod1c.rda", package = "writeAlizer")
@@ -343,7 +343,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1c.rda",
-               "https://www.dropbox.com/s/7yh9yuldzo7fth4/coh_mod1c.rda?dl=1")
+               "https://osf.io/dq2s9/download")
       load(system.file("extdata", "coh_mod1c.rda", package = "writeAlizer"))
     }
     path_1d <- system.file("extdata", "coh_mod1d.rda", package = "writeAlizer")
@@ -351,7 +351,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1d.rda",
-               "https://www.dropbox.com/s/owe4u5yu1tbaumk/coh_mod1d.rda?dl=1")
+               "https://osf.io/be6qv/download")
       load(system.file("extdata", "coh_mod1d.rda", package = "writeAlizer"))
     }
     path_1e <- system.file("extdata", "coh_mod1e.rda", package = "writeAlizer")
@@ -359,7 +359,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1e.rda",
-               "https://www.dropbox.com/s/ifmrz1j6i9phjry/coh_mod1e.rda?dl=1")
+               "https://osf.io/pv3gm/download")
       load(system.file("extdata", "coh_mod1e.rda", package = "writeAlizer"))
     }
     path_1f <- system.file("extdata", "coh_mod1f.rda", package = "writeAlizer")
@@ -367,7 +367,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
     } else {
       download("coh_mod1f.rda",
-               "https://www.dropbox.com/s/qftbg2mbig0urvr/coh_mod1f.rda?dl=1")
+               "https://osf.io/myk6f/download")
       load(system.file("extdata", "coh_mod1f.rda", package = "writeAlizer"))
     }
     pred.1 <- predict(coh_mod1a,data)
@@ -391,7 +391,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'gamet_cws1' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'gamet_cws1' for predictions.")
       download("CWS_mod1a.rda",
-               "https://www.dropbox.com/s/e9zhp6gc7v680zx/CWS_mod1a.rda?dl=1")
+               "https://osf.io/tfw95/download")
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     }
     path_ciws1a <- system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer")
@@ -399,7 +399,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod1a.rda",
-               "https://www.dropbox.com/s/frgf04jz77srod2/CIWS_mod1a.rda?dl=1")
+               "https://osf.io/yjuxn/download")
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     }
 
@@ -418,7 +418,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     } else {
       print("Because this is the first time 'gamet_cws1' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'gamet_cws1' for predictions.")
       download("CWS_mod1a.rda",
-               "https://www.dropbox.com/s/e9zhp6gc7v680zx/CWS_mod1a.rda?dl=1")
+               "https://osf.io/tfw95/download")
       load(system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer"))
     }
     path_ciws1a <- system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer")
@@ -426,7 +426,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     } else {
       download("CIWS_mod1a.rda",
-               "https://www.dropbox.com/s/frgf04jz77srod2/CIWS_mod1a.rda?dl=1")
+               "https://osf.io/yjuxn/download")
       load(system.file("extdata", "CIWS_mod1a.rda", package = "writeAlizer"))
     }
 

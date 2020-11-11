@@ -1,7 +1,7 @@
 Package: writeAlizer
 Type: Package
 Title: Generate Predicted Writing Quality and Written Expression CBM Scores
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: person("Mercer", "Sterett H.", email = "sterett.mercer@ubc.ca",
   role = c("aut", "cre"))
 Description: This package (a) imports ReaderBench, Coh-Metrix, and GAMET

@@ -40,6 +40,7 @@ Information on the various scoring models available and how they were developed 
 2. Description of the following specific scoring models, including information on the relative importance of metrics and weighting of algorithms:
    * [Coh-Metrix Model 1](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-1)
    * [ReaderBench Model 1](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-1)
+   * [Automated Written Expression CBM Model 1](https://github.com/shmercer/writeAlizer/wiki/aWE-CBM-Model-1)
 
 ## Package Author and Maintainer
 
@@ -51,7 +52,7 @@ Also see the list of [contributors](https://github.com/shmercer/writeAlizer/cont
 
 ### Journal Articles
 
-Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (in press). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology.* [https://doi.org/10.31219/osf.io/yrvq5](link to accepted manuscript)
+Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (in press). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology.* [link to accepted manuscript](https://doi.org/10.31219/osf.io/yrvq5)
 
 Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)
 

@@ -27,7 +27,10 @@ With *devtools* installed, you can install writeAlizer in R directly from this G
 ```
 devtools::install_github("shmercer/writeAlizer")
 ```
-Due to the large file size, it may take a while for writeAlizer to download and install.
+After installation, documentation of the file import and predict_quality() functions, and examples of their use, can be found in the R package help file.
+```
+help("writeAlizer")
+```
 
 ## Documentation
 
@@ -47,6 +50,8 @@ Also see the list of [contributors](https://github.com/shmercer/writeAlizer/cont
 ## References
 
 ### Journal Articles
+
+Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (in press). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology.* [https://doi.org/10.31219/osf.io/yrvq5](link to accepted manuscript)
 
 Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)
 

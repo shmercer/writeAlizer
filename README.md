@@ -19,7 +19,7 @@ The writeAlizer scoring models assume that column names in the output files have
 
 ### Installing
 
-writeAlizer is not available on [CRAN](https://cran.r-project.org/) due to file size (~500 mb). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
+writeAlizer is not available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
 ```
 install.packages("devtools")
 ```

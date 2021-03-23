@@ -52,6 +52,8 @@ Also see the list of [contributors](https://github.com/shmercer/writeAlizer/cont
 
 ### Journal Articles
 
+Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (in press). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal.* [link to pre-print of accepted article](https://doi.org/10.31219/osf.io/gcetv)
+
 Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (in press). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology.* [link to accepted manuscript](https://doi.org/10.31219/osf.io/yrvq5)
 
 Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)

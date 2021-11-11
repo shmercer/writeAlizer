@@ -52,13 +52,19 @@ Also see the list of [contributors](https://github.com/shmercer/writeAlizer/cont
 
 ### Journal Articles
 
-Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (in press). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal.* [link to pre-print of accepted article](https://doi.org/10.31219/osf.io/gcetv)
+Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (2021). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal, 34*, 2461-2480. [https://doi.org/10.1007/s11145-021-10153-6](https://doi.org/10.1007/s11145-021-10153-6)  
+[link to pre-print of accepted article](https://doi.org/10.31219/osf.io/gcetv)
 
-Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (in press). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology.* [link to accepted manuscript](https://doi.org/10.31219/osf.io/yrvq5)
+Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (2021). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology, 36*, 304-317. [https://doi.org/10.1177/0829573520987753](https://doi.org/10.1177/0829573520987753)
+[link to pre-print of accepted article](https://doi.org/10.31219/osf.io/yrvq5)
 
 Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)
 
 ### Conference Presentations
+
+Matta, M., Keller-Margulis, M., & Mercer, S. H. (2021, July). *The use of automated approaches to scoring written expression of elementary students.* Poster presented at the at the meeting of the International School Psychology Association, online.
+
+Matta, Michael, Keller-Margulis, M. A., Mercer, S. H., & Zopatti, K. (2021, February). *Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs.* Paper presented at the meeting of the National Association of School Psychologists, online.
 
 Mercer, S. H., Keller-Margulis, M. A., & Matta, M. (2020, February). _[Validity of automated vs. hand-scored written expression curriculum-based measurement samples](https://blogs.ubc.ca/mercer/2020/02/11/pcrc-2020-poster-automated-text-eval-for-screening/)._ Poster presented at the Pacific Coast Research Conference, Coronado, CA, USA.
 

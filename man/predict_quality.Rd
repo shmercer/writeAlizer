@@ -9,8 +9,8 @@ predict_quality(model, data, store = FALSE, name = "filename.csv")
 \arguments{
 \item{model}{A string telling which scoring model to use.
 Options are:
-'rb_mod1' or 'rb_mod2' for ReaderBench files to generate holistic quality,
-'coh_mod1' pr 'coh_mod2' for Coh-Metrix files to generate holistic quality,
+'rb_mod1', 'rb_mod2', or 'rb_mod3' for ReaderBench files to generate holistic quality,
+'coh_mod1', 'coh_mod2', or 'coh_mod3' for Coh-Metrix files to generate holistic quality,
 and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 

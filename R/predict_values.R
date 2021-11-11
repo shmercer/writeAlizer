@@ -21,7 +21,9 @@
 #declare global vars for the model objects used in predict_quality
 if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "rb_mod1c","rb_mod1d", "rb_mod1e", "rb_mod1f",
                                                       "coh_mod1a","coh_mod1b","coh_mod1c","coh_mod1d","coh_mod1e","coh_mod1f",
-                                                      "CWS_mod1a", "CIWS_mod1a"))
+                                                      "CWS_mod1a", "CIWS_mod1a",
+                                                      "rb_mod3a", "rb_mod3b", "rb_mod3c",
+                                                      "coh_mod3a", "coh_mod3b", "coh_mod3c"))
 
 #' @title Apply scoring models for predictions
 #' @description Apply scoring models to ReaderBench, CohMetrix, and/or
@@ -36,8 +38,8 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' @importFrom stats predict
 #' @param model A string telling which scoring model to use.
 #' Options are:
-#' 'rb_mod1' or 'rb_mod2' for ReaderBench files to generate holistic quality,
-#' 'coh_mod1' pr 'coh_mod2' for Coh-Metrix files to generate holistic quality,
+#' 'rb_mod1', 'rb_mod2', or 'rb_mod3' for ReaderBench files to generate holistic quality,
+#' 'coh_mod1', 'coh_mod2', or 'coh_mod3' for Coh-Metrix files to generate holistic quality,
 #' and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 #' and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.
 #' @param data The name of the R object corresponding to the data file. The
@@ -384,7 +386,80 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
     return(id_quality)
-      } else if (model == 'coh_mod1' & store == FALSE){
+  } else if (model=='rb_mod3' & store == FALSE){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3a <- system.file("extdata", "rb_mod3a.rda", package = "writeAlizer")
+    if (file.exists(path_3a) == TRUE){
+      load(system.file("extdata", "rb_mod3a.rda", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'rb_mod3' has been used for predictions, three files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod3' for predictions.")
+      download("rb_mod3a.rda",
+               "https://osf.io/b8fcj/download")
+      load(system.file("extdata", "rb_mod3a.rda", package = "writeAlizer"))
+    }
+    path_3b <- system.file("extdata", "rb_mod3b.rda", package = "writeAlizer")
+    if (file.exists(path_3b) == TRUE){
+      load(system.file("extdata", "rb_mod3b.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3b.rda",
+               "https://osf.io/c2ja3/download")
+      load(system.file("extdata", "rb_mod3b.rda", package = "writeAlizer"))
+    }
+    path_3c <- system.file("extdata", "rb_mod3c.rda", package = "writeAlizer")
+    if (file.exists(path_3c) == TRUE){
+      load(system.file("extdata", "rb_mod3c.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3c.rda",
+               "https://osf.io/8nvap/download")
+      load(system.file("extdata", "rb_mod3c.rda", package = "writeAlizer"))
+    }
+
+    pred.1 <- predict(rb_mod3a,data)
+    pred.2 <- predict(rb_mod3b,data)
+    pred.3 <- predict(rb_mod3c,data)
+
+    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
+  } else if (model=='rb_mod3' & store == TRUE){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3a <- system.file("extdata", "rb_mod3a.rda", package = "writeAlizer")
+    if (file.exists(path_3a) == TRUE){
+      load(system.file("extdata", "rb_mod3a.rda", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'rb_mod3' has been used for predictions, three files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod3' for predictions.")
+      download("rb_mod3a.rda",
+               "https://osf.io/b8fcj/download")
+      load(system.file("extdata", "rb_mod3a.rda", package = "writeAlizer"))
+    }
+    path_3b <- system.file("extdata", "rb_mod3b.rda", package = "writeAlizer")
+    if (file.exists(path_3b) == TRUE){
+      load(system.file("extdata", "rb_mod3b.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3b.rda",
+               "https://osf.io/c2ja3/download")
+      load(system.file("extdata", "rb_mod3b.rda", package = "writeAlizer"))
+    }
+    path_3c <- system.file("extdata", "rb_mod3c.rda", package = "writeAlizer")
+    if (file.exists(path_3c) == TRUE){
+      load(system.file("extdata", "rb_mod3c.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3c.rda",
+               "https://osf.io/8nvap/download")
+      load(system.file("extdata", "rb_mod3c.rda", package = "writeAlizer"))
+    }
+
+    pred.1 <- predict(rb_mod3a,data)
+    pred.2 <- predict(rb_mod3b,data)
+    pred.3 <- predict(rb_mod3c,data)
+
+    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    data.2 <- cbind(predicted_quality,data)
+    write.table(data.2, file = name, sep = ",", row.names = FALSE)
+
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
+  } else if (model == 'coh_mod1' & store == FALSE){
     #check if each model object exists, if so, load it; if not, download and load it
     path_1a <- system.file("extdata", "coh_mod1a.rda", package = "writeAlizer")
     if (file.exists(path_1a) == TRUE){
@@ -637,7 +712,81 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
 
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
     return(id_quality)
-    } else if (model == 'gamet_cws1' & store == FALSE) {
+  } else if (model=='coh_mod3' & store == FALSE){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3a <- system.file("extdata", "coh_mod3a.rda", package = "writeAlizer")
+    if (file.exists(path_3a) == TRUE){
+      load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'coh_mod3' has been used for predictions, three files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod3' for predictions.")
+      download("coh_mod3a.rda",
+               "https://osf.io/em56t/download")
+      load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
+    }
+    path_3b <- system.file("extdata", "coh_mod3b.rda", package = "writeAlizer")
+    if (file.exists(path_3b) == TRUE){
+      load(system.file("extdata", "coh_mod3b.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod3b.rda",
+               "https://osf.io/45n9s/download")
+      load(system.file("extdata", "coh_mod3b.rda", package = "writeAlizer"))
+    }
+    path_3c <- system.file("extdata", "coh_mod3c.rda", package = "writeAlizer")
+    if (file.exists(path_3c) == TRUE){
+      load(system.file("extdata", "coh_mod3c.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod3c.rda",
+               "https://osf.io/rvsqp/download")
+      load(system.file("extdata", "coh_mod3c.rda", package = "writeAlizer"))
+    }
+
+    pred.1 <- predict(coh_mod3a,data)
+    pred.2 <- predict(coh_mod3b,data)
+    pred.3 <- predict(coh_mod3c,data)
+
+    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
+  } else if (model=='coh_mod3' & store == TRUE){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3a <- system.file("extdata", "coh_mod3a.rda", package = "writeAlizer")
+    if (file.exists(path_3a) == TRUE){
+      load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'coh_mod3' has been used for predictions, three files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod3' for predictions.")
+      download("coh_mod3a.rda",
+               "https://osf.io/em56t/download")
+      load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
+    }
+    path_3b <- system.file("extdata", "coh_mod3b.rda", package = "writeAlizer")
+    if (file.exists(path_3b) == TRUE){
+      load(system.file("extdata", "coh_mod3b.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod3b.rda",
+               "https://osf.io/45n9s/download")
+      load(system.file("extdata", "coh_mod3b.rda", package = "writeAlizer"))
+    }
+    path_3c <- system.file("extdata", "coh_mod3c.rda", package = "writeAlizer")
+    if (file.exists(path_3c) == TRUE){
+      load(system.file("extdata", "coh_mod3c.rda", package = "writeAlizer"))
+    } else {
+      download("coh_mod3c.rda",
+               "https://osf.io/rvsqp/download")
+      load(system.file("extdata", "coh_mod3c.rda", package = "writeAlizer"))
+    }
+
+    pred.1 <- predict(coh_mod3a,data)
+    pred.2 <- predict(coh_mod3b,data)
+    pred.3 <- predict(coh_mod3c,data)
+
+    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    data.2 <- cbind(predicted_quality,data)
+    write.table(data.2, file = name, sep = ",", row.names = FALSE)
+
+    id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    return(id_quality)
+  } else if (model == 'gamet_cws1' & store == FALSE) {
     #check if each model object exists, if so, load it; if not, download and load it
     path_cws1a <- system.file("extdata", "CWS_mod1a.rda", package = "writeAlizer")
     if (file.exists(path_cws1a) == TRUE){

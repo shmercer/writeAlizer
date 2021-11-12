@@ -14,6 +14,7 @@ License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
+  caret,
   caretEnsemble,
   Cubist,
   data.table,
@@ -25,7 +26,8 @@ Imports:
   magrittr,
   pls,
   randomForest,
-  stats
+  stats,
+  tidyselect
 RoxygenNote: 7.1.1
 URL: https://github.com/shmercer/writeAlizer/
 BugReports: https://github.com/shmercer/writeAlizer/issues

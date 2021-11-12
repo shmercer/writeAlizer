@@ -38,6 +38,9 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom utils write.table download.file
 #' @importFrom stats predict
+#' @importFrom dplyr select
+#' @importFrom caret preProcess
+#' @importFrom tidyselect all_of
 #' @param model A string telling which scoring model to use.
 #' Options are:
 #' 'rb_mod1', 'rb_mod2', or 'rb_mod3' for ReaderBench files to generate holistic quality,
@@ -82,7 +85,7 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #'
 #' #Generate holistic quality from "rb_file"
 #' #and return scores to an object called "rb_quality":
-#' rb_quality <- predict_quality('rb_mod1', rb_file, store = FALSE)
+#' rb_quality <- predict_quality('rb_mod3', rb_file, store = FALSE)
 #'
 #' #display quality scores
 #' rb_quality
@@ -101,7 +104,7 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
 #' #return scores to an object called "coh_quality", merge
 #' #predicted scores with the data file, and store data as "output.csv" in the
 #' #working directory
-#' coh_quality <- predict_quality('coh_mod1', coh_file, store = TRUE, name = "output.csv")
+#' coh_quality <- predict_quality('coh_mod3', coh_file, store = TRUE, name = "output.csv")
 #'
 #' #display quality scores
 #' coh_quality
@@ -415,13 +418,54 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
                "https://osf.io/8nvap/download")
       load(system.file("extdata", "rb_mod3c.rda", package = "writeAlizer"))
     }
+    path_3a_vars <- system.file("extdata", "rb_mod3a_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3a_vars) == TRUE){
+      mod3a_vars <- readRDS(system.file("extdata", "rb_mod3a_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3a_vars.rds",
+               "https://osf.io/nqukt/download")
+      mod3a_vars <- readRDS(system.file("extdata", "rb_mod3a_vars.rds", package = "writeAlizer"))
+    }
+    path_3b_vars <- system.file("extdata", "rb_mod3b_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3b_vars) == TRUE){
+      mod3b_vars <- readRDS(system.file("extdata", "rb_mod3b_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3b_vars.rds",
+               "https://osf.io/djtbr/download")
+      mod3b_vars <- readRDS(system.file("extdata", "rb_mod3b_vars.rds", package = "writeAlizer"))
+    }
+    path_3c_vars <- system.file("extdata", "rb_mod3c_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3c_vars) == TRUE){
+      mod3c_vars <- readRDS(system.file("extdata", "rb_mod3c_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3c_vars.rds",
+               "https://osf.io/xrf9g/download")
+      mod3c_vars <- readRDS(system.file("extdata", "rb_mod3c_vars.rds", package = "writeAlizer"))
+    }
 
-    pred.1 <- predict(rb_mod3a,data)
-    pred.2 <- predict(rb_mod3b,data)
-    pred.3 <- predict(rb_mod3c,data)
+    data1 <- data %>% select(all_of(mod3a_vars))
+    pp1 <- preProcess(data1, method=c("center", "scale"))
+    data1r <- predict(pp1, data1)
+    data1pp <- data.frame(cbind(ID=data$ID, data1r))
 
-    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    data2 <- data %>% select(all_of(mod3b_vars))
+    pp2 <- preProcess(data2, method=c("center", "scale"))
+    data2r <- predict(pp2, data2)
+    data2pp <- data.frame(cbind(ID=data$ID, data2r))
+
+    data3 <- data %>% select(all_of(mod3c_vars))
+    pp3 <- preProcess(data3, method=c("center", "scale"))
+    data3r <- predict(pp3, data3)
+    data3pp <- data.frame(cbind(ID=data$ID, data3r))
+
+    pred.1 <- predict(rb_mod3a,data1pp)
+    pred.2 <- predict(rb_mod3b,data2pp)
+    pred.3 <- predict(rb_mod3c,data3pp)
+
+    predicted_quality <- scale((pred.1 + pred.2 + pred.3)/3)
+
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    names(id_quality)[2] <- "predicted_quality"
     return(id_quality)
   } else if (model=='rb_mod3' & store == TRUE){
     #check if each model object exists, if so, load it; if not, download and load it
@@ -450,16 +494,57 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
                "https://osf.io/8nvap/download")
       load(system.file("extdata", "rb_mod3c.rda", package = "writeAlizer"))
     }
+    path_3a_vars <- system.file("extdata", "rb_mod3a_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3a_vars) == TRUE){
+      mod3a_vars <- readRDS(system.file("extdata", "rb_mod3a_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3a_vars.rds",
+               "https://osf.io/nqukt/download")
+      mod3a_vars <- readRDS(system.file("extdata", "rb_mod3a_vars.rds", package = "writeAlizer"))
+    }
+    path_3b_vars <- system.file("extdata", "rb_mod3b_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3b_vars) == TRUE){
+      mod3b_vars <- readRDS(system.file("extdata", "rb_mod3b_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3b_vars.rds",
+               "https://osf.io/djtbr/download")
+      mod3b_vars <- readRDS(system.file("extdata", "rb_mod3b_vars.rds", package = "writeAlizer"))
+    }
+    path_3c_vars <- system.file("extdata", "rb_mod3c_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3c_vars) == TRUE){
+      mod3c_vars <- readRDS(system.file("extdata", "rb_mod3c_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3c_vars.rds",
+               "https://osf.io/xrf9g/download")
+      mod3c_vars <- readRDS(system.file("extdata", "rb_mod3c_vars.rds", package = "writeAlizer"))
+    }
 
-    pred.1 <- predict(rb_mod3a,data)
-    pred.2 <- predict(rb_mod3b,data)
-    pred.3 <- predict(rb_mod3c,data)
+    data1 <- data %>% select(all_of(mod3a_vars))
+    pp1 <- preProcess(data1, method=c("center", "scale"))
+    data1r <- predict(pp1, data1)
+    data1pp <- data.frame(cbind(ID=data$ID, data1r))
 
-    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    data2 <- data %>% select(all_of(mod3b_vars))
+    pp2 <- preProcess(data2, method=c("center", "scale"))
+    data2r <- predict(pp2, data2)
+    data2pp <- data.frame(cbind(ID=data$ID, data2r))
+
+    data3 <- data %>% select(all_of(mod3c_vars))
+    pp3 <- preProcess(data3, method=c("center", "scale"))
+    data3r <- predict(pp3, data3)
+    data3pp <- data.frame(cbind(ID=data$ID, data3r))
+
+    pred.1 <- predict(rb_mod3a,data1pp)
+    pred.2 <- predict(rb_mod3b,data2pp)
+    pred.3 <- predict(rb_mod3c,data3pp)
+
+    predicted_quality <- scale((pred.1 + pred.2 + pred.3)/3)
+
     data.2 <- cbind(predicted_quality,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    names(id_quality)[2] <- "predicted_quality"
     return(id_quality)
   } else if (model == 'coh_mod1' & store == FALSE){
     #check if each model object exists, if so, load it; if not, download and load it
@@ -720,7 +805,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_3a) == TRUE){
       load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
     } else {
-      print("Because this is the first time 'coh_mod3' has been used for predictions, three files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod3' for predictions.")
+      print("Because this is the first time 'coh_mod3' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod3' for predictions.")
       download("coh_mod3a.rda",
                "https://osf.io/em56t/download")
       load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
@@ -741,14 +826,54 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
                "https://osf.io/rvsqp/download")
       load(system.file("extdata", "coh_mod3c.rda", package = "writeAlizer"))
     }
+    path_3a_vars <- system.file("extdata", "coh_mod3a_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3a_vars) == TRUE){
+      mod3a_vars <- readRDS(system.file("extdata", "coh_mod3a_vars.rds", package = "writeAlizer"))
+    } else {
+      download("coh_mod3a_vars.rds",
+               "https://osf.io/hyswj/download")
+      mod3a_vars <- readRDS(system.file("extdata", "coh_mod3a_vars.rds", package = "writeAlizer"))
+    }
+    path_3b_vars <- system.file("extdata", "coh_mod3b_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3b_vars) == TRUE){
+      mod3b_vars <- readRDS(system.file("extdata", "coh_mod3b_vars.rds", package = "writeAlizer"))
+    } else {
+      download("coh_mod3b_vars.rds",
+               "https://osf.io/wu9vr/download")
+      mod3b_vars <- readRDS(system.file("extdata", "coh_mod3b_vars.rds", package = "writeAlizer"))
+    }
+    path_3c_vars <- system.file("extdata", "coh_mod3c_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3c_vars) == TRUE){
+      mod3c_vars <- readRDS(system.file("extdata", "coh_mod3c_vars.rds", package = "writeAlizer"))
+    } else {
+      download("coh_mod3c_vars.rds",
+               "https://osf.io/gq2zm/download")
+      mod3c_vars <- readRDS(system.file("extdata", "coh_mod3c_vars.rds", package = "writeAlizer"))
+    }
 
-    pred.1 <- predict(coh_mod3a,data)
-    pred.2 <- predict(coh_mod3b,data)
-    pred.3 <- predict(coh_mod3c,data)
+    data1 <- data %>% select(all_of(mod3a_vars))
+    pp1 <- preProcess(data1, method=c("center", "scale"))
+    data1r <- predict(pp1, data1)
+    data1pp <- data.frame(cbind(ID=data$ID, data1r))
 
-    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    data2 <- data %>% select(all_of(mod3b_vars))
+    pp2 <- preProcess(data2, method=c("center", "scale"))
+    data2r <- predict(pp2, data2)
+    data2pp <- data.frame(cbind(ID=data$ID, data2r))
+
+    data3 <- data %>% select(all_of(mod3c_vars))
+    pp3 <- preProcess(data3, method=c("center", "scale"))
+    data3r <- predict(pp3, data3)
+    data3pp <- data.frame(cbind(ID=data$ID, data3r))
+
+    pred.1 <- predict(coh_mod3a,data1pp)
+    pred.2 <- predict(coh_mod3b,data2pp)
+    pred.3 <- predict(coh_mod3c,data3pp)
+
+    predicted_quality <- scale((pred.1 + pred.2 + pred.3)/3)
 
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    names(id_quality)[2] <- "predicted_quality"
     return(id_quality)
   } else if (model=='coh_mod3' & store == TRUE){
     #check if each model object exists, if so, load it; if not, download and load it
@@ -756,7 +881,7 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
     if (file.exists(path_3a) == TRUE){
       load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
     } else {
-      print("Because this is the first time 'coh_mod3' has been used for predictions, three files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod3' for predictions.")
+      print("Because this is the first time 'coh_mod3' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'coh_mod3' for predictions.")
       download("coh_mod3a.rda",
                "https://osf.io/em56t/download")
       load(system.file("extdata", "coh_mod3a.rda", package = "writeAlizer"))
@@ -777,16 +902,57 @@ predict_quality <- function(model, data, store = FALSE, name = "filename.csv") {
                "https://osf.io/rvsqp/download")
       load(system.file("extdata", "coh_mod3c.rda", package = "writeAlizer"))
     }
+    path_3a_vars <- system.file("extdata", "coh_mod3a_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3a_vars) == TRUE){
+      mod3a_vars <- readRDS(system.file("extdata", "coh_mod3a_vars.rds", package = "writeAlizer"))
+    } else {
+      download("coh_mod3a_vars.rds",
+               "https://osf.io/hyswj/download")
+      mod3a_vars <- readRDS(system.file("extdata", "coh_mod3a_vars.rds", package = "writeAlizer"))
+    }
+    path_3b_vars <- system.file("extdata", "coh_mod3b_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3b_vars) == TRUE){
+      mod3b_vars <- readRDS(system.file("extdata", "coh_mod3b_vars.rds", package = "writeAlizer"))
+    } else {
+      download("coh_mod3b_vars.rds",
+               "https://osf.io/wu9vr/download")
+      mod3b_vars <- readRDS(system.file("extdata", "coh_mod3b_vars.rds", package = "writeAlizer"))
+    }
+    path_3c_vars <- system.file("extdata", "coh_mod3c_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3c_vars) == TRUE){
+      mod3c_vars <- readRDS(system.file("extdata", "coh_mod3c_vars.rds", package = "writeAlizer"))
+    } else {
+      download("coh_mod3c_vars.rds",
+               "https://osf.io/gq2zm/download")
+      mod3c_vars <- readRDS(system.file("extdata", "coh_mod3c_vars.rds", package = "writeAlizer"))
+    }
 
-    pred.1 <- predict(coh_mod3a,data)
-    pred.2 <- predict(coh_mod3b,data)
-    pred.3 <- predict(coh_mod3c,data)
+    data1 <- data %>% select(all_of(mod3a_vars))
+    pp1 <- preProcess(data1, method=c("center", "scale"))
+    data1r <- predict(pp1, data1)
+    data1pp <- data.frame(cbind(ID=data$ID, data1r))
 
-    predicted_quality <- (pred.1 + pred.2 + pred.3)/3
+    data2 <- data %>% select(all_of(mod3b_vars))
+    pp2 <- preProcess(data2, method=c("center", "scale"))
+    data2r <- predict(pp2, data2)
+    data2pp <- data.frame(cbind(ID=data$ID, data2r))
+
+    data3 <- data %>% select(all_of(mod3c_vars))
+    pp3 <- preProcess(data3, method=c("center", "scale"))
+    data3r <- predict(pp3, data3)
+    data3pp <- data.frame(cbind(ID=data$ID, data3r))
+
+    pred.1 <- predict(coh_mod3a,data1pp)
+    pred.2 <- predict(coh_mod3b,data2pp)
+    pred.3 <- predict(coh_mod3c,data3pp)
+
+    predicted_quality <- scale((pred.1 + pred.2 + pred.3)/3)
+
     data.2 <- cbind(predicted_quality,data)
     write.table(data.2, file = name, sep = ",", row.names = FALSE)
 
     id_quality <- data.frame(cbind(ID=data$ID, predicted_quality))
+    names(id_quality)[2] <- "predicted_quality"
     return(id_quality)
   } else if (model == 'gamet_cws1' & store == FALSE) {
     #check if each model object exists, if so, load it; if not, download and load it

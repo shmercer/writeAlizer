@@ -61,7 +61,7 @@ rb_file <- import_rb(file_path1)
 
 #Generate holistic quality from "rb_file"
 #and return scores to an object called "rb_quality":
-rb_quality <- predict_quality('rb_mod1', rb_file, store = FALSE)
+rb_quality <- predict_quality('rb_mod3', rb_file, store = FALSE)
 
 #display quality scores
 rb_quality
@@ -80,7 +80,7 @@ coh_file <- import_coh(file_path2)
 #return scores to an object called "coh_quality", merge
 #predicted scores with the data file, and store data as "output.csv" in the
 #working directory
-coh_quality <- predict_quality('coh_mod1', coh_file, store = TRUE, name = "output.csv")
+coh_quality <- predict_quality('coh_mod3', coh_file, store = TRUE, name = "output.csv")
 
 #display quality scores
 coh_quality

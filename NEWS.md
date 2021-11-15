@@ -1,7 +1,7 @@
 writeAlizer v1.3.0 (Release date: 2021-11-10)
 ==============
 Changes:
-* Added RB/Coh model 3s (only rf and gbm in ensembles)
+* Replaced RB/Coh model 2s with trimmed versions of model 1s with improved data pre-processing. 
 
 writeAlizer v1.2.0 (Release date: 2020-11-11)
 ==============

@@ -9,8 +9,8 @@ predict_quality(model, data, store = FALSE, name = "filename.csv")
 \arguments{
 \item{model}{A string telling which scoring model to use.
 Options are:
-'rb_mod1', 'rb_mod2', or 'rb_mod3' for ReaderBench files to generate holistic quality,
-'coh_mod1', 'coh_mod2', or 'coh_mod3' for Coh-Metrix files to generate holistic quality,
+'rb_mod1' or 'rb_mod2' for ReaderBench files to generate holistic quality,
+'coh_mod1' or 'coh_mod2' for Coh-Metrix files to generate holistic quality,
 and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 
@@ -37,11 +37,10 @@ and/or GAMET output files) are returned.
 \description{
 Apply scoring models to ReaderBench, CohMetrix, and/or
 GAMET files. Holistic writing quality can be
-generated from Readerbench (model = 'rb_mod1') or
-Coh-Metrix files (model = 'coh_mod1'). Also,
+generated from Readerbench (model = 'rb_mod2') or
+Coh-Metrix files (model = 'coh_mod2'). Also,
 Correct Word Sequences and Correct Minus Incorrect
-Word Sequences can be generated from a combined
-Readerbench and GAMET file.
+Word Sequences can be generated from a GAMET file (model = 'gamet_cws1').
 }
 \examples{
 ###Examples using sample data included in writeAlizer package
@@ -61,7 +60,7 @@ rb_file <- import_rb(file_path1)
 
 #Generate holistic quality from "rb_file"
 #and return scores to an object called "rb_quality":
-rb_quality <- predict_quality('rb_mod3', rb_file, store = FALSE)
+rb_quality <- predict_quality('rb_mod2', rb_file, store = FALSE)
 
 #display quality scores
 rb_quality
@@ -80,7 +79,7 @@ coh_file <- import_coh(file_path2)
 #return scores to an object called "coh_quality", merge
 #predicted scores with the data file, and store data as "output.csv" in the
 #working directory
-coh_quality <- predict_quality('coh_mod3', coh_file, store = TRUE, name = "output.csv")
+coh_quality <- predict_quality('coh_mod2', coh_file, store = TRUE, name = "output.csv")
 
 #display quality scores
 coh_quality
@@ -92,7 +91,7 @@ file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer"
 #see path to sample GAMET file
 file_path3
 
-#import files, merge, and store as "rb_gam_file"
+#import files, merge, and store as "gam_file"
 gam_file <- import_gamet(file_path3)
 
 #Generate CWS and CIWS scores from a GAMET file

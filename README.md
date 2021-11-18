@@ -2,7 +2,7 @@
 
 This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the repository wiki.
 
-The writeAlizer R package (a) imports [ReaderBench](https://git.readerbench.com/ReaderBench/ReaderBench), [Coh-Metrix](http://cohmetrix.com/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
+The writeAlizer R package (a) imports [ReaderBench](http://readerbench.com/), [Coh-Metrix](http://cohmetrix.com/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
 
 ### Versions
 The version history of writeAlizer is available in the package [NEWS.md](https://github.com/shmercer/writeAlizer/blob/master/NEWS.md) file.
@@ -11,7 +11,7 @@ The version history of writeAlizer is available in the package [NEWS.md](https:/
 
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the standalone version of ReaderBench that is described [here](https://git.readerbench.com/ReaderBench/ReaderBench/-/wikis/how-to/How%20to%20install%20and%20run%20readerbench) and can be downloaded from [here](http://readerbench.com/deployment).
+ 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the standalone version of ReaderBench that can be downloaded from [here](http://readerbench.com/deployment).
  2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
 

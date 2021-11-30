@@ -52,7 +52,7 @@ Also see the list of [contributors](https://github.com/shmercer/writeAlizer/cont
 
 ### Journal Articles
 
-Mercer, H. H., & Cannon, J. E. (in press). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online*. [link to pre-print of accepted article](https://doi/org/10.31219/osf.io/yh3zj)
+Mercer, H. H., & Cannon, J. E. (in press). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online*. [link to pre-print of accepted article](https://doi.org/10.31219/osf.io/yh3zj)
 
 Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (2021). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal, 34*, 2461-2480. [https://doi.org/10.1007/s11145-021-10153-6](https://doi.org/10.1007/s11145-021-10153-6)  
 [link to pre-print of accepted article](https://doi.org/10.31219/osf.io/gcetv)

@@ -56,7 +56,7 @@ Also see the list of code [contributors](https://github.com/shmercer/writeAlizer
 
 Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (in press). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice*. [https://doi.org/10.1080/0969594X.2022.2043240](https://doi.org/10.1080/0969594X.2022.2043240)
 
-Mercer, H. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. [https://doi.org/10.31244/jero.2022.01.03](https://doi.org/10.31244/jero.2022.01.03)
+Mercer, S. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. [https://doi.org/10.31244/jero.2022.01.03](https://doi.org/10.31244/jero.2022.01.03)
 
 Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2022). Cost analysis and cost effectiveness of hand-scored and automated approaches to writing screening. *Journal of School Psychology, 92*, 80-95. [https://doi.org/10.1016/j.jsp.2022.03.003](https://doi.org/10.1016/j.jsp.2022.03.003)
 

@@ -70,6 +70,8 @@ Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (20
 
 ### Conference Presentations
 
+Matta, M., Keller-Margulis M., & Mercer, S. H. (2022, February). *New directions for writing assessment: Improving feasibility with automated scoring.* Presentation at the meeting of the National Association of School Psychologists, Boston, MA, USA.
+
 Matta, M., Keller-Margulis, M., & Mercer, S. H. (2021, July). *The use of automated approaches to scoring written expression of elementary students.* Poster presented at the at the meeting of the International School Psychology Association, online.
 
 Matta, Michael, Keller-Margulis, M. A., Mercer, S. H., & Zopatti, K. (2021, February). *Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs.* Paper presented at the meeting of the National Association of School Psychologists, online.

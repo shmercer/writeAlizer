@@ -37,22 +37,28 @@ help("writeAlizer")
 Information on the various scoring models available and how they were developed is in this respository's [wiki](https://github.com/shmercer/writeAlizer/wiki):
 
 1. [Description of the general process used to develop scoring algorithms](https://github.com/shmercer/writeAlizer/wiki/Scoring-Model-Development).
-2. Description of the following specific scoring models, including information on the relative importance of metrics and weighting of algorithms:
+2. Description of the following specific scoring models (models recommended for use in research are indicated by *), including information on the relative importance of metrics and weighting of algorithms:
    * [Coh-Metrix Model 1](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-1)
+   * [Coh-Metrix Model 2*](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-2)
    * [ReaderBench Model 1](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-1)
+   * [ReaderBench Model 2*](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-2)
    * [Automated Written Expression CBM Model 1](https://github.com/shmercer/writeAlizer/wiki/aWE-CBM-Model-1)
 
 ## Package Author and Maintainer
 
 * **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/person/sterett-mercer/) - [ResearchGate](https://www.researchgate.net/profile/Sterett_Mercer) - [Google Scholar](https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en)
 
-Also see the list of [contributors](https://github.com/shmercer/writeAlizer/contributors) for this project.
+Also see the list of code [contributors](https://github.com/shmercer/writeAlizer/contributors) for this package.
 
 ## References
 
 ### Journal Articles
 
-Mercer, H. H., & Cannon, J. E. (in press). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online*. [link to pre-print of accepted article](https://doi.org/10.31219/osf.io/yh3zj)
+Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (in press). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice*. [https://doi.org/10.1080/0969594X.2022.2043240](https://doi.org/10.1080/0969594X.2022.2043240)
+
+Mercer, H. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. [https://doi.org/10.31244/jero.2022.01.03](https://doi.org/10.31244/jero.2022.01.03)
+
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2022). Cost analysis and cost effectiveness of hand-scored and automated approaches to writing screening. *Journal of School Psychology, 92*, 80-95. [https://doi.org/10.1016/j.jsp.2022.03.003](https://doi.org/10.1016/j.jsp.2022.03.003)
 
 Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (2021). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal, 34*, 2461-2480. [https://doi.org/10.1007/s11145-021-10153-6](https://doi.org/10.1007/s11145-021-10153-6)  
 [link to pre-print of accepted article](https://doi.org/10.31219/osf.io/gcetv)

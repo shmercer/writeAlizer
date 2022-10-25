@@ -54,7 +54,7 @@ Also see the list of code [contributors](https://github.com/shmercer/writeAlizer
 
 ### Journal Articles
 
-Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (in press). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice*. [https://doi.org/10.1080/0969594X.2022.2043240](https://doi.org/10.1080/0969594X.2022.2043240)
+Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2022). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice, 29*, 200-218. [https://doi.org/10.1080/0969594X.2022.2043240](https://doi.org/10.1080/0969594X.2022.2043240)
 
 Mercer, S. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. [https://doi.org/10.31244/jero.2022.01.03](https://doi.org/10.31244/jero.2022.01.03)
 [link to pre-print of accepted article](https://www.researchgate.net/profile/Michael-Matta/publication/358917370_Evaluating_validity_and_bias_for_hand-calculated_and_automated_written_expression_curriculum-based_measurement_scores/links/621e7a867106690c08531aa9/Evaluating-validity-and-bias-for-hand-calculated-and-automated-written-expression-curriculum-based-measurement-scores.pdf)

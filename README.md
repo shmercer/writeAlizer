@@ -1,3 +1,5 @@
+![writeAlizer Logo](https://www.dropbox.com/s/bxgse42uf44k6me/wA_logo.png?raw=1)
+
 # writeAlizer: An R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
 
 This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the repository wiki.

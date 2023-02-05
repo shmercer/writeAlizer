@@ -52,6 +52,10 @@ Information on the various scoring models available and how they were developed 
 
 Also see the list of code [contributors](https://github.com/shmercer/writeAlizer/contributors) for this package.
 
+## writeAlizer Logo Wear
+
+For writeAlizer t-shirts, hats, coffee mugs, etc., visit [https://www.zazzle.ca/store/writealizer](https://www.zazzle.ca/store/writealizer) (Canada) or [https://www.zazzle.com/store/writealizer](https://www.zazzle.com/store/writealizer) (USA).
+
 ## References
 
 ### Journal Articles

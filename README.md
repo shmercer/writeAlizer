@@ -78,6 +78,8 @@ Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (20
 
 ### Conference Presentations
 
+Mercer, S. H.,Geres-Smith, R., Guo, Y., & Squires, B. (2023, February). *Validity of automated learning progress assessment in written expression.* Poster presented at the meeting of the National Association of School Psychologists, Denver, CO, USA. [https://doi.org/10.17605/OSF.IO/WHJD3](https://doi.org/10.17605/OSF.IO/WHJD3)
+
 Matta, M., Keller-Margulis M., & Mercer, S. H. (2022, February). *New directions for writing assessment: Improving feasibility with automated scoring.* Presentation at the meeting of the National Association of School Psychologists, Boston, MA, USA.
 
 Matta, M., Keller-Margulis, M., & Mercer, S. H. (2021, July). *The use of automated approaches to scoring written expression of elementary students.* Poster presented at the at the meeting of the International School Psychology Association, online.

@@ -23,6 +23,7 @@ if(getRversion() >= "2.10")  utils::globalVariables(c("rb_mod1a", "rb_mod1b", "r
                                                       "coh_mod1a","coh_mod1b","coh_mod1c","coh_mod1d","coh_mod1e","coh_mod1f",
                                                       "rb_mod2a", "rb_mod2b", "rb_mod2c",
                                                       "coh_mod2a","coh_mod2b","coh_mod2c",
+                                                      "rb_mod3narr", "rb_mod3exp", "rb_mod3per", "rb_mod3all",
                                                       "CWS_mod1a", "CIWS_mod1a"))
 
 
@@ -53,7 +54,8 @@ download <- function(file, url){
 #' @importFrom tidyselect all_of
 #' @param model A string telling which scoring model to use.
 #' Options are:
-#' 'rb_mod1' or 'rb_mod2' for ReaderBench files,
+#' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
+#' 'rb_mod3per', or 'rb_mod3all' for ReaderBench files,
 #' 'coh_mod1' or 'coh_mod2' for Coh-Metrix files, or
 #' 'gamet_cws1' for GAMET files
 #' @param data The name of the R object corresponding to the data file. The
@@ -87,6 +89,74 @@ download <- function(file, url){
 #' #Pre-process RB data for model 2
 #' preprocess('rb_mod2', rb_file)
 preprocess <- function(model, data) {
+  ##### rb_mod3narr
+  #check if the variable list exists, if so, load it; if not, download and load it
+  if (model=="rb_mod3narr") {
+    path_3narr_vars <- system.file("extdata", "rb_mod3narr_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3narr_vars) == TRUE){
+      vars_a<-readRDS(system.file("extdata", "rb_mod3narr_vars.rds", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'rb_mod3narr' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod3narr' for predictions.")
+      download("rb_mod3narr_vars.rds",
+               "https://osf.io/bmqg9/download")
+      vars_a<-readRDS(system.file("extdata", "rb_mod3narr_vars.rds", package = "writeAlizer"))
+    }
+  }
+  ##### rb_mod3exp
+  #check if the variable list exists, if so, load it; if not, download and load it
+  if (model=="rb_mod3exp") {
+    path_3exp_vars <- system.file("extdata", "rb_mod3exp_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3exp_vars) == TRUE){
+      vars_a<-readRDS(system.file("extdata", "rb_mod3exp_vars.rds", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'rb_mod3exp' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod3exp' for predictions.")
+      download("rb_mod3exp_vars.rds",
+               "https://osf.io/8ut7r/download")
+      vars_a<-readRDS(system.file("extdata", "rb_mod3exp_vars.rds", package = "writeAlizer"))
+    }
+  }
+  ##### rb_mod3per
+  #check if the variable list exists, if so, load it; if not, download and load it
+  if (model=="rb_mod3per") {
+    path_3per_vars <- system.file("extdata", "rb_mod3per_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3per_vars) == TRUE){
+      vars_a<-readRDS(system.file("extdata", "rb_mod3per_vars.rds", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'rb_mod3per' has been used for predictions, two files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod3per' for predictions.")
+      download("rb_mod3per_vars.rds",
+               "https://osf.io/8mgcn/download")
+      vars_a<-readRDS(system.file("extdata", "rb_mod3per_vars.rds", package = "writeAlizer"))
+    }
+  }
+  ##### rb_mod3all
+  #check if the variable list exists, if so, load it; if not, download and load it
+  if (model=="rb_mod3all") {
+    path_3narr_vars <- system.file("extdata", "rb_mod3narr_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3narr_vars) == TRUE){
+      vars_a<-readRDS(system.file("extdata", "rb_mod3narr_vars.rds", package = "writeAlizer"))
+    } else {
+      print("Because this is the first time 'rb_mod3all' has been used for predictions, six files will be downloaded and stored in the 'extdata' folder of the writeAlizer R package directory. These files will not need to be downloaded the next time you use 'rb_mod3all' for predictions.")
+      download("rb_mod3narr_vars.rds",
+               "https://osf.io/bmqg9/download")
+      vars_a<-readRDS(system.file("extdata", "rb_mod3narr_vars.rds", package = "writeAlizer"))
+    }
+    path_3exp_vars <- system.file("extdata", "rb_mod3exp_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3exp_vars) == TRUE){
+      vars_b<-readRDS(system.file("extdata", "rb_mod3exp_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3exp_vars.rds",
+               "https://osf.io/8ut7r/download")
+      vars_b<-readRDS(system.file("extdata", "rb_mod3exp_vars.rds", package = "writeAlizer"))
+    }
+    path_3per_vars <- system.file("extdata", "rb_mod3per_vars.rds", package = "writeAlizer")
+    if (file.exists(path_3per_vars) == TRUE){
+      vars_c<-readRDS(system.file("extdata", "rb_mod3per_vars.rds", package = "writeAlizer"))
+    } else {
+      download("rb_mod3per_vars.rds",
+               "https://osf.io/8mgcn/download")
+      vars_c<-readRDS(system.file("extdata", "rb_mod3per_vars.rds", package = "writeAlizer"))
+    }
+  }
   ##### rb_mod2
   #check if the variable list exists, if so, load it; if not, download and load it
   if (model=="rb_mod2") {
@@ -149,7 +219,7 @@ preprocess <- function(model, data) {
     data_pp <- list(data, data, data, data, data, data)
   } else if (model=="gamet_cws1") {
     data_pp <- list(data)
-  } else if (model=="rb_mod2" | model=="coh_mod2") {
+  } else if (model=="rb_mod2" | model=="coh_mod2" | model=="rb_mod3all") {
   ##### select variables for each model, preprocess data, export in list
   data1 <- data %>% select(all_of(vars_a))
   pp1 <- preProcess(data1, method=c("center", "scale"))
@@ -167,6 +237,14 @@ preprocess <- function(model, data) {
   data3pp <- data.frame(cbind(ID=data$ID, data3r))
 
   data_pp <- list(data1pp, data2pp, data3pp)
+  } else if (model=="rb_mod3narr" | model=="rb_mod3exp" | model=="rb_mod3per") {
+  ##### select variables for model, preprocess data, export in list
+  data1 <- data %>% select(all_of(vars_a))
+  pp1 <- preProcess(data1, method=c("center", "scale"))
+  data1r <- predict(pp1, data1)
+  data1pp <- data.frame(cbind(ID=data$ID, data1r))
+
+  data_pp <- list(data1pp)
   }
   return(data_pp)
 }
@@ -177,7 +255,8 @@ preprocess <- function(model, data) {
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @param model A string telling which scoring model to use.
 #' Options are:
-#' 'rb_mod1' and 'rb_mod2' for ReaderBench models, or
+#' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
+#' 'rb_mod3per', or 'rb_mod3all' for ReaderBench files,
 #' 'coh_mod1' and 'coh_mod2' for Coh-Metrix models, or
 #' 'gamet_cws1' for GAMET files
 #' @export
@@ -272,6 +351,74 @@ download_mod <- function(model) {
       load(system.file("extdata", "rb_mod2c.rda", package = "writeAlizer"))
     }
     models <- list(rb_mod2a, rb_mod2b, rb_mod2c)
+  }
+  ##### rb_mod3narr
+  if (model=='rb_mod3narr'){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3narr <- system.file("extdata", "rb_mod3narr.rda", package = "writeAlizer")
+    if (file.exists(path_3narr) == TRUE){
+      load(system.file("extdata", "rb_mod3narr.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3narr.rda",
+               "https://osf.io/f4nhu/download")
+      load(system.file("extdata", "rb_mod3narr.rda", package = "writeAlizer"))
+    }
+    models <- list(rb_mod3narr)
+  }
+  ##### rb_mod3exp
+  if (model=='rb_mod3exp'){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3exp <- system.file("extdata", "rb_mod3exp.rda", package = "writeAlizer")
+    if (file.exists(path_3exp) == TRUE){
+      load(system.file("extdata", "rb_mod3exp.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3exp.rda",
+               "https://osf.io/rx6aj/download")
+      load(system.file("extdata", "rb_mod3exp.rda", package = "writeAlizer"))
+    }
+    models <- list(rb_mod3exp)
+  }
+  ##### rb_mod3per
+  if (model=='rb_mod3per'){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3per <- system.file("extdata", "rb_mod3per.rda", package = "writeAlizer")
+    if (file.exists(path_3per) == TRUE){
+      load(system.file("extdata", "rb_mod3per.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3per.rda",
+               "https://osf.io/kqxte/download")
+      load(system.file("extdata", "rb_mod3per.rda", package = "writeAlizer"))
+    }
+    models <- list(rb_mod3per)
+  }
+  ##### rb_mod3all
+  if (model=='rb_mod3all'){
+    #check if each model object exists, if so, load it; if not, download and load it
+    path_3narr <- system.file("extdata", "rb_mod3narr.rda", package = "writeAlizer")
+    if (file.exists(path_3narr) == TRUE){
+      load(system.file("extdata", "rb_mod3narr.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3narr.rda",
+               "https://osf.io/f4nhu/download")
+      load(system.file("extdata", "rb_mod3narr.rda", package = "writeAlizer"))
+    }
+    path_3exp <- system.file("extdata", "rb_mod3exp.rda", package = "writeAlizer")
+    if (file.exists(path_3exp) == TRUE){
+      load(system.file("extdata", "rb_mod3exp.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3exp.rda",
+               "https://osf.io/rx6aj/download")
+      load(system.file("extdata", "rb_mod3exp.rda", package = "writeAlizer"))
+    }
+    path_3per <- system.file("extdata", "rb_mod3per.rda", package = "writeAlizer")
+    if (file.exists(path_3per) == TRUE){
+      load(system.file("extdata", "rb_mod3per.rda", package = "writeAlizer"))
+    } else {
+      download("rb_mod3per.rda",
+               "https://osf.io/kqxte/download")
+      load(system.file("extdata", "rb_mod3per.rda", package = "writeAlizer"))
+    }
+    models <- list(rb_mod3narr, rb_mod3exp, rb_mod3per)
   }
   ##### coh_mod1
   if (model == 'coh_mod1'){
@@ -394,7 +541,8 @@ download_mod <- function(model) {
 #' @importFrom dplyr select
 #' @param model A string telling which scoring model to use.
 #' Options are:
-#' 'rb_mod1' or 'rb_mod2' for ReaderBench files to generate holistic quality,
+#' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
+#' 'rb_mod3per', or 'rb_mod3all' for ReaderBench files to generate holistic quality,
 #' 'coh_mod1' or 'coh_mod2' for Coh-Metrix files to generate holistic quality,
 #' and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 #' and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.

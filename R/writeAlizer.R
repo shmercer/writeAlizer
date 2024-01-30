@@ -43,6 +43,6 @@
 #' @section 2. Generate predicted quality scores:
 #' \code{\link{predict_quality}}
 #'
-#' @docType package
+# @docType package
 #' @name writeAlizer
 NULL

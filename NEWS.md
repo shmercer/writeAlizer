@@ -1,3 +1,8 @@
+writeAlizer v1.4.0 (Release date: 2024-1-30)
+==============
+Changes:
+* Added new RB genre-specific scoring models (mod3narr, mod3exp, mod3per, mod3all).
+
 writeAlizer v1.3.0 (Release date: 2021-11-10)
 ==============
 Changes:

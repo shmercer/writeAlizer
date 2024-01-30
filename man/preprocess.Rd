@@ -9,7 +9,8 @@ preprocess(model, data)
 \arguments{
 \item{model}{A string telling which scoring model to use.
 Options are:
-'rb_mod1' or 'rb_mod2' for ReaderBench files,
+'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
+'rb_mod3per', or 'rb_mod3all' for ReaderBench files,
 'coh_mod1' or 'coh_mod2' for Coh-Metrix files, or
 'gamet_cws1' for GAMET files}
 

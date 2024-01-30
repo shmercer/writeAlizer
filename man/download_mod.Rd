@@ -9,7 +9,8 @@ download_mod(model)
 \arguments{
 \item{model}{A string telling which scoring model to use.
 Options are:
-'rb_mod1' and 'rb_mod2' for ReaderBench models, or
+'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
+'rb_mod3per', or 'rb_mod3all' for ReaderBench files,
 'coh_mod1' and 'coh_mod2' for Coh-Metrix models, or
 'gamet_cws1' for GAMET files}
 }

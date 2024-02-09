@@ -10,8 +10,10 @@ predict_quality(model, data, store = FALSE, name = "filename.csv")
 \item{model}{A string telling which scoring model to use.
 Options are:
 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
-'rb_mod3per', or 'rb_mod3all' for ReaderBench files to generate holistic quality,
-'coh_mod1' or 'coh_mod2' for Coh-Metrix files to generate holistic quality,
+'rb_mod3per', 'rb_mod3all', 'rb_mod3narr_v2', 'rb_mod3exp_v2',
+'rb_mod3per_v2', or 'rb_mod3all_v2' for ReaderBench files to generate holistic quality,
+'coh_mod1', 'coh_mod2' 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
+ or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
 and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 
@@ -77,10 +79,8 @@ file_path2
 coh_file <- import_coh(file_path2)
 
 #Generate holistic quality from a Coh-Metrix file (coh_file),
-#return scores to an object called "coh_quality", merge
-#predicted scores with the data file, and store data as "output.csv" in the
-#working directory
-coh_quality <- predict_quality('coh_mod2', coh_file, store = TRUE, name = "output.csv")
+#return scores to an object called "coh_quality",
+coh_quality <- predict_quality('coh_mod2', coh_file, store = FALSE)
 
 #display quality scores
 coh_quality

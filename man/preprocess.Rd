@@ -10,8 +10,10 @@ preprocess(model, data)
 \item{model}{A string telling which scoring model to use.
 Options are:
 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
-'rb_mod3per', or 'rb_mod3all' for ReaderBench files,
-'coh_mod1' or 'coh_mod2' for Coh-Metrix files, or
+'rb_mod3per', 'rb_mod3all', 'rb_mod3narr_v2', 'rb_mod3exp_v2',
+'rb_mod3per_v2', or 'rb_mod3all_v2' for ReaderBench files,
+'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
+ or 'coh_mod3all' for Coh-Metrix files, or
 'gamet_cws1' for GAMET files}
 
 \item{data}{The name of the R object corresponding to the data file. The

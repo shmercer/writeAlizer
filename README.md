@@ -13,7 +13,7 @@ The version history of writeAlizer is available in the package [NEWS.md](https:/
 
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the standalone version of ReaderBench that can be downloaded from [here](http://readerbench.com/deployment).
+ 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Windows Binaries](https://osf.io/wyq4t)
  2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
 
@@ -60,6 +60,10 @@ For writeAlizer t-shirts, hats, coffee mugs, etc., visit [https://www.zazzle.ca/
 
 ### Journal Articles
 
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (in press). Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs. *School Psychology.* [https://doi.org/10.1037/spq0000691](https://doi.org/10.1037/spq0000691)
+
+Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2023). Implications of bias in automated writing quality scores for fair and equitable assessment decisions. *School Psychology, 38*, 173–181. [https://doi.org/10.1037/spq0000517](https://doi.org/10.1037/spq0000517)
+
 Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2022). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice, 29*, 200-218. [https://doi.org/10.1080/0969594X.2022.2043240](https://doi.org/10.1080/0969594X.2022.2043240)
 
 Mercer, S. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. [https://doi.org/10.31244/jero.2022.01.03](https://doi.org/10.31244/jero.2022.01.03)
@@ -77,6 +81,12 @@ Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (2021). Accuracy
 Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)
 
 ### Conference Presentations
+
+Keller-Margulis, M. A., Mercer, S. H., Matta, M., Hut, A. R., Navarro, S., & Duran, B. J. (2025, February). *Cross-genre validity of automated scoring of writing CBM.* Poster presented at the meeting of the National Association of School Psychologists, Seattle, WA, USA.
+
+Keller-Margulis, M., Mercer, S. H., Matta, M., Duran, B., Hut, A., Jellinek-Russo, E., & Lozano, I. (2024, February). *Updated validity of automated scoring for writing CBM across genres.* Paper presented at the meeting of the National Association of School Psychologists, New Orleans, LA, USA.
+
+Keller-Margulis, M. A., Mercer, S. H., Matta, M., Duran, B. J., Hut, A. R., Jellinek, E. R., Loria, E. S., & Lozano, I. (2023, February). *Validity of automated scoring of written expression CBM across genres.* Paper presented at the meeting of the National Association of School Psychologists, Denver, CO, USA.
 
 Mercer, S. H.,Geres-Smith, R., Guo, Y., & Squires, B. (2023, February). *Validity of automated learning progress assessment in written expression.* Poster presented at the meeting of the National Association of School Psychologists, Denver, CO, USA. [https://doi.org/10.17605/OSF.IO/WHJD3](https://doi.org/10.17605/OSF.IO/WHJD3)
 

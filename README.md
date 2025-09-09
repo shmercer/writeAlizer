@@ -36,14 +36,16 @@ help("writeAlizer")
 
 ## Documentation
 
-Information on the various scoring models available and how they were developed is in this respository's [wiki](https://github.com/shmercer/writeAlizer/wiki):
+Information on the various scoring models available and how they were developed is in this repository's [wiki](https://github.com/shmercer/writeAlizer/wiki):
 
 1. [Description of the general process used to develop scoring algorithms](https://github.com/shmercer/writeAlizer/wiki/Scoring-Model-Development).
 2. Description of the following specific scoring models (models recommended for use in research are indicated by *), including information on the relative importance of metrics and weighting of algorithms:
    * [Coh-Metrix Model 1](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-1)
-   * [Coh-Metrix Model 2*](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-2)
+   * [Coh-Metrix Model 2](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-2)
+   * [Coh-Metrix Model 3*](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-3)
    * [ReaderBench Model 1](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-1)
-   * [ReaderBench Model 2*](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-2)
+   * [ReaderBench Model 2](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-2)
+   * [ReaderBench Model 3*](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-3)
    * [Automated Written Expression CBM Model 1](https://github.com/shmercer/writeAlizer/wiki/aWE-CBM-Model-1)
 
 ## Package Author and Maintainer

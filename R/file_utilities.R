@@ -162,7 +162,7 @@ import_rb <- function(path) {
       sep = ",")
   }
   dat_RB <- dat_RB %>%
-    dplyr::mutate(dplyr::across(where(is.character), ~ dplyr::na_if(.x, "NaN")))
+    dplyr::mutate(dplyr::across(dplyr::where(is.character), ~ dplyr::na_if(.x, "NaN")))
   dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
   names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
   #make any factors numeric and sort by ID

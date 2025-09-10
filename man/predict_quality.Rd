@@ -22,15 +22,6 @@ and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 \code{\link{import_rb}}import_rb()
 functions should be used before this function
 to generate these data objects.}
-
-\item{store}{When store = TRUE, this function will generate scores, merge
-the scores into the data file, and export the file as .csv in the
-working directory. When store = FALSE (the default) the predicted scores
-are returned to a user-specified object or the R console.}
-
-\item{name}{When store = TRUE, the name parameter gives the filename for
-the .csv file (for example, "filename.csv") that is
-generated to the working directory.}
 }
 \value{
 Depending on the model parameter option selected, predicted quality (or CWS/CIWS scores)
@@ -46,6 +37,7 @@ Correct Word Sequences and Correct Minus Incorrect
 Word Sequences can be generated from a GAMET file (model = 'gamet_cws1').
 }
 \examples{
+\donttest{
 ###Examples using sample data included in writeAlizer package
 
 ##Example 1: ReaderBench output file
@@ -63,7 +55,7 @@ rb_file <- import_rb(file_path1)
 
 #Generate holistic quality from "rb_file"
 #and return scores to an object called "rb_quality":
-rb_quality <- predict_quality('rb_mod2', rb_file, store = FALSE)
+rb_quality <- predict_quality('rb_mod2', rb_file)
 
 #display quality scores
 rb_quality
@@ -80,7 +72,7 @@ coh_file <- import_coh(file_path2)
 
 #Generate holistic quality from a Coh-Metrix file (coh_file),
 #return scores to an object called "coh_quality",
-coh_quality <- predict_quality('coh_mod2', coh_file, store = FALSE)
+coh_quality <- predict_quality('coh_mod2', coh_file)
 
 #display quality scores
 coh_quality
@@ -97,10 +89,11 @@ gam_file <- import_gamet(file_path3)
 
 #Generate CWS and CIWS scores from a GAMET file
 #(gam_file) and return scores to an object called "gamet_CWS_CIWS"
-gamet_CWS_CIWS <- predict_quality('gamet_cws1', gam_file, store = FALSE)
+gamet_CWS_CIWS <- predict_quality('gamet_cws1', gam_file)
 
 #display quality scores
 gamet_CWS_CIWS
+}
 }
 \seealso{
 \code{\link{import_rb}}

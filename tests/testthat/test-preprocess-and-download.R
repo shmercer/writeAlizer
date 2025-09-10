@@ -59,18 +59,25 @@ testthat::test_that("registry-driven preprocess works for 1-part Coh models (coh
 })
 
 testthat::test_that("models with no preprocessing preserve behavior", {
+  # rb_mod1 -> 6 copies
   rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-  testthat::skip_if_not(rb_path != "", "sample_rb.csv not found in inst/extdata")
+  testthat::skip_if_not(rb_path != "", "sample_rb.csv not found")
   rb <- writeAlizer::import_rb(rb_path)
 
   out1 <- writeAlizer:::preprocess("rb_mod1", rb)
   testthat::expect_length(out1, 6)
   for (df in out1) testthat::expect_identical(nrow(df), nrow(rb))
 
-  out2 <- writeAlizer:::preprocess("gamet_cws1", rb) # structure check only
-  testthat::expect_length(out2, 1)
-  testthat::expect_identical(nrow(out2[[1]]), nrow(rb))
+  # gamet_cws1 -> TWO splits (CWS, CIWS) using identical features
+  gm_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+  testthat::skip_if_not(gm_path != "", "sample_gamet.csv not found")
+  gm <- writeAlizer::import_gamet(gm_path)
+
+  out2 <- writeAlizer:::preprocess("gamet_cws1", gm)
+  testthat::expect_length(out2, 2)
+  testthat::expect_true(all(vapply(out2, nrow, integer(1)) == nrow(gm)))
 })
+
 
 testthat::test_that("unknown model key produces a clear error", {
   rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")

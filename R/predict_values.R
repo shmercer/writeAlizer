@@ -95,8 +95,8 @@ preprocess <- function(model, data) {
     data_pp <- list(data, data, data, data, data, data)
 
   } else if (model == "gamet_cws1") {
-    # No preprocessing; single item list
-    data_pp <- list(data)
+    # Both CWS and CIWS consume the same features; return two splits
+    data_pp <- list(data, data)
 
   } else if (model %in% c("rb_mod2", "coh_mod2", "rb_mod3all",
                           "rb_mod3all_v2", "coh_mod3all")) {
@@ -164,13 +164,6 @@ preprocess <- function(model, data) {
 #' \code{\link{import_rb}}import_rb()
 #' functions should be used before this function
 #' to generate these data objects.
-#' @param store When store = TRUE, this function will generate scores, merge
-#' the scores into the data file, and export the file as .csv in the
-#' working directory. When store = FALSE (the default) the predicted scores
-#' are returned to a user-specified object or the R console.
-#' @param name When store = TRUE, the name parameter gives the filename for
-#' the .csv file (for example, "filename.csv") that is
-#' generated to the working directory.
 #' @return Depending on the model parameter option selected, predicted quality (or CWS/CIWS scores)
 #' and the ID variable (parsed from the file names used when generating the ReaderBench, Coh-Metrix,
 #' and/or GAMET output files) are returned.
@@ -180,6 +173,7 @@ preprocess <- function(model, data) {
 #' \code{\link{import_coh}}
 #' \code{\link{import_gamet}}
 #' @examples
+#' \donttest{
 #' ###Examples using sample data included in writeAlizer package
 #'
 #' ##Example 1: ReaderBench output file
@@ -197,7 +191,7 @@ preprocess <- function(model, data) {
 #'
 #' #Generate holistic quality from "rb_file"
 #' #and return scores to an object called "rb_quality":
-#' rb_quality <- predict_quality('rb_mod2', rb_file, store = FALSE)
+#' rb_quality <- predict_quality('rb_mod2', rb_file)
 #'
 #' #display quality scores
 #' rb_quality
@@ -214,7 +208,7 @@ preprocess <- function(model, data) {
 #'
 #' #Generate holistic quality from a Coh-Metrix file (coh_file),
 #' #return scores to an object called "coh_quality",
-#' coh_quality <- predict_quality('coh_mod2', coh_file, store = FALSE)
+#' coh_quality <- predict_quality('coh_mod2', coh_file)
 #'
 #' #display quality scores
 #' coh_quality
@@ -231,10 +225,11 @@ preprocess <- function(model, data) {
 #'
 #' #Generate CWS and CIWS scores from a GAMET file
 #' #(gam_file) and return scores to an object called "gamet_CWS_CIWS"
-#' gamet_CWS_CIWS <- predict_quality('gamet_cws1', gam_file, store = FALSE)
+#' gamet_CWS_CIWS <- predict_quality('gamet_cws1', gam_file)
 #'
 #' #display quality scores
 #' gamet_CWS_CIWS
+#' }
 predict_quality <- function(model, data) {
   stopifnot(is.data.frame(data), "ID" %in% names(data))
 
@@ -299,9 +294,14 @@ predict_quality <- function(model, data) {
     out[[paste0("pred_", nm)]] <- preds[[nm]]
   }
 
-  # 7) Optional row-mean
+  # 7) If all prediction columns are numeric and we have >1, add a row-mean
+  #    BUT: not for GAMET (gamet_cws1)
   pred_cols <- grep("^pred_", names(out), value = TRUE)
-  if (length(pred_cols) > 1 && all(vapply(out[pred_cols], is.numeric, logical(1)))) {
+  if (
+    model != "gamet_cws1" &&
+    length(pred_cols) > 1 &&
+    all(vapply(out[pred_cols], is.numeric, logical(1)))
+  ) {
     out$score_mean <- rowMeans(out[pred_cols], na.rm = TRUE)
   }
 

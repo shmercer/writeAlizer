@@ -139,11 +139,12 @@ preprocess <- function(model, data) {
   return(data_pp)
 }
 
-#' @title Apply scoring models for predictions
-#' @description Apply scoring models to ReaderBench, CohMetrix, and/or
+#' @title Predict writing quality
+#' @description Run the specified model(s) on preprocessed data and return predictions.
+#' Apply scoring models to ReaderBench, CohMetrix, and/or
 #' GAMET files. Holistic writing quality can be
-#' generated from Readerbench (model = 'rb_mod2') or
-#' Coh-Metrix files (model = 'coh_mod2'). Also,
+#' generated from Readerbench (model = 'rb_mod3all') or
+#' Coh-Metrix files (model = 'coh_mod3all'). Also,
 #' Correct Word Sequences and Correct Minus Incorrect
 #' Word Sequences can be generated from a GAMET file (model = 'gamet_cws1').
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
@@ -153,8 +154,7 @@ preprocess <- function(model, data) {
 #' @param model A string telling which scoring model to use.
 #' Options are:
 #' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
-#' 'rb_mod3per', 'rb_mod3all', 'rb_mod3narr_v2', 'rb_mod3exp_v2',
-#' 'rb_mod3per_v2', or 'rb_mod3all_v2' for ReaderBench files to generate holistic quality,
+#' 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
 #' 'coh_mod1', 'coh_mod2' 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
 #'  or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
 #' and 'gamet_cws1' to generate Correct Word Sequences (CWS)
@@ -164,16 +164,17 @@ preprocess <- function(model, data) {
 #' \code{\link{import_rb}}import_rb()
 #' functions should be used before this function
 #' to generate these data objects.
-#' @return Depending on the model parameter option selected, predicted quality (or CWS/CIWS scores)
-#' and the ID variable (parsed from the file names used when generating the ReaderBench, Coh-Metrix,
-#' and/or GAMET output files) are returned.
+#' @return A data.frame with ID and one column per sub-model prediction.
+#'         If multiple sub-models are used and all predictions are numeric,
+#'         an aggregate column named \code{pred_<model>_mean}
+#'         is added (except for "gamet_cws1")
 #' @export
 #' @seealso
 #' \code{\link{import_rb}}
 #' \code{\link{import_coh}}
 #' \code{\link{import_gamet}}
-#' @examples
-#' \donttest{
+#' @section Examples (not run):
+#' \preformatted{
 #' ###Examples using sample data included in writeAlizer package
 #'
 #' ##Example 1: ReaderBench output file
@@ -191,7 +192,7 @@ preprocess <- function(model, data) {
 #'
 #' #Generate holistic quality from "rb_file"
 #' #and return scores to an object called "rb_quality":
-#' rb_quality <- predict_quality('rb_mod2', rb_file)
+#' rb_quality <- predict_quality('rb_mod3all', rb_file)
 #'
 #' #display quality scores
 #' rb_quality
@@ -208,7 +209,7 @@ preprocess <- function(model, data) {
 #'
 #' #Generate holistic quality from a Coh-Metrix file (coh_file),
 #' #return scores to an object called "coh_quality",
-#' coh_quality <- predict_quality('coh_mod2', coh_file)
+#' coh_quality <- predict_quality('coh_mod3all', coh_file)
 #'
 #' #display quality scores
 #' coh_quality
@@ -233,77 +234,71 @@ preprocess <- function(model, data) {
 predict_quality <- function(model, data) {
   stopifnot(is.data.frame(data), "ID" %in% names(data))
 
-  # 1) Preprocess (registry-driven varlists)
-  data_pp <- preprocess(model, data)  # list length 1, 3, or 6 (or 1 for gamet)
+  requested_model  <- model                       # for output naming
+  canonical_model  <- .wa_canonical_model(model)  # for artifact/varlist loading
 
-  # 2) Load trained fits as a named list (canonical names from filenames)
-  fits <- .wa_load_fits_list(model)
+  # 1) Preprocess for the canonical model key
+  data_pp <- preprocess(canonical_model, data)
 
-  # 3) Expected order/names per model key
-  obj_names <- switch(
-    model,
-    # 6-part models
-    "rb_mod1"  = paste0("rb_mod1",  letters[1:6]),
-    "coh_mod1" = paste0("coh_mod1", letters[1:6]),
-    # 3-part models
-    "rb_mod2"       = paste0("rb_mod2",  letters[1:3]),
-    "coh_mod2"      = paste0("coh_mod2",  letters[1:3]),
-    "rb_mod3all"    = c("rb_mod3exp", "rb_mod3narr", "rb_mod3per"),
-    "rb_mod3all_v2" = c("rb_mod3exp_v2", "rb_mod3narr_v2", "rb_mod3per_v2"),
-    "coh_mod3all"   = c("coh_mod3exp",  "coh_mod3narr",  "coh_mod3per"),
-    # single-part models
-    "rb_mod3narr"   = "rb_mod3narr",
-    "rb_mod3exp"    = "rb_mod3exp",
-    "rb_mod3per"    = "rb_mod3per",
-    "rb_mod3narr_v2"= "rb_mod3narr_v2",
-    "rb_mod3exp_v2" = "rb_mod3exp_v2",
-    "rb_mod3per_v2" = "rb_mod3per_v2",
-    "coh_mod3narr"  = "coh_mod3narr",
-    "coh_mod3exp"   = "coh_mod3exp",
-    "coh_mod3per"   = "coh_mod3per",
-    # GAMET
-    "gamet_cws1"    = c("CWS_mod1a", "CIWS_mod1a"),
-    stop(sprintf("Unknown model key '%s'", model))
+  # 2) Load trained fits for the canonical model
+  fits <- .wa_load_fits_list(canonical_model)
+
+  # 3) Expected object names by canonical key
+  fit_names <- switch(
+    canonical_model,
+    "rb_mod1"        = paste0("rb_mod1",  letters[1:6]),
+    "coh_mod1"       = paste0("coh_mod1", letters[1:6]),
+    "rb_mod2"        = paste0("rb_mod2",  letters[1:3]),
+    "coh_mod2"       = paste0("coh_mod2",  letters[1:3]),
+    "rb_mod3all_v2"  = c("rb_mod3exp_v2", "rb_mod3narr_v2", "rb_mod3per_v2"),
+    "rb_mod3narr_v2" = "rb_mod3narr_v2",
+    "rb_mod3exp_v2"  = "rb_mod3exp_v2",
+    "rb_mod3per_v2"  = "rb_mod3per_v2",
+    "coh_mod3all"    = c("coh_mod3exp",   "coh_mod3narr",   "coh_mod3per"),
+    "coh_mod3narr"   = "coh_mod3narr",
+    "coh_mod3exp"    = "coh_mod3exp",
+    "coh_mod3per"    = "coh_mod3per",
+    "gamet_cws1"     = c("CWS_mod1a", "CIWS_mod1a"),
+    stop(sprintf("Unknown model key '%s' (canonicalized from '%s')", canonical_model, requested_model))
   )
 
-  # 4) Validate we have a 1:1 mapping between fits and preprocessed splits
-  if (length(obj_names) != length(data_pp)) {
+  if (length(fit_names) != length(data_pp)) {
     stop(sprintf("Mismatch: expected %d sub-models, got %d preprocessed splits.",
-                 length(obj_names), length(data_pp)))
+                 length(fit_names), length(data_pp)))
   }
-  missing <- setdiff(obj_names, names(fits))
+  missing <- setdiff(fit_names, names(fits))
   if (length(missing)) {
     stop(sprintf("Missing trained objects for model '%s': %s",
-                 model, paste(missing, collapse = ", ")))
+                 canonical_model, paste(missing, collapse = ", ")))
   }
 
-  # 5) Predict per sub-model
+  #outward display names have '_v2' stripped for RB mod3
+  strip_v2 <- function(x) sub("_v2$", "", x)
+  out_names <- if (grepl("^rb_mod3", canonical_model)) strip_v2(fit_names) else fit_names
+
+  # 4) Predict per sub-model
   drop_id <- function(df) if ("ID" %in% names(df)) df[setdiff(names(df), "ID")] else df
+  preds <- vector("list", length(fit_names))
+  names(preds) <- out_names
 
-  preds <- vector("list", length(obj_names))
-  names(preds) <- obj_names
-  for (i in seq_along(obj_names)) {
-    nm <- obj_names[[i]]
+  for (i in seq_along(fit_names)) {
     newx <- drop_id(data_pp[[i]])
-    preds[[i]] <- predict(fits[[nm]], newdata = newx)
+    preds[[out_names[[i]]]] <- predict(fits[[fit_names[[i]]]], newdata = newx)
   }
 
-  # 6) Assemble output
+  # 5) Assemble output with outward names
   out <- data.frame(ID = data$ID, stringsAsFactors = FALSE)
-  for (nm in obj_names) {
-    out[[paste0("pred_", nm)]] <- preds[[nm]]
-  }
+  for (nm in out_names) out[[paste0("pred_", nm)]] <- preds[[nm]]
 
-  # 7) If all prediction columns are numeric and we have >1, add a row-mean
-  #    BUT: not for GAMET (gamet_cws1)
+  # Mean column: pred_<model>_mean, with any trailing _v2 removed
   pred_cols <- grep("^pred_", names(out), value = TRUE)
-  if (
-    model != "gamet_cws1" &&
-    length(pred_cols) > 1 &&
-    all(vapply(out[pred_cols], is.numeric, logical(1)))
-  ) {
-    out$score_mean <- rowMeans(out[pred_cols], na.rm = TRUE)
+  if (requested_model != "gamet_cws1" &&
+      length(pred_cols) > 1 &&
+      all(vapply(out[pred_cols], is.numeric, logical(1)))) {
+    model_for_mean <- sub("_v2$", "", requested_model)
+    out[[paste0("pred_", model_for_mean, "_mean")]] <- rowMeans(out[pred_cols], na.rm = TRUE)
   }
 
   out
 }
+

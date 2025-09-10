@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_values.R
 \name{predict_quality}
 \alias{predict_quality}
-\title{Apply scoring models for predictions}
+\title{Predict writing quality}
 \usage{
 predict_quality(model, data)
 }
@@ -10,8 +10,7 @@ predict_quality(model, data)
 \item{model}{A string telling which scoring model to use.
 Options are:
 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
-'rb_mod3per', 'rb_mod3all', 'rb_mod3narr_v2', 'rb_mod3exp_v2',
-'rb_mod3per_v2', or 'rb_mod3all_v2' for ReaderBench files to generate holistic quality,
+'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
 'coh_mod1', 'coh_mod2' 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
  or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
 and 'gamet_cws1' to generate Correct Word Sequences (CWS)
@@ -24,20 +23,23 @@ functions should be used before this function
 to generate these data objects.}
 }
 \value{
-Depending on the model parameter option selected, predicted quality (or CWS/CIWS scores)
-and the ID variable (parsed from the file names used when generating the ReaderBench, Coh-Metrix,
-and/or GAMET output files) are returned.
+A data.frame with ID and one column per sub-model prediction.
+        If multiple sub-models are used and all predictions are numeric,
+        an aggregate column named \code{pred_<model>_mean}
+        is added (except for "gamet_cws1")
 }
 \description{
+Run the specified model(s) on preprocessed data and return predictions.
 Apply scoring models to ReaderBench, CohMetrix, and/or
 GAMET files. Holistic writing quality can be
-generated from Readerbench (model = 'rb_mod2') or
-Coh-Metrix files (model = 'coh_mod2'). Also,
+generated from Readerbench (model = 'rb_mod3all') or
+Coh-Metrix files (model = 'coh_mod3all'). Also,
 Correct Word Sequences and Correct Minus Incorrect
 Word Sequences can be generated from a GAMET file (model = 'gamet_cws1').
 }
-\examples{
-\donttest{
+\section{Examples (not run)}{
+
+\preformatted{
 ###Examples using sample data included in writeAlizer package
 
 ##Example 1: ReaderBench output file
@@ -55,7 +57,7 @@ rb_file <- import_rb(file_path1)
 
 #Generate holistic quality from "rb_file"
 #and return scores to an object called "rb_quality":
-rb_quality <- predict_quality('rb_mod2', rb_file)
+rb_quality <- predict_quality('rb_mod3all', rb_file)
 
 #display quality scores
 rb_quality
@@ -72,7 +74,7 @@ coh_file <- import_coh(file_path2)
 
 #Generate holistic quality from a Coh-Metrix file (coh_file),
 #return scores to an object called "coh_quality",
-coh_quality <- predict_quality('coh_mod2', coh_file)
+coh_quality <- predict_quality('coh_mod3all', coh_file)
 
 #display quality scores
 coh_quality
@@ -95,6 +97,7 @@ gamet_CWS_CIWS <- predict_quality('gamet_cws1', gam_file)
 gamet_CWS_CIWS
 }
 }
+
 \seealso{
 \code{\link{import_rb}}
 \code{\link{import_coh}}

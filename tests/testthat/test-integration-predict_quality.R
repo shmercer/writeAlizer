@@ -1,5 +1,3 @@
-# tests/testthat/test-integration-predict_quality.R
-
 testthat::test_that("predict_quality runs for all model keys with mocked artifacts", {
   # Keep tests offline
   tmp <- withr::local_tempdir()
@@ -74,6 +72,16 @@ testthat::test_that("predict_quality runs for all model keys with mocked artifac
     rda_parts <- writeAlizer:::.wa_parts_for("rda", model)
     testthat::expect_gt(nrow(rda_parts), 0L)
 
+    # outward (display) names: strip "_v2" for rb_mod3 family
+    base_names <- tools::file_path_sans_ext(basename(rda_parts$file))
+    display_names <- if (grepl("^rb_mod3", writeAlizer:::.wa_canonical_model(model))) {
+      sub("_v2$", "", base_names)
+    } else base_names
+    expected_preds <- paste0("pred_", display_names)
+
+    # mean column name (never include _v2)
+    mean_name <- paste0("pred_", sub("_v2$", "", model), "_mean")
+
     # Choose vars per part: use the vars slice when available; otherwise fall back
     fallback <- head(num_cols(data), 5L)
     testthat::skip_if(length(fallback) < 1L, "No numeric columns available for fallback")
@@ -86,15 +94,15 @@ testthat::test_that("predict_quality runs for all model keys with mocked artifac
     # 3) Predict via package API
     out <- writeAlizer:::predict_quality(model, data)
 
-    # 4) Validate output columns and basic shapes
-    expected_preds <- paste0("pred_", tools::file_path_sans_ext(basename(rda_parts$file)))
+    # 4) Validate output columns and basic shapes (use display names)
     testthat::expect_true(all(expected_preds %in% names(out)))
     testthat::expect_identical(out$ID, data$ID)
 
+    # mean column presence/absence
     if (model == "gamet_cws1") {
-      testthat::expect_false("score_mean" %in% names(out))  # special rule
+      testthat::expect_false(mean_name %in% names(out))  # special rule
     } else if (length(expected_preds) > 1L) {
-      testthat::expect_true("score_mean" %in% names(out))
+      testthat::expect_true(mean_name %in% names(out))
     }
 
     # Predictions are numeric of correct length

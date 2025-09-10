@@ -8,10 +8,6 @@
       # -------- RDS (variable lists) ----------
       # rb_mod2
       "rds","rds","rds",
-      # rb_mod3 single-genre
-      "rds","rds","rds",
-      # rb_mod3 all
-      "rds","rds","rds",
       # rb_mod3 v2 single-genre
       "rds","rds","rds",
       # rb_mod3 v2 all
@@ -28,13 +24,9 @@
       "rda","rda","rda","rda","rda","rda",
       # rb_mod2 (3 parts)
       "rda","rda","rda",
-      # rb_mod3 single-genre
-      "rda","rda","rda",
-      # rb_mod3 all
-      "rda","rda","rda",
       # rb_mod3 v2 single-genre
       "rda","rda","rda",
-      # rb_mod3 v2 all
+      # rb_mod3 v2 all (bundle the three v2 fits)
       "rda","rda","rda",
       # coh_mod1 (6 parts)
       "rda","rda","rda","rda","rda","rda",
@@ -51,10 +43,6 @@
       # -------- RDS ----------
       # rb_mod2
       "rb_mod2","rb_mod2","rb_mod2",
-      # rb_mod3 single-genre
-      "rb_mod3narr","rb_mod3exp","rb_mod3per",
-      # rb_mod3 all
-      "rb_mod3all","rb_mod3all","rb_mod3all",
       # rb_mod3 v2 single-genre
       "rb_mod3narr_v2","rb_mod3exp_v2","rb_mod3per_v2",
       # rb_mod3 v2 all
@@ -71,13 +59,9 @@
       "rb_mod1","rb_mod1","rb_mod1","rb_mod1","rb_mod1","rb_mod1",
       # rb_mod2
       "rb_mod2","rb_mod2","rb_mod2",
-      # rb_mod3 single-genre
-      "rb_mod3narr","rb_mod3exp","rb_mod3per",
-      # rb_mod3 all
-      "rb_mod3all","rb_mod3all","rb_mod3all",
       # rb_mod3 v2 single-genre
       "rb_mod3narr_v2","rb_mod3exp_v2","rb_mod3per_v2",
-      # rb_mod3 v2 all
+      # rb_mod3 v2 all (same three v2 fits)
       "rb_mod3all_v2","rb_mod3all_v2","rb_mod3all_v2",
       # coh_mod1
       "coh_mod1","coh_mod1","coh_mod1","coh_mod1","coh_mod1","coh_mod1",
@@ -93,8 +77,6 @@
     part  = c(
       # -------- RDS ----------
       "a","b","c",  # rb_mod2
-      "a","a","a",  # rb_mod3 single-genre
-      "a","b","c",  # rb_mod3 all
       "a","a","a",  # rb_mod3 v2 single-genre
       "a","b","c",  # rb_mod3 v2 all
       "a","b","c",  # coh_mod2
@@ -104,8 +86,6 @@
       # -------- RDA ----------
       "a","b","c","d","e","f",  # rb_mod1
       "a","b","c",              # rb_mod2
-      "a","a","a",              # rb_mod3 single-genre
-      "a","b","c",              # rb_mod3 all
       "a","a","a",              # rb_mod3 v2 single-genre
       "a","b","c",              # rb_mod3 v2 all
       "a","b","c","d","e","f",  # coh_mod1
@@ -117,8 +97,6 @@
     file  = c(
       # -------- RDS ----------
       "rb_mod2a_vars.rds","rb_mod2b_vars.rds","rb_mod2c_vars.rds",
-      "rb_mod3narr_vars.rds","rb_mod3exp_vars.rds","rb_mod3per_vars.rds",
-      "rb_mod3exp_vars.rds","rb_mod3narr_vars.rds","rb_mod3per_vars.rds",
       "rb_narr_vars_v2.rds","rb_exp_vars_v2.rds","rb_per_vars_v2.rds",
       "rb_exp_vars_v2.rds","rb_narr_vars_v2.rds","rb_per_vars_v2.rds",
       "coh_mod2a_vars.rds","coh_mod2b_vars.rds","coh_mod2c_vars.rds",
@@ -128,8 +106,6 @@
       # -------- RDA ----------
       "rb_mod1a.rda","rb_mod1b.rda","rb_mod1c.rda","rb_mod1d.rda","rb_mod1e.rda","rb_mod1f.rda",
       "rb_mod2a.rda","rb_mod2b.rda","rb_mod2c.rda",
-      "rb_mod3narr.rda","rb_mod3exp.rda","rb_mod3per.rda",
-      "rb_mod3exp.rda","rb_mod3narr.rda","rb_mod3per.rda",
       "rb_mod3narr_v2.rda","rb_mod3exp_v2.rda","rb_mod3per_v2.rda",
       "rb_mod3exp_v2.rda","rb_mod3narr_v2.rda","rb_mod3per_v2.rda",
       "coh_mod1a.rda","coh_mod1b.rda","coh_mod1c.rda","coh_mod1d.rda","coh_mod1e.rda","coh_mod1f.rda",
@@ -141,8 +117,6 @@
     url   = c(
       # -------- RDS ----------
       "https://osf.io/2rsnc/download","https://osf.io/qjg68/download","https://osf.io/kqdvt/download",
-      "https://osf.io/bmqg9/download","https://osf.io/8ut7r/download","https://osf.io/8mgcn/download",
-      "https://osf.io/8ut7r/download","https://osf.io/bmqg9/download","https://osf.io/8mgcn/download",
       "https://osf.io/8v6nz/download","https://osf.io/gvtyx/download","https://osf.io/7dhc6/download",
       "https://osf.io/gvtyx/download","https://osf.io/8v6nz/download","https://osf.io/7dhc6/download",
       "https://osf.io/qp7fc/download","https://osf.io/upn6j/download","https://osf.io/8qmzv/download",
@@ -153,8 +127,6 @@
       "https://osf.io/eq9rw/download","https://osf.io/sy4dw/download","https://osf.io/64dxf/download",
       "https://osf.io/5yghv/download","https://osf.io/kgxtu/download","https://osf.io/5wdet/download",
       "https://osf.io/bpzhs/download","https://osf.io/vzkhn/download","https://osf.io/cqkrv/download",
-      "https://osf.io/f4nhu/download","https://osf.io/rx6aj/download","https://osf.io/kqxte/download",
-      "https://osf.io/rx6aj/download","https://osf.io/f4nhu/download","https://osf.io/kqxte/download",
       "https://osf.io/rqtzm/download","https://osf.io/hknxf/download","https://osf.io/ntgfm/download",
       "https://osf.io/hknxf/download","https://osf.io/rqtzm/download","https://osf.io/ntgfm/download",
       "https://osf.io/qws5x/download","https://osf.io/rdmfw/download","https://osf.io/dq2s9/download",
@@ -170,9 +142,29 @@
 
 # ------- helpers (internal; do NOT export) -------
 
+# Returns the full artifact registry (as a data.frame).
+# Kept separate from .wa_artifacts() so we can later add filtering,
+# validation, or de-duplication here without touching the table.
+.wa_registry <- function() {
+  .wa_artifacts()
+}
+
+.wa_canonical_model <- function(model) {
+  switch(model,
+         "rb_mod3narr" = "rb_mod3narr_v2",
+         "rb_mod3exp"  = "rb_mod3exp_v2",
+         "rb_mod3per"  = "rb_mod3per_v2",
+         "rb_mod3all"  = "rb_mod3all_v2",
+         model
+  )
+}
+
 .wa_parts_for <- function(kind, model) {
-  af <- .wa_artifacts()
-  af[af$kind == kind & af$model == model, , drop = FALSE]
+  key <- .wa_canonical_model(model)
+  reg <- .wa_registry()
+  out <- reg[reg$kind == kind & reg$model == key, c("file","url"), drop = FALSE]
+  rownames(out) <- NULL
+  out
 }
 
 .wa_local_path <- function(filename) {

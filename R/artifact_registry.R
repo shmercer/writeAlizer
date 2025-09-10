@@ -233,6 +233,57 @@
     canonical <- tools::file_path_sans_ext(basename(p$file))  # e.g., rb_mod1a
     fits[[canonical]] <- get(pick, envir = tmp, inherits = FALSE)
   }
+
+  #ensure any required Suggests are installed for these model objects
+  .wa_require_pkgs_for_fits(unname(fits))
+
   fits
+}
+
+.wa_require_pkgs_for_fits <- function(fits) {
+  needed <- character(0)
+
+  for (f in fits) {
+    cls <- class(f)
+
+    # Direct model classes → packages
+    if ("randomForest" %in% cls) needed <- c(needed, "randomForest")
+    if ("gbm"          %in% cls) needed <- c(needed, "gbm")
+    if ("glmnet"       %in% cls) needed <- c(needed, "glmnet")
+    if ("earth"        %in% cls) needed <- c(needed, "earth")
+    if ("cubist"       %in% cls || "Cubist" %in% cls) needed <- c(needed, "Cubist")
+    if ("ksvm"         %in% cls || "kernlab" %in% cls) needed <- c(needed, "kernlab")
+    if ("mvr"          %in% cls || "pls"    %in% cls) needed <- c(needed, "pls")
+    if ("caretEnsemble"%in% cls) needed <- c(needed, "caretEnsemble")
+
+    # caret::train objects often require additional libraries specified in modelInfo
+    if ("train" %in% cls) {
+      libs <- tryCatch(
+        {
+          mi <- f$modelInfo
+          if (!is.null(mi$library)) mi$library else character(0)
+        },
+        error = function(e) character(0)
+      )
+      needed <- c(needed, libs)
+    }
+  }
+
+  needed <- unique(needed)
+  missing <- needed[!vapply(needed, requireNamespace, logical(1), quietly = TRUE)]
+
+  if (length(missing)) {
+    stop(
+      paste0(
+        "These packages are required to use the loaded model objects but are not installed: ",
+        paste(missing, collapse = ", "),
+        "\nPlease install them, e.g.: install.packages(c(\"",
+        paste(missing, collapse = "\", \""), "\"))"
+      ),
+      call. = FALSE
+    )
+  }
+
+  invisible(TRUE)
 }
 

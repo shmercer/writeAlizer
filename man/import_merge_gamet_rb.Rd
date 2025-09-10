@@ -2,7 +2,8 @@
 % Please edit documentation in R/file_utilities.R
 \name{import_merge_gamet_rb}
 \alias{import_merge_gamet_rb}
-\title{Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.}
+\title{Import a ReaderBench output file (.csv) and GAMET output file (.csv),
+and merge the two files on ID.}
 \usage{
 import_merge_gamet_rb(rb_path, gamet_path)
 }
@@ -12,37 +13,8 @@ import_merge_gamet_rb(rb_path, gamet_path)
 \item{gamet_path}{A string giving the path and GAMET filename to import.}
 }
 \description{
-Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.
-}
-\examples{
-##Example 1:
-#Using a sample data files included with writeAlizer package
-
-#load package
-library(writeAlizer)
-
-#get path of sample ReaderBench output file
-file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-
-#see path to sample ReaderBench file
-file_path1
-
-#get path of sample GAMET output file
-file_path2 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-
-#see path to sample GAMET file
-file_path2
-
-#import files, merge, and store as "rb_gam_file"
-rb_gam_file <- import_merge_gamet_rb(file_path1, file_path2)
-
-##Example 2:
-#To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.csv)
-#and GAMET file (sample name: gamet_output.csv) stored in the working
-#directory and then merge them
-\dontrun{
-rb_gam_file <- import_merge_gamet_rb("rb_output.csv", "gamet_output.csv")
-}
+Import a ReaderBench output file (.csv) and GAMET output file (.csv),
+and merge the two files on ID.
 }
 \seealso{
 \code{\link{predict_quality}}

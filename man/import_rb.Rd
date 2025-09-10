@@ -2,7 +2,7 @@
 % Please edit documentation in R/file_utilities.R
 \name{import_rb}
 \alias{import_rb}
-\title{Import a ReaderBench output file(.csv) into R.}
+\title{Import a ReaderBench output file (.csv) into R.}
 \usage{
 import_rb(path)
 }
@@ -10,30 +10,7 @@ import_rb(path)
 \item{path}{A string giving the path and filename to import.}
 }
 \description{
-Import a ReaderBench output file(.csv) into R.
-}
-\examples{
-#' ##Example 1:
-#Using a sample data file included with writeAlizer package
-
-#load package
-library(writeAlizer)
-
-#get path of sample ReaderBench output file
-file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-
-#see path to sample file
-file_path
-
-#import file and store as "rb_file"
-rb_file <- import_rb(file_path)
-
-##Example 2:
-#To import as "rb_file" a ReaderBench file (sample name: rb_output.csv)
-#that is stored in the working directory
-\dontrun{
-rb_file <- import_rb("rb_output.csv")
-}
+Import a ReaderBench output file (.csv) into R.
 }
 \seealso{
 \code{\link{predict_quality}}

@@ -12,29 +12,6 @@ import_gamet(path)
 \description{
 Import a GAMET output file into R.
 }
-\examples{
-##Example 1:
-#Using a sample data file included with writeAlizer package
-
-#load package
-library(writeAlizer)
-
-#get path of sample GAMET output file
-file_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-
-#see path to sample file
-file_path
-
-#import file and store as "gamet_file"
-gamet_file <- import_gamet(file_path)
-
-##Example 2:
-#To import as "gamet_file" a GAMET file (sample name: gamet_output.csv)
-#that is stored in the working directory
-\dontrun{
-gamet_file <- import_gamet('gamet_output.csv')
-}
-}
 \seealso{
 \code{\link{predict_quality}}
 }

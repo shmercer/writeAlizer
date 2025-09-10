@@ -1,3 +1,9 @@
+writeAlizer v1.6.0 (Release date: 2025-9-10)
+==============
+Changes: 
+* Replaced the RB mod3 models with their v2 counterparts (e.g., rb_mod3all now calls the rb_mod3all_v2 models).
+* Optimized code for the downloading of model objects.
+
 writeAlizer v1.5.0 (Release date: 2024-2-09)
 ==============
 Changes: 

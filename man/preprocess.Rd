@@ -16,42 +16,15 @@ Options are:
  or 'coh_mod3all' for Coh-Metrix files, or
 'gamet_cws1' for GAMET files}
 
-\item{data}{The name of the R object corresponding to the data file. The
-\code{\link{import_gamet}}import_gamet(), \code{\link{import_coh}}import_coh(), or
-\code{\link{import_rb}}import_rb()
-functions should be used before this function
-to generate these data objects.}
+\item{data}{The name of the R object corresponding to the data file. Use
+\code{\link{import_gamet}}, \code{\link{import_coh}}, or \code{\link{import_rb}}
+before this function to generate these data objects.}
 }
 \value{
-returns a list of pre-processed data files, one per sub-model
+A list of pre-processed data frames, one per sub-model
 }
 \description{
 Pre-process Coh-Metrix and ReaderBench data files before applying predictive models
-}
-\examples{
-###Example using sample data included in writeAlizer package
-
-##Example 1: ReaderBench output file
-#load package
-library(writeAlizer)
-
-#get path of sample ReaderBench output file
-file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-
-#see path to sample file
-file_path1
-
-#import file and store as "rb_file"
-rb_file <- import_rb(file_path1)
-
-#Pre-process RB data for model 2
-preprocess('rb_mod2', rb_file)
-}
-\seealso{
-\code{\link{import_rb}}
-\code{\link{import_coh}}
-\code{\link{import_gamet}}
-\code{\link{predict_quality}}
 }
 \author{
 Sterett H. Mercer <sterett.mercer@ubc.ca>

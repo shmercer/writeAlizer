@@ -17,208 +17,157 @@
 # This file includes functions to import and pre-process Coh-Metrix, ReaderBench,
 # and GAMET output files
 
+# ---- helpers --------------------------------------------------------------
+
+# Treats strings like "12", "-3.5", "1e-3" (with optional whitespace) as numeric-like
+.wa_num_like <- function(x) {
+  is.character(x) &&
+    all(is.na(x) | grepl("^\\s*[-+]?\\d*\\.?\\d+(?:[eE][-+]?\\d+)?\\s*$", x, perl = TRUE))
+}
+
+# Convert numeric-like character columns to numeric, excluding specific columns (e.g., "ID")
+.wa_convert_numeric_like <- function(df, exclude = character()) {
+  cols <- setdiff(names(df), exclude)
+  to_num <- cols[vapply(df[cols], .wa_num_like, logical(1))]
+  if (length(to_num)) {
+    df[to_num] <- lapply(df[to_num], function(x) suppressWarnings(as.numeric(x)))
+  }
+  df
+}
+
+# Replace literal "NaN" strings with NA in character columns (exclude certain cols)
+.wa_naify_nan_chars <- function(df, exclude = character()) {
+  cols <- setdiff(names(df), exclude)
+  for (nm in cols) {
+    if (is.character(df[[nm]])) {
+      x <- df[[nm]]
+      x[x == "NaN"] <- NA
+      df[[nm]] <- x
+    }
+  }
+  df
+}
+
+# --------------------------------------------------------------------------
+
 #' Import a GAMET output file into R.
 #'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
-#' @importFrom dplyr mutate_all
+#' @importFrom dplyr mutate
+#' @importFrom tidyselect where
 #' @param path A string giving the path and filename to import.
 #' @export
-#' @seealso
-#' \code{\link{predict_quality}}
-#' @examples
-#' ##Example 1:
-#' #Using a sample data file included with writeAlizer package
-#'
-#' #load package
-#' library(writeAlizer)
-#'
-#' #get path of sample GAMET output file
-#' file_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-#'
-#' #see path to sample file
-#' file_path
-#'
-#' #import file and store as "gamet_file"
-#' gamet_file <- import_gamet(file_path)
-#'
-#' ##Example 2:
-#' #To import as "gamet_file" a GAMET file (sample name: gamet_output.csv)
-#' #that is stored in the working directory
-#' \dontrun{
-#' gamet_file <- import_gamet('gamet_output.csv')
-#' }
+#' @seealso \code{\link{predict_quality}}
 import_gamet <- function(path) {
-  dat1<-read.csv(path, header = T)
-  #strip filename from path
-  dat1$filename<-basename(tools::file_path_sans_ext(dat1$filename))
-  #rename filename variable
+  dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
+
+  # normalize ID
+  dat1$filename <- basename(tools::file_path_sans_ext(dat1$filename))
   names(dat1)[names(dat1) == "filename"] <- "ID"
-  #make any factors numeric and sort by ID
-  dat2<-mutate_all(dat1, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat3 <- dat2[order(dat2$ID),]
-  dat4 <- dat3[,c("ID", "error_count", "word_count", "grammar", "misspelling", "duplication",
-                  "typographical", "whitespace")]
-  dat4$per_gram <- dat4$grammar/dat4$word_count
-  dat4$per_spell <- dat4$misspelling/dat4$word_count
-  return(dat4)
+  dat1$ID <- as.character(dat1$ID)
+
+  # clean character "NaN" -> NA; auto-convert numeric-like chars (keep ID as character)
+  dat1 <- .wa_naify_nan_chars(dat1, exclude = "ID")
+  dat1 <- .wa_convert_numeric_like(dat1, exclude = "ID")
+
+  # sort by ID (character-safe)
+  dat1 <- dat1[order(dat1$ID), ]
+
+  # select and derive
+  dat4 <- dat1[, c("ID", "error_count", "word_count", "grammar", "misspelling",
+                   "duplication", "typographical", "whitespace")]
+
+  # guard against division by zero
+  dat4$per_gram  <- ifelse(dat4$word_count == 0, NA_real_, dat4$grammar    / dat4$word_count)
+  dat4$per_spell <- ifelse(dat4$word_count == 0, NA_real_, dat4$misspelling / dat4$word_count)
+
+  dat4
 }
 
-#' Import a Coh-Metrix output file(.csv) into R.
+#' Import a Coh-Metrix output file (.csv) into R.
 #'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_sans_ext
-#' @importFrom dplyr mutate_all
+#' @importFrom dplyr mutate
+#' @importFrom tidyselect where
 #' @param path A string giving the path and filename to import.
 #' @export
-#' @seealso
-#' \code{\link{predict_quality}}
-#' @examples
-#' ##Example 1:
-#' #Using a sample data file included with writeAlizer package
-#'
-#' #load package
-#' library(writeAlizer)
-#'
-#' #get path of sample Coh-Metrix output file
-#' file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-#'
-#' #see path to sample file
-#' file_path
-#'
-#' #import file and store as "coh_file"
-#' coh_file <- import_coh(file_path)
-#'
-#' ##Example 2:
-#' #To import as 'coh_file' a Coh-Metrix file (sample name: coh_output.csv)
-#' #that is stored in the working directory
-#' \dontrun{
-#' coh_file <- import_coh("coh_output.csv")
-#' }
+#' @seealso \code{\link{predict_quality}}
 import_coh <- function(path) {
-  dat1<-read.csv(path, header = T)
-  #strip filename from path
-  dat1$TextID<-basename(tools::file_path_sans_ext(dat1$TextID))
-  #rename TextID variable
+  dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
+
+  # normalize ID
+  dat1$TextID <- basename(tools::file_path_sans_ext(dat1$TextID))
   names(dat1)[names(dat1) == "TextID"] <- "ID"
-  #make any factors numeric and sort by ID
-  dat2<-mutate_all(dat1, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat3 <- dat2[order(dat2$ID),]
-  return(dat3)
+  dat1$ID <- as.character(dat1$ID)
+
+  # clean character "NaN" -> NA; auto-convert numeric-like chars (keep ID as character)
+  dat1 <- .wa_naify_nan_chars(dat1, exclude = "ID")
+  dat1 <- .wa_convert_numeric_like(dat1, exclude = "ID")
+
+  # sort by ID
+  dat1 <- dat1[order(dat1$ID), ]
+  dat1
 }
 
-#' Import a ReaderBench output file(.csv) into R.
+#' Import a ReaderBench output file (.csv) into R.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom utils modifyList read.table
-#' @importFrom dplyr na_if
-#' @export
-#' @seealso
-#' \code{\link{predict_quality}}
+#' @importFrom utils read.table
+#' @importFrom dplyr mutate
+#' @importFrom tidyselect where
 #' @param path A string giving the path and filename to import.
-#' @examples
-#' #' ##Example 1:
-#' #Using a sample data file included with writeAlizer package
-#'
-#' #load package
-#' library(writeAlizer)
-#'
-#' #get path of sample ReaderBench output file
-#' file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-#'
-#' #see path to sample file
-#' file_path
-#'
-#' #import file and store as "rb_file"
-#' rb_file <- import_rb(file_path)
-#'
-#' ##Example 2:
-#' #To import as "rb_file" a ReaderBench file (sample name: rb_output.csv)
-#' #that is stored in the working directory
-#' \dontrun{
-#' rb_file <- import_rb("rb_output.csv")
-#' }
+#' @export
+#' @seealso \code{\link{predict_quality}}
 import_rb <- function(path) {
-  #check first line for "SEP=,"; if there, exclude line during import
-  con <- file(path,"r")
-  first_line <- readLines(con,n=1)
+  # check first line for "SEP=,"; if present, skip that line on import
+  con <- file(path, "r")
+  first_line <- readLines(con, n = 1)
   close(con)
 
-  if (first_line=="SEP=,"){
-    dat_RB<-read.table(
+  if (identical(first_line, "SEP=,")) {
+    dat_RB <- utils::read.table(
       text = readLines(path, warn = FALSE),
-      header = TRUE,
-      sep = ",", skip=1
+      header = TRUE, sep = ",", skip = 1, stringsAsFactors = FALSE, check.names = TRUE
+    )
+  } else {
+    dat_RB <- utils::read.table(
+      text = readLines(path, warn = FALSE),
+      header = TRUE, sep = ",", stringsAsFactors = FALSE, check.names = TRUE
     )
   }
-  if (first_line!="SEP=,"){
-    dat_RB<-read.table(
-      text = readLines(path, warn = FALSE),
-      header = TRUE,
-      sep = ",")
-  }
-  dat_RB <- dat_RB %>%
-    dplyr::mutate(dplyr::across(dplyr::where(is.character), ~ dplyr::na_if(.x, "NaN")))
-  dat_RB2<-dat_RB[,1:404] #exclude the sentiment analysis colums
-  names(dat_RB2)[names(dat_RB2)=="File.name"]<-"ID"
-  #make any factors numeric and sort by ID
-  dat_RB3<-mutate_all(dat_RB2, function(x) {
-    if(is.factor(x)) as.numeric(as.character(x)) else if (is.character(x)) as.numeric(x) else x
-  })
-  dat_RB4 <- dat_RB3[order(dat_RB3$ID),]
-  return(dat_RB4)
+
+  # replace "NaN" (as strings) in character cols only
+  dat_RB <- .wa_naify_nan_chars(dat_RB)
+
+  # drop sentiment columns (keep first 404) and normalize ID
+  dat_RB2 <- dat_RB[, 1:404]
+  names(dat_RB2)[names(dat_RB2) == "File.name"] <- "ID"
+  dat_RB2$ID <- as.character(dat_RB2$ID)
+
+  # auto-convert numeric-like character columns to numeric, excluding ID
+  dat_RB2 <- .wa_convert_numeric_like(dat_RB2, exclude = "ID")
+
+  # sort by ID
+  dat_RB2 <- dat_RB2[order(dat_RB2$ID), ]
+  dat_RB2
 }
 
-#' Import a ReaderBench output file(.csv) and GAMET output file (.csv) into R, and merge the two files.
+#' Import a ReaderBench output file (.csv) and GAMET output file (.csv),
+#' and merge the two files on ID.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom utils modifyList read.csv read.table
+#' @importFrom utils read.csv read.table
 #' @importFrom tools file_path_sans_ext
-#' @importFrom dplyr na_if mutate_all
 #' @export
-#' @seealso
-#' \code{\link{predict_quality}}
+#' @seealso \code{\link{predict_quality}}
 #' @param rb_path A string giving the path and ReaderBench filename to import.
 #' @param gamet_path A string giving the path and GAMET filename to import.
-#' @examples
-#' ##Example 1:
-#' #Using a sample data files included with writeAlizer package
-#'
-#' #load package
-#' library(writeAlizer)
-#'
-#' #get path of sample ReaderBench output file
-#' file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-#'
-#' #see path to sample ReaderBench file
-#' file_path1
-#'
-#' #get path of sample GAMET output file
-#' file_path2 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-#'
-#' #see path to sample GAMET file
-#' file_path2
-#'
-#' #import files, merge, and store as "rb_gam_file"
-#' rb_gam_file <- import_merge_gamet_rb(file_path1, file_path2)
-#'
-#' ##Example 2:
-#' #To import as "rb_gam_file" a ReaderBench file (sample name: rb_output.csv)
-#' #and GAMET file (sample name: gamet_output.csv) stored in the working
-#' #directory and then merge them
-#' \dontrun{
-#' rb_gam_file <- import_merge_gamet_rb("rb_output.csv", "gamet_output.csv")
-#' }
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
-  #import RB
   dat.RB <- import_rb(rb_path)
-  #import GAMET
-  dat.G <- import_gamet(gamet_path)
-  #merge RB and GAMET
-  dat.merge<-merge(dat.G, dat.RB, by.x="ID", by.y="ID")
-  return(merge)
+  dat.G  <- import_gamet(gamet_path)
+  # both imports keep ID as character; merge on "ID"
+  dat.merge <- merge(dat.G, dat.RB, by = "ID", all = FALSE)
+  dat.merge
 }

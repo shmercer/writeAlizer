@@ -2,7 +2,7 @@
 % Please edit documentation in R/file_utilities.R
 \name{import_coh}
 \alias{import_coh}
-\title{Import a Coh-Metrix output file(.csv) into R.}
+\title{Import a Coh-Metrix output file (.csv) into R.}
 \usage{
 import_coh(path)
 }
@@ -10,30 +10,7 @@ import_coh(path)
 \item{path}{A string giving the path and filename to import.}
 }
 \description{
-Import a Coh-Metrix output file(.csv) into R.
-}
-\examples{
-##Example 1:
-#Using a sample data file included with writeAlizer package
-
-#load package
-library(writeAlizer)
-
-#get path of sample Coh-Metrix output file
-file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-
-#see path to sample file
-file_path
-
-#import file and store as "coh_file"
-coh_file <- import_coh(file_path)
-
-##Example 2:
-#To import as 'coh_file' a Coh-Metrix file (sample name: coh_output.csv)
-#that is stored in the working directory
-\dontrun{
-coh_file <- import_coh("coh_output.csv")
-}
+Import a Coh-Metrix output file (.csv) into R.
 }
 \seealso{
 \code{\link{predict_quality}}

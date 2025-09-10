@@ -4,7 +4,7 @@
 \alias{predict_quality}
 \title{Apply scoring models for predictions}
 \usage{
-predict_quality(model, data, store = FALSE, name = "filename.csv")
+predict_quality(model, data)
 }
 \arguments{
 \item{model}{A string telling which scoring model to use.

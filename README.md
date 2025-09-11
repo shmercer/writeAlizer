@@ -17,7 +17,7 @@ writeAlizer accepts the following output files as inputs:
  2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
  3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
 
-The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). File names/ID variables need to be numeric.
+The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
 
 ### Installing
 
@@ -32,6 +32,51 @@ devtools::install_github("shmercer/writeAlizer")
 After installation, documentation of the file import and predict_quality() functions, and examples of their use, can be found in the R package help file.
 ```
 help("writeAlizer")
+```
+
+### Install model dependencies (Suggests)
+
+Some models rely on packages listed in `Suggests`. You can install them in one
+shot with:
+
+```r
+install_model_deps()           # installs writeAlizer's Suggests
+install_model_deps(dry_run=TRUE)  # just show what would be installed
+```
+
+### Quickstart: generate predicted quality scores with the rb_mod3all / coh_mod3all models
+
+```r
+library(writeAlizer)
+
+## ReaderBench example
+rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer") #read path of included sample rb output file
+rb <- import_rb(rb_path) #import the rb file
+rb_pred <- predict_quality(rb, model = "rb_mod3all") #generate predicted values
+
+## Coh-Metrix example
+
+coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer") #read path of included sample Cooh-Metrix output file
+coh <- import_coh(coh_path) #import the file
+coh_pred <- predict_quality(coh, model = "coh_mod3all") #generate predicted values
+```
+
+### About predict_quality() output
+
+Some models are ensembles and will output multiple sub-predictions (e.g., genre-specific or component models). In those cases, predict_quality() adds a column named pred_<model>_mean, which is the mean of that model’s sub-predictions. For single-output models, you’ll just see the pred_<model> column.
+
+### Where model files are stored
+
+By default, writeAlizer caches downloaded model artifacts under the user cache directory returned by:
+
+```r
+tools::R_user_dir("writeAlizer", "cache")
+```
+
+If you want to store downloaded model artifacts in a different location, use the following option:
+
+```r
+options(writeAlizer.mock_dir = "~/writealizer-artifacts")
 ```
 
 ## Documentation

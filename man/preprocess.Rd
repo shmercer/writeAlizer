@@ -7,24 +7,26 @@
 preprocess(model, data)
 }
 \arguments{
-\item{model}{A string telling which scoring model to use.
-Options are:
-'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
-'rb_mod3per', 'rb_mod3all', 'rb_mod3narr_v2', 'rb_mod3exp_v2',
-'rb_mod3per_v2', or 'rb_mod3all_v2' for ReaderBench files,
-'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
- or 'coh_mod3all' for Coh-Metrix files, or
-'gamet_cws1' for GAMET files}
+\item{model}{Character scalar. Which scoring model to use. Supported values include:
+ReaderBench: 'rb_mod1','rb_mod2','rb_mod3narr','rb_mod3exp','rb_mod3per','rb_mod3all',
+'rb_mod3narr_v2','rb_mod3exp_v2','rb_mod3per_v2','rb_mod3all_v2';
+Coh-Metrix: 'coh_mod1','coh_mod2','coh_mod3narr','coh_mod3exp','coh_mod3per','coh_mod3all';
+GAMET: 'gamet_cws1'.
+Legacy keys for RB mod3 (non-v2) are mapped to their v2 equivalents internally.}
 
-\item{data}{The name of the R object corresponding to the data file. Use
-\code{\link{import_gamet}}, \code{\link{import_coh}}, or \code{\link{import_rb}}
-before this function to generate these data objects.}
+\item{data}{A data.frame produced by \code{\link{import_rb}}, \code{\link{import_coh}},
+or \code{\link{import_gamet}}, with an \code{ID} column and the expected feature columns.}
 }
 \value{
-A list of pre-processed data frames, one per sub-model
+A list of pre-processed data frames, one per sub-model. For models with no
+  varlists (e.g., 'rb_mod1','coh_mod1'), returns six copies of the input data.
+  For 'gamet_cws1', returns two copies (CWS/CIWS). For 1-part/3-part models, returns
+  a list of length 1/3 with centered & scaled features plus the \code{ID} column.
 }
 \description{
-Pre-process Coh-Metrix and ReaderBench data files before applying predictive models
+Pre-process Coh-Metrix and ReaderBench data files before applying predictive models.
+Uses the artifact registry to load the correct variable lists and applies
+centering and scaling per sub-model, preserving the original behavior by model key.
 }
 \author{
 Sterett H. Mercer <sterett.mercer@ubc.ca>

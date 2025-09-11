@@ -142,13 +142,6 @@
 
 # ------- helpers (internal; do NOT export) -------
 
-# Returns the full artifact registry (as a data.frame).
-# Kept separate from .wa_artifacts() so we can later add filtering,
-# validation, or de-duplication here without touching the table.
-.wa_registry <- function() {
-  .wa_artifacts()
-}
-
 .wa_canonical_model <- function(model) {
   switch(model,
          "rb_mod3narr" = "rb_mod3narr_v2",
@@ -159,11 +152,41 @@
   )
 }
 
+# Read the shipped CSV registry (preferred), or fall back to the in-code table.
+.wa_registry <- function() {
+  csv <- system.file("metadata", "artifacts.csv", package = "writeAlizer")
+  if (nzchar(csv) && file.exists(csv)) {
+    df <- utils::read.csv(csv, stringsAsFactors = FALSE)
+    need <- c("kind","model","part","file","url","sha")
+    miss <- setdiff(need, names(df))
+    if (length(miss)) stop("artifacts.csv missing columns: ", paste(miss, collapse = ", "), call. = FALSE)
+    return(df)
+  }
+  if (exists(".wa_artifacts", mode = "function")) {
+    df <- .wa_artifacts()
+    if (!"sha" %in% names(df)) df$sha <- NA_character_
+    return(df)
+  }
+  stop("No registry found (inst/metadata/artifacts.csv or .wa_artifacts()).", call. = FALSE)
+}
+
+# Helper to filter registry by kind/model and return rows (including sha)
 .wa_parts_for <- function(kind, model) {
-  key <- .wa_canonical_model(model)
   reg <- .wa_registry()
-  out <- reg[reg$kind == kind & reg$model == key, c("file","url"), drop = FALSE]
-  rownames(out) <- NULL
+  # guard rails
+  if (!all(c("kind", "model", "part", "file", "url") %in% names(reg))) {
+    stop("artifacts registry is missing required columns.", call. = FALSE)
+  }
+  if (!is.character(kind) || length(kind) != 1L) {
+    stop("`kind` must be a single string ('rds' or 'rda').", call. = FALSE)
+  }
+  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+
+  out <- reg[reg$kind == kind & reg$model == key, , drop = FALSE]
+  # order by part if present
+  if ("part" %in% names(out)) {
+    out <- out[order(out$part), , drop = FALSE]
+  }
   out
 }
 
@@ -171,23 +194,87 @@
   file.path(system.file("extdata", package = "writeAlizer"), filename)
 }
 
-# Uses your existing exported download(file, url) to write under inst/extdata.
-# Honors an override option for tests so we never hit the network.
-.wa_ensure_file <- function(filename, url) {
-  # Test override: if option writeAlizer.mock_dir is set and file exists there, use it
-  mock_dir <- getOption("writeAlizer.mock_dir", default = NULL)
-  if (!is.null(mock_dir)) {
-    cand <- file.path(mock_dir, filename)
-    if (file.exists(cand)) return(cand)
+# Internal helper: ensure an artifact exists in the user cache.
+# - Downloads when missing or when checksum fails.
+# - Verifies SHA-256 if provided (string of 64 hex chars).
+# - Returns the absolute path to the cached file.
+.wa_ensure_file <- function(file, url, sha256 = NULL, quiet = FALSE,
+                            overwrite = FALSE, retries = 1L) {
+  # Resolve cache path (use .wa_cached_path() if present; else fallback to R_user_dir)
+  dest <- if (exists(".wa_cached_path", mode = "function")) {
+    .wa_cached_path(file)
+  } else {
+    dir <- tools::R_user_dir("writeAlizer", "cache")
+    if (!dir.exists(dir)) dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+    file.path(dir, file)
+  }
+  dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
+
+  # Normalise expected checksum if provided
+  .norm_sha <- function(x) tolower(trimws(as.character(x)))
+  expected <- if (is.null(sha256)) NULL else .norm_sha(sha256)
+
+  # SHA256 verifier
+  .verify_sha <- function(path, expected) {
+    if (is.null(expected)) return(TRUE)
+    got <- tryCatch(digest::digest(path, algo = "sha256", file = TRUE),
+                    error = function(e) NA_character_)
+    identical(.norm_sha(got), expected)
   }
 
-  # Normal behavior: use package extdata
-  dest <- .wa_local_path(filename)
-  if (!file.exists(dest)) {
-    download(filename, url)
+  # If we already have a file and either no checksum is provided or it matches, we're done
+  if (file.exists(dest) && !overwrite) {
+    if (.verify_sha(dest, expected)) {
+      return(dest)
+    } else {
+      warning(sprintf("Checksum mismatch in cache for '%s'; re-downloading.", basename(dest)))
+      try(unlink(dest, force = TRUE), silent = TRUE)
+    }
   }
-  dest
+
+  # Guard: need a URL to download if missing or invalid
+  if (!nzchar(url)) {
+    stop(sprintf("No URL provided to fetch artifact '%s'.", file), call. = FALSE)
+  }
+
+  # Download with simple retry loop
+  tries <- max(1L, as.integer(retries))
+  last_err <- NULL
+  for (i in seq_len(tries)) {
+    # Clean any partials before each attempt
+    if (file.exists(dest)) try(unlink(dest, force = TRUE), silent = TRUE)
+
+    # Use binary mode for portability
+    ok <- tryCatch({
+      utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
+      TRUE
+    }, error = function(e) {
+      last_err <<- e
+      FALSE
+    })
+
+    if (!ok) {
+      next
+    }
+
+    # Verify checksum if expected
+    if (.verify_sha(dest, expected)) {
+      return(dest)
+    } else {
+      last_err <- simpleError(sprintf(
+        "Checksum mismatch after download for '%s' (expected %s).",
+        basename(dest), if (is.null(expected)) "<none>" else expected
+      ))
+    }
+  }
+
+  # If we get here, all attempts failed
+  # Clean any bad partial
+  if (file.exists(dest)) try(unlink(dest, force = TRUE), silent = TRUE)
+  if (!is.null(last_err)) stop(last_err)
+  stop(sprintf("Failed to ensure artifact '%s' in cache.", file), call. = FALSE)
 }
+
 
 
 # Optional convenience loaders used by our refactor
@@ -210,32 +297,44 @@
   invisible(TRUE)
 }
 
-# Load trained model fits for a given model key and return them as a named list.
-# Names are derived from filenames (e.g., "rb_mod1a.rda" -> "rb_mod1a").
+# Load trained model fits (RDA) from cache for a given model key.
+# Returns a named list where names are canonicalized from filenames (e.g., "rb_mod1a").
 .wa_load_fits_list <- function(model) {
-  parts <- .wa_parts_for("rda", model)
-  if (nrow(parts) == 0L) stop(sprintf("No model artifacts registered for '%s'", model))
+  # Map legacy keys (e.g., rb_mod3narr -> rb_mod3narr_v2), if mapping helper exists
+  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+
+  parts <- .wa_parts_for("rda", key)
+  if (nrow(parts) == 0L) {
+    stop(sprintf("No model artifacts registered for '%s'", model), call. = FALSE)
+  }
 
   fits <- list()
   for (i in seq_len(nrow(parts))) {
     p <- parts[i, ]
-    path <- .wa_ensure_file(p$file, p$url)
 
-    tmp <- new.env(parent = emptyenv())
-    objs <- load(path, envir = tmp)  # object names inside the .rda
+    # Ensure .rda file exists in user cache (download + optional checksum)
+    sha  <- if ("sha" %in% names(parts)) parts$sha[i] else NULL
+    path <- .wa_ensure_file(p$file, p$url, sha256 = sha)
 
-    # Heuristic: prefer common model object names; else take the first
+    # Load into a throwaway environment and pick a sensible object
+    tmp  <- new.env(parent = emptyenv())
+    objs <- load(path, envir = tmp)
+
     pick <- NULL
     preferred <- c("fit", "model", "mod", "gbmFit", "glmnet.fit")
-    for (cand in preferred) if (cand %in% objs) { pick <- cand; break }
+    for (cand in preferred) {
+      if (cand %in% objs) { pick <- cand; break }
+    }
     if (is.null(pick)) pick <- objs[[1L]]
 
-    canonical <- tools::file_path_sans_ext(basename(p$file))  # e.g., rb_mod1a
+    canonical <- tools::file_path_sans_ext(basename(p$file))  # e.g., "rb_mod1a"
     fits[[canonical]] <- get(pick, envir = tmp, inherits = FALSE)
   }
 
-  #ensure any required Suggests are installed for these model objects
-  .wa_require_pkgs_for_fits(unname(fits))
+  # Ensure any required packages for these model objects are available
+  if (exists(".wa_require_pkgs_for_fits", mode = "function")) {
+    .wa_require_pkgs_for_fits(unname(fits))
+  }
 
   fits
 }

@@ -18,125 +18,77 @@
 # and written expression curriculum-based measurement scores (CWS and CIWS)
 # from Readerbench, CohMetrix, and/or GAMET files.
 
-#' @title Download model objects
-#' @description Download model objects or variable lists
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
-#' @importFrom utils download.file
-#' @param file A string that provides the file name, for example "rb_mod1a.rda"
-#' @param url The location of the file, for example "https://osf.io/eq9rw/download"
-#' @export
-#' @examples
-#' #load package
-#' library(writeAlizer)
-#'
-#' #download rb_mod1a to extdata
-#' download("rb_mod1a.rda", "https://osf.io/eq9rw/download")
-download <- function(file, url){
-  path <- system.file("extdata", package = "writeAlizer")
-  file <- paste(path, file, sep = "/")
-  download.file(url= url,
-                destfile=file, mode = "wb")
-}
-
 #' @title Pre-process data
-#' @description Pre-process Coh-Metrix and ReaderBench data files before applying predictive models
+#' @description Pre-process Coh-Metrix and ReaderBench data files before applying predictive models.
+#' Uses the artifact registry to load the correct variable lists and applies
+#' centering and scaling per sub-model, preserving the original behavior by model key.
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom caret preProcess
 #' @importFrom tidyselect all_of
-#' @param model A string telling which scoring model to use.
-#' Options are:
-#' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
-#' 'rb_mod3per', 'rb_mod3all', 'rb_mod3narr_v2', 'rb_mod3exp_v2',
-#' 'rb_mod3per_v2', or 'rb_mod3all_v2' for ReaderBench files,
-#' 'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
-#'  or 'coh_mod3all' for Coh-Metrix files, or
-#' 'gamet_cws1' for GAMET files
-#' @param data The name of the R object corresponding to the data file. Use
-#' \code{\link{import_gamet}}, \code{\link{import_coh}}, or \code{\link{import_rb}}
-#' before this function to generate these data objects.
-#' @return A list of pre-processed data frames, one per sub-model
+#' @param model Character scalar. Which scoring model to use. Supported values include:
+#'   ReaderBench: 'rb_mod1','rb_mod2','rb_mod3narr','rb_mod3exp','rb_mod3per','rb_mod3all',
+#'   'rb_mod3narr_v2','rb_mod3exp_v2','rb_mod3per_v2','rb_mod3all_v2';
+#'   Coh-Metrix: 'coh_mod1','coh_mod2','coh_mod3narr','coh_mod3exp','coh_mod3per','coh_mod3all';
+#'   GAMET: 'gamet_cws1'.
+#'   Legacy keys for RB mod3 (non-v2) are mapped to their v2 equivalents internally.
+#' @param data A data.frame produced by \code{\link{import_rb}}, \code{\link{import_coh}},
+#'   or \code{\link{import_gamet}}, with an \code{ID} column and the expected feature columns.
+#' @return A list of pre-processed data frames, one per sub-model. For models with no
+#'   varlists (e.g., 'rb_mod1','coh_mod1'), returns six copies of the input data.
+#'   For 'gamet_cws1', returns two copies (CWS/CIWS). For 1-part/3-part models, returns
+#'   a list of length 1/3 with centered & scaled features plus the \code{ID} column.
 #' @export
 preprocess <- function(model, data) {
-  # ----------------------------
-  # 0) Model family counts (for parity with existing behavior)
-  # ----------------------------
+  # Map legacy keys (e.g., rb_mod3narr -> rb_mod3narr_v2) to the canonical key if available
+  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+
+  # Models with no varlists: preserve existing behavior
   if (model %in% c("rb_mod1", "coh_mod1")) {
-    mod_count <- 6
-  } else if (model == "gamet_cws1") {
-    mod_count <- 1
-  } else {
-    parts_tmp <- .wa_parts_for(kind = "rds", model = model)
-    if (nrow(parts_tmp) == 0L) {
-      stop(sprintf("No variable lists registered for model '%s'", model))
-    }
-    mod_count <- nrow(parts_tmp)
+    # Return 6 copies (downstream expects 6 submodels)
+    return(list(data, data, data, data, data, data))
+  }
+  if (model == "gamet_cws1") {
+    # Return 2 splits (CWS & CIWS)
+    return(list(data, data))
   }
 
-  # -------------------------------------------
-  # 1) Load variable lists via the registry
-  # -------------------------------------------
-  vars_a <- vars_b <- vars_c <- NULL
-  if (!(model %in% c("rb_mod1", "coh_mod1", "gamet_cws1"))) {
-    parts <- .wa_parts_for(kind = "rds", model = model)
-    varlists <- lapply(seq_len(nrow(parts)), function(i) {
-      p <- parts[i, ]
-      readRDS(.wa_ensure_file(p$file, p$url))  # downloads to inst/extdata if missing
-    })
-    if (length(varlists) >= 1) vars_a <- varlists[[1]]
-    if (length(varlists) >= 2) vars_b <- varlists[[2]]
-    if (length(varlists) >= 3) vars_c <- varlists[[3]]
+  # Load variable lists (RDS) from the registry/cache
+  rds_parts <- .wa_parts_for(kind = "rds", model = key)
+  if (nrow(rds_parts) == 0L) {
+    stop(sprintf("No variable lists registered for model '%s' (canonical: '%s')", model, key), call. = FALSE)
   }
 
-  # ------------------------------------------------
-  # 2) Preserve existing preprocessing by model type
-  # ------------------------------------------------
-  if (model %in% c("rb_mod1", "coh_mod1")) {
-    # No preprocessing; return 6 copies to match downstream expectations
-    data_pp <- list(data, data, data, data, data, data)
+  varlists <- lapply(seq_len(nrow(rds_parts)), function(i) {
+    p <- rds_parts[i, ]
+    readRDS(.wa_ensure_file(p$file, p$url, sha256 = if ("sha" %in% names(rds_parts)) rds_parts$sha[i] else NULL))
+  })
 
-  } else if (model == "gamet_cws1") {
-    # Both CWS and CIWS consume the same features; return two splits
-    data_pp <- list(data, data)
-
-  } else if (model %in% c("rb_mod2", "coh_mod2", "rb_mod3all",
-                          "rb_mod3all_v2", "coh_mod3all")) {
-    # Three-part models
-    # Part A
-    data1 <- data %>% dplyr::select(all_of(vars_a))
-    pp1 <- preProcess(data1, method = c("center", "scale"))
-    data1r <- predict(pp1, data1)
-    data1pp <- data.frame(cbind(ID = data$ID, data1r))
-
-    # Part B
-    data2 <- data %>% dplyr::select(all_of(vars_b))
-    pp2 <- preProcess(data2, method = c("center", "scale"))
-    data2r <- predict(pp2, data2)
-    data2pp <- data.frame(cbind(ID = data$ID, data2r))
-
-    # Part C
-    data3 <- data %>% dplyr::select(all_of(vars_c))
-    pp3 <- preProcess(data3, method = c("center", "scale"))
-    data3r <- predict(pp3, data3)
-    data3pp <- data.frame(cbind(ID = data$ID, data3r))
-
-    data_pp <- list(data1pp, data2pp, data3pp)
-
-  } else if (model %in% c("rb_mod3narr", "rb_mod3exp", "rb_mod3per",
-                          "coh_mod3narr", "coh_mod3exp", "coh_mod3per",
-                          "rb_mod3narr_v2", "rb_mod3exp_v2", "rb_mod3per_v2")) {
-    # One-part models
-    data1 <- data %>% dplyr::select(all_of(vars_a))
-    pp1 <- preProcess(data1, method = c("center", "scale"))
-    data1r <- predict(pp1, data1)
-    data1pp <- data.frame(cbind(ID = data$ID, data1r))
-
-    data_pp <- list(data1pp)
-
-  } else {
-    stop(sprintf("Unknown model key '%s'", model))
+  # Helper to center/scale a slice and keep ID
+  prep_slice <- function(vars) {
+    data_i <- dplyr::select(data, tidyselect::all_of(vars))
+    pp     <- caret::preProcess(data_i, method = c("center", "scale"))
+    data_s <- stats::predict(pp, data_i)
+    data.frame(ID = data$ID, data_s, check.names = FALSE)
   }
 
-  return(data_pp)
+  # 3-part models
+  if (model %in% c("rb_mod2", "coh_mod2", "rb_mod3all", "rb_mod3all_v2", "coh_mod3all")) {
+    if (length(varlists) < 3L) stop(sprintf("Expected 3 varlists for model '%s'", model), call. = FALSE)
+    return(list(
+      prep_slice(varlists[[1L]]),
+      prep_slice(varlists[[2L]]),
+      prep_slice(varlists[[3L]])
+    ))
+  }
+
+  # 1-part models
+  if (model %in% c("rb_mod3narr", "rb_mod3exp", "rb_mod3per",
+                   "coh_mod3narr", "coh_mod3exp", "coh_mod3per",
+                   "rb_mod3narr_v2", "rb_mod3exp_v2", "rb_mod3per_v2")) {
+    return(list(prep_slice(varlists[[1L]])))
+  }
+
+  stop(sprintf("Unknown model key '%s'", model), call. = FALSE)
 }
 
 #' @title Predict writing quality

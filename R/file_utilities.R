@@ -48,6 +48,27 @@
   df
 }
 
+#' Internal: derive keep/exclude RB feature names from packaged sample file
+#' We read ONLY the header (nrows=0). If the file has a "SEP=," first line,
+#' we skip it. Names are made syntactic (check.names=TRUE), so "File name" -> "File.name".
+.wa_rb_keep_exclude_from_sample <- function() {
+  path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+  if (!nzchar(path) || !file.exists(path)) return(NULL)
+
+  first <- tryCatch(readLines(path, n = 1, warn = FALSE), error = function(e) "")
+  skip <- if (identical(first, "SEP=,")) 1L else 0L
+
+  # read header only, no data
+  hdr <- utils::read.csv(path, nrows = 0, check.names = TRUE, skip = skip)
+  nm  <- colnames(hdr)
+  if (!length(nm)) return(NULL)
+
+  keep <- nm[seq_len(min(404L, length(nm)))]
+  drop <- if (length(nm) > 404L) nm[(404L + 1L):length(nm)] else character(0)
+
+  list(keep = keep, drop = drop)
+}
+
 # --------------------------------------------------------------------------
 
 #' Import a GAMET output file into R.
@@ -113,6 +134,11 @@ import_coh <- function(path) {
 
 #' Import a ReaderBench output file (.csv) into R.
 #'
+#' When available, the function reads the header of the packaged sample
+#' (\code{inst/extdata/sample_rb.csv}) and keeps the first 404 columns by NAME
+#' (plus the \code{File.name}/\code{ID} column), excluding any columns with names
+#' appearing after position 404 in that header. If the sample is unavailable,
+#' it falls back to keeping the first 404 columns by position.
 #' @importFrom magrittr %>%
 #' @importFrom utils read.table
 #' @importFrom dplyr mutate
@@ -141,9 +167,38 @@ import_rb <- function(path) {
   # replace "NaN" (as strings) in character cols only
   dat_RB <- .wa_naify_nan_chars(dat_RB)
 
-  # drop sentiment columns (keep first 404) and normalize ID
-  dat_RB2 <- dat_RB[, 1:404]
-  names(dat_RB2)[names(dat_RB2) == "File.name"] <- "ID"
+  # Name-based selection using the packaged sample header:
+  # - keep: first 404 column NAMES from sample_rb.csv (made syntactic)
+  # - drop: columns 405+ by name
+  # If anything goes sideways (e.g., sample missing), we fall back to first 404 by position.
+  k <- .wa_rb_keep_exclude_from_sample()
+
+  if (!is.null(k)) {
+    # ensure we include File.name if present
+    keep_names <- unique(c("File.name", setdiff(k$keep, "File.name")))
+    keep_names <- intersect(colnames(dat_RB), keep_names)
+    dat_RB2 <- dat_RB[, keep_names, drop = FALSE]
+
+    # If the sample suggested drop names exist, remove them explicitly (belt & suspenders)
+    if (length(k$drop)) {
+      drop_these <- intersect(colnames(dat_RB2), k$drop)
+      if (length(drop_these)) {
+        dat_RB2 <- dat_RB2[, setdiff(colnames(dat_RB2), drop_these), drop = FALSE]
+      }
+    }
+  } else {
+    # Fallback to legacy behavior if sample not available
+    n <- min(404L, ncol(dat_RB))
+    dat_RB2 <- dat_RB[, seq_len(n), drop = FALSE]
+  }
+
+  # normalize ID
+  if ("File.name" %in% names(dat_RB2)) {
+    names(dat_RB2)[names(dat_RB2) == "File.name"] <- "ID"
+  }
+  if (!"ID" %in% names(dat_RB2) && "File.name" %in% names(dat_RB)) {
+    dat_RB2$ID <- as.character(dat_RB[["File.name"]])
+  }
   dat_RB2$ID <- as.character(dat_RB2$ID)
 
   # auto-convert numeric-like character columns to numeric, excluding ID

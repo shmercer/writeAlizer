@@ -170,10 +170,24 @@
   stop("No registry found (inst/metadata/artifacts.csv or .wa_artifacts()).", call. = FALSE)
 }
 
-# Filter registry rows by kind and model
+# Helper to filter registry by kind/model and return rows (including sha)
 .wa_parts_for <- function(kind, model) {
   reg <- .wa_registry()
-  reg[reg$kind == kind & reg$model == model, , drop = FALSE]
+  # guard rails
+  if (!all(c("kind", "model", "part", "file", "url") %in% names(reg))) {
+    stop("artifacts registry is missing required columns.", call. = FALSE)
+  }
+  if (!is.character(kind) || length(kind) != 1L) {
+    stop("`kind` must be a single string ('rds' or 'rda').", call. = FALSE)
+  }
+  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+
+  out <- reg[reg$kind == kind & reg$model == key, , drop = FALSE]
+  # order by part if present
+  if ("part" %in% names(out)) {
+    out <- out[order(out$part), , drop = FALSE]
+  }
+  out
 }
 
 .wa_local_path <- function(filename) {

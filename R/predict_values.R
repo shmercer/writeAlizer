@@ -18,31 +18,25 @@
 # and written expression curriculum-based measurement scores (CWS and CIWS)
 # from Readerbench, CohMetrix, and/or GAMET files.
 
-#' @title Download model objects
-#' @description Download model objects or variable lists
-#' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
-#' @importFrom utils download.file
-#' @param file A string that provides the file name, for example "rb_mod1a.rda"
-#' @param url The location of the file, for example "https://osf.io/eq9rw/download"
-#' @export
-#' @examples
-#' #load package
-#' library(writeAlizer)
-#'
-#' #download rb_mod1a to extdata
-#' download("rb_mod1a.rda", "https://osf.io/eq9rw/download")
-download <- function(file, url){
-  path <- system.file("extdata", package = "writeAlizer")
-  file <- paste(path, file, sep = "/")
-  download.file(url= url,
-                destfile=file, mode = "wb")
-}
-
 #' @title Pre-process data
-#' @description Pre-process Coh-Metrix and ReaderBench data files before applying predictive models
+#' @description Pre-process Coh-Metrix and ReaderBench data files before applying predictive models.
+#' Uses the artifact registry to load the correct variable lists and applies
+#' centering and scaling per sub-model, preserving the original behavior by model key.
 #' @author Sterett H. Mercer <sterett.mercer@@ubc.ca>
 #' @importFrom caret preProcess
 #' @importFrom tidyselect all_of
+#' @param model Character scalar. Which scoring model to use. Supported values include:
+#'   ReaderBench: 'rb_mod1','rb_mod2','rb_mod3narr','rb_mod3exp','rb_mod3per','rb_mod3all',
+#'   'rb_mod3narr_v2','rb_mod3exp_v2','rb_mod3per_v2','rb_mod3all_v2';
+#'   Coh-Metrix: 'coh_mod1','coh_mod2','coh_mod3narr','coh_mod3exp','coh_mod3per','coh_mod3all';
+#'   GAMET: 'gamet_cws1'.
+#'   Legacy keys for RB mod3 (non-v2) are mapped to their v2 equivalents internally.
+#' @param data A data.frame produced by \code{\link{import_rb}}, \code{\link{import_coh}},
+#'   or \code{\link{import_gamet}}, with an \code{ID} column and the expected feature columns.
+#' @return A list of pre-processed data frames, one per sub-model. For models with no
+#'   varlists (e.g., 'rb_mod1','coh_mod1'), returns six copies of the input data.
+#'   For 'gamet_cws1', returns two copies (CWS/CIWS). For 1-part/3-part models, returns
+#'   a list of length 1/3 with centered & scaled features plus the \code{ID} column.
 #' @export
 preprocess <- function(model, data) {
   # Map legacy keys (e.g., rb_mod3narr -> rb_mod3narr_v2) to the canonical key if available
@@ -66,8 +60,7 @@ preprocess <- function(model, data) {
 
   varlists <- lapply(seq_len(nrow(rds_parts)), function(i) {
     p <- rds_parts[i, ]
-    sha <- if ("sha" %in% names(rds_parts)) rds_parts$sha[i] else NULL
-    readRDS(.wa_ensure_file(p$file, p$url, sha256 = sha))  # ensure from user cache
+    readRDS(.wa_ensure_file(p$file, p$url, sha256 = if ("sha" %in% names(rds_parts)) rds_parts$sha[i] else NULL))
   })
 
   # Helper to center/scale a slice and keep ID

@@ -2,8 +2,8 @@
 
 # User cache directory for writeAlizer artifacts (RDS/RDA files)
 .wa_cache_dir <- function() {
-  dir <- tools::R_user_dir("writeAlizer", which = "cache")
-  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+  dir <- tools::R_user_dir("writeAlizer", "cache")
+  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
   dir
 }
 
@@ -53,6 +53,18 @@
 }
 
 # Optional: a tiny wrapper you can call elsewhere (kept for compatibility)
+#' @title Download artifact into user cache (with optional checksum)
+#' @description Download a registry artifact (RDS/RDA/etc.) into the writeAlizer
+#' user cache (via \code{tools::R_user_dir}) and optionally verify its SHA-256 checksum.
+#' This is a thin wrapper over the internal cache helper used by the package.
+#' @param file Character scalar. Filename to write within the cache (e.g., \code{"rb_mod2a.rda"}).
+#' @param url Character scalar. Remote URL to download from.
+#' @param sha256 Optional character scalar. Expected SHA-256 hex digest of the file
+#'   contents. If provided, the downloaded file is verified; a mismatch raises an error.
+#' @param quiet Logical. Passed to \code{utils::download.file}; \code{TRUE} suppresses progress output.
+#' @return The full filesystem path (character scalar) to the cached file.
+#' @seealso \code{\link{preprocess}}, \code{\link{predict_quality}}
+#' @export
 wa_download <- function(file, url, sha256 = NULL, quiet = FALSE) {
   .wa_ensure_file(file, url, sha256 = sha256, quiet = quiet)
 }

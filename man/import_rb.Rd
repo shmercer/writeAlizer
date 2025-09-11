@@ -10,7 +10,11 @@ import_rb(path)
 \item{path}{A string giving the path and filename to import.}
 }
 \description{
-Import a ReaderBench output file (.csv) into R.
+When available, the function reads the header of the packaged sample
+(\code{inst/extdata/sample_rb.csv}) and keeps the first 404 columns by NAME
+(plus the \code{File.name}/\code{ID} column), excluding any columns with names
+appearing after position 404 in that header. If the sample is unavailable,
+it falls back to keeping the first 404 columns by position.
 }
 \seealso{
 \code{\link{predict_quality}}

@@ -63,7 +63,7 @@ coh_pred <- predict_quality(coh, model = "coh_mod3all") #generate predicted valu
 
 ### About predict_quality() output
 
-Some models are ensembles and will output multiple sub-predictions (e.g., genre-specific or component models). In those cases, predict_quality() adds a column named 'pred_<model>_mean', which is the mean of that model’s sub-predictions. For single-output models, you’ll just see the pred_<model> column.
+Some models are ensembles and will output multiple sub-predictions (e.g., genre-specific or component models). In those cases, predict_quality() adds a column named pred_model_mean, which is the mean of that model’s sub-predictions. For single-output models, you’ll just see the pred_<model> column.
 
 ### Where model files are stored
 

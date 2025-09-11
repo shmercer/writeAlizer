@@ -4,6 +4,7 @@ Changes:
 * Replaced the RB mod3 models with their v2 counterparts (e.g., rb_mod3all now calls the rb_mod3all_v2 models).
 * Optimized code for the downloading of model objects, adding checksum verification.
 * predict_quality now outputs scores for submodels as well as the overall mean across submodels
+* `import_rb()` now keeps ReaderBench features **by name** using the packaged `sample_rb.csv` header (first 404), dropping 405+. Falls back to the legacy positional selection if the header is unavailable. This reduces brittleness to column reordering in ReaderBench outputs.
 
 writeAlizer v1.5.0 (Release date: 2024-2-09)
 ==============

@@ -7,8 +7,7 @@
 install_model_deps(model = "all", dry_run = FALSE)
 }
 \arguments{
-\item{model}{Character (ignored for now; reserved for future use). Examples:
-"rb_mod3all", "coh_mod3all", or "all".}
+\item{model}{Character (reserved for future use). Currently ignored.}
 
 \item{dry_run}{Logical. If TRUE, do not install; simply return the names.}
 }
@@ -16,11 +15,6 @@ install_model_deps(model = "all", dry_run = FALSE)
 Invisibly returns the character vector of package names considered.
 }
 \description{
-Installs packages listed in \strong{Suggests} that writeAlizer relies on.
-This wrapper accepts a \code{model} argument for future per-model scoping,
-but today it installs the package's Suggests set (conservative and robust).
-}
-\details{
-Use \code{dry_run = TRUE} in CI/tests to avoid installing anything and just
-return the package names that would be installed.
+Installs packages listed in **Suggests** that writeAlizer may use.
+Use `dry_run = TRUE` to just list the packages without installing.
 }

@@ -5,7 +5,7 @@
 \alias{writeAlizer-package}
 \title{writeAlizer: Generate Predicted Writing Quality and Written Expression CBM Scores}
 \description{
-This package (a) imports ReaderBench, Coh-Metrix, and GAMET output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
+Imports ReaderBench, Coh-Metrix, and GAMET output files; downloads predictive scoring models; and computes predicted writing quality scores from these inputs.
 }
 \seealso{
 Useful links:

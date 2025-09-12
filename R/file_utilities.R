@@ -146,6 +146,10 @@ import_coh <- function(path) {
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso \code{\link{predict_quality}}
+#' @examples
+#' rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+#' rb <- import_rb(rb_path)
+#' head(rb)
 import_rb <- function(path) {
   # check first line for "SEP=,"; if present, skip that line on import
   con <- file(path, "r")

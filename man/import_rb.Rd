@@ -16,6 +16,11 @@ When available, the function reads the header of the packaged sample
 appearing after position 404 in that header. If the sample is unavailable,
 it falls back to keeping the first 404 columns by position.
 }
+\examples{
+rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+rb <- import_rb(rb_path)
+head(rb)
+}
 \seealso{
 \code{\link{predict_quality}}
 }

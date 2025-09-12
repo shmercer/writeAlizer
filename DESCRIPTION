@@ -2,16 +2,14 @@ Package: writeAlizer
 Type: Package
 Title: Generate Predicted Writing Quality and Written Expression CBM Scores
 Version: 1.6.0
-Authors@R: 
-    person("Sterett H.", "Mercer", , "sterett.mercer@ubc.ca", role = c("aut", "cre"),
-    comment = c(ORCID = "0000-0002-7940-4221"))
-Description: This package (a) imports ReaderBench, Coh-Metrix, and GAMET
-    output files into R, (b) downloads existing predictive scoring
-    models to the local machine, and (c) uses the predictive scoring models
-    to generate predicted writing quality scores or Correct Word Sequences
-    and Correct Minus Incorrect Word Sequences scores from the ReaderBench, 
-    Coh-Metrix, and/or GAMET files.
-License: GPL-3 + file LICENSE
+Authors@R:
+    person("Sterett H.", "Mercer", email = "sterett.mercer@ubc.ca",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7940-4221"))
+Description:  Imports ReaderBench, Coh-Metrix, and GAMET output files; downloads
+    predictive scoring models; and computes predicted writing quality scores
+    from these inputs.
+License: GPL-3
 Encoding: UTF-8
 URL: https://github.com/shmercer/writeAlizer/
 BugReports: https://github.com/shmercer/writeAlizer/issues
@@ -35,7 +33,8 @@ Suggests:
     glmnet,
     kernlab,
     pls,
-    randomForest
+    randomForest,
+    withr
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 Language: en-US

@@ -102,7 +102,7 @@ Also see the list of code [contributors](https://github.com/shmercer/writeAlizer
 
 ## writeAlizer Logo Wear
 
-For writeAlizer t-shirts, hats, coffee mugs, etc., visit [https://www.zazzle.ca/store/writealizer](https://www.zazzle.ca/store/writealizer) (Canada) or [https://www.zazzle.com/store/writealizer](https://www.zazzle.com/store/writealizer) (USA). Additional countries can be selected by following either link.
+For writeAlizer t-shirts, hats, coffee mugs, etc., visit https://www.zazzle.ca/store/writealizer (Canada) or https://www.zazzle.com/store/writealizer (USA). Additional countries can be selected by following either link.
 
 ## References
 
@@ -150,7 +150,7 @@ Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _[Evalua
 
 ## License
 
-This project is licensed under the GNU General Public License Version 3 ([GPLv3](LICENSE)).
+This project is licensed under the GNU General Public License Version 3 (GPL-3).
 
 ## Acknowledgments
 

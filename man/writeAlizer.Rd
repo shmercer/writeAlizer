@@ -8,8 +8,8 @@ Detailed documentation on writeAlizer is available in the \href{https://github.c
 and \href{https://github.com/shmercer/writeAlizer/wiki}{wiki}
 }
 \details{
-The writeAlizer R package (a) imports \href{https://git.readerbench.com/ReaderBench/ReaderBench}{ReaderBench},
-\href{http://cohmetrix.com/}{Coh-Metrix}, and \href{https://www.linguisticanalysistools.org/gamet.html}{GAMET} output files into R,
+The writeAlizer R package (a) imports \href{https://github.com/readerbench/readerbench-java}{ReaderBench},
+\href{https://soletlab.asu.edu/coh-metrix/}{Coh-Metrix}, and \href{https://www.linguisticanalysistools.org/gamet.html}{GAMET} output files into R,
 and (b) uses research-developed scoring models to generate predicted writing
 quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences
 scores from the ReaderBench, Coh-Metrix, and/or GAMET files.

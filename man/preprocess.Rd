@@ -28,6 +28,10 @@ Pre-process Coh-Metrix and ReaderBench data files before applying predictive mod
 Uses the artifact registry to load the correct variable lists and applies
 centering and scaling per sub-model, preserving the original behavior by model key.
 }
-\author{
-Sterett H. Mercer <sterett.mercer@ubc.ca>
+\examples{
+# Offline-safe minimal example
+rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+rb <- import_rb(rb_path)
+rb2 <- preprocess("rb_mod1", rb)   # model first, data second
+str(rb2[[1L]])
 }

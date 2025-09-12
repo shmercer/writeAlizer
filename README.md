@@ -29,7 +29,7 @@ writeAlizer is not available on [CRAN](https://cran.r-project.org/). To install 
 ```
 install.packages("devtools")
 ```
-With *devtools* installed, you can install writeAlizer in R directly from this Github repository.
+With *devtools* installed, you can install writeAlizer in R directly from this GitHub repository.
 ```
 devtools::install_github("shmercer/writeAlizer")
 ```

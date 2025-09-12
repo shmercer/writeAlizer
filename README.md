@@ -4,6 +4,7 @@
 
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml)
+  [![codecov](https://codecov.io/gh/shmercer/writeAlizer/branch/main/graph/badge.svg)](https://app.codecov.io/gh/shmercer/writeAlizer)
   <!-- badges: end -->
 
 This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the [repository wiki](https://github.com/shmercer/writeAlizer/wiki).

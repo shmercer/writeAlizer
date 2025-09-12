@@ -2,8 +2,9 @@ Package: writeAlizer
 Type: Package
 Title: Generate Predicted Writing Quality and Written Expression CBM Scores
 Version: 1.6.0
-Authors@R: person("Mercer", "Sterett H.", email = "sterett.mercer@ubc.ca",
-  role = c("aut", "cre"))
+Authors@R: 
+    person("Sterett H.", "Mercer", , "sterett.mercer@ubc.ca", role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-7940-4221"))
 Description: This package (a) imports ReaderBench, Coh-Metrix, and GAMET
     output files into R, (b) downloads existing predictive scoring
     models to the local machine, and (c) uses the predictive scoring models
@@ -35,5 +36,5 @@ Suggests:
     kernlab,
     pls,
     randomForest
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3

@@ -93,10 +93,10 @@ Information on the various scoring models available and how they were developed 
 
 ## Package Author and Maintainer
 
-* **Sterett H. Mercer** - *University of British Columbia* 
-UBC Faculty Profile: https://ecps.educ.ubc.ca/sterett-h-mercer/
-ResearchGate: https://www.researchgate.net/profile/Sterett_Mercer 
-Google Scholar: https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en
+* **Sterett H. Mercer** - *University of British Columbia*  
+UBC Faculty Profile: https://ecps.educ.ubc.ca/sterett-h-mercer/  
+ResearchGate: https://www.researchgate.net/profile/Sterett_Mercer  
+Google Scholar: https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en  
 
 Also see the list of code [contributors](https://github.com/shmercer/writeAlizer/contributors) for this package.
 

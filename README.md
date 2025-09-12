@@ -8,7 +8,7 @@
 
 This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the [repository wiki](https://github.com/shmercer/writeAlizer/wiki).
 
-The writeAlizer R package (a) imports [ReaderBench](http://readerbench.com/), [Coh-Metrix](http://cohmetrix.com/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
+The writeAlizer R package (a) imports [ReaderBench](https://github.com/readerbench/readerbench-java), [Coh-Metrix](https://soletlab.asu.edu/coh-metrix/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from the ReaderBench, Coh-Metrix, and/or GAMET files.
 
 ### Versions
 The version history of writeAlizer is available in the package [NEWS.md](https://github.com/shmercer/writeAlizer/blob/master/NEWS.md) file.
@@ -93,7 +93,7 @@ Information on the various scoring models available and how they were developed 
 
 ## Package Author and Maintainer
 
-* **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/sterett-h-mercer/) - [ResearchGate](https://www.researchgate.net/profile/Sterett_Mercer) - [Google Scholar](https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en)
+* **Sterett H. Mercer** - *University of British Columbia* - [UBC Faculty Profile](https://ecps.educ.ubc.ca/sterett-h-mercer/) - ResearchGate: https://www.researchgate.net/profile/Sterett_Mercer - Google Scholar: https://scholar.google.ca/citations?user=YJg4svsAAAAJ&hl=en
 
 Also see the list of code [contributors](https://github.com/shmercer/writeAlizer/contributors) for this package.
 
@@ -105,25 +105,21 @@ For writeAlizer t-shirts, hats, coffee mugs, etc., visit [https://www.zazzle.ca/
 
 ### Journal Articles
 
-Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (in press). Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs. *School Psychology.* [https://doi.org/10.1037/spq0000691](https://doi.org/10.1037/spq0000691)
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (in press). Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs. *School Psychology.* https://doi.org/10.1037/spq0000691
 
-Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2023). Implications of bias in automated writing quality scores for fair and equitable assessment decisions. *School Psychology, 38*, 173–181. [https://doi.org/10.1037/spq0000517](https://doi.org/10.1037/spq0000517)
+Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2023). Implications of bias in automated writing quality scores for fair and equitable assessment decisions. *School Psychology, 38*, 173–181. https://doi.org/10.1037/spq0000517
 
-Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2022). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice, 29*, 200-218. [https://doi.org/10.1080/0969594X.2022.2043240](https://doi.org/10.1080/0969594X.2022.2043240)
+Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2022). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. *Assessment in Education: Principles, Policy & Practice, 29*, 200-218. https://doi.org/10.1080/0969594X.2022.2043240
 
-Mercer, S. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. [https://doi.org/10.31244/jero.2022.01.03](https://doi.org/10.31244/jero.2022.01.03)
-[link to pre-print of accepted article](https://www.researchgate.net/profile/Michael-Matta/publication/358917370_Evaluating_validity_and_bias_for_hand-calculated_and_automated_written_expression_curriculum-based_measurement_scores/links/621e7a867106690c08531aa9/Evaluating-validity-and-bias-for-hand-calculated-and-automated-written-expression-curriculum-based-measurement-scores.pdf)
+Mercer, S. H., & Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. *Journal for Educational Research Online, 14*, 39-60. https://doi.org/10.31244/jero.2022.01.03
 
-Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2022). Cost analysis and cost effectiveness of hand-scored and automated approaches to writing screening. *Journal of School Psychology, 92*, 80-95. [https://doi.org/10.1016/j.jsp.2022.03.003](https://doi.org/10.1016/j.jsp.2022.03.003)
-[link to pre-print of accepted article](https://www.researchgate.net/profile/Michael-Matta/publication/359523444_Cost_analysis_and_cost-effectiveness_of_hand-scored_and_automated_approaches_to_writing_screening/links/624304dd8068956f3c57846b/Cost-analysis-and-cost-effectiveness-of-hand-scored-and-automated-approaches-to-writing-screening.pdf)
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2022). Cost analysis and cost effectiveness of hand-scored and automated approaches to writing screening. *Journal of School Psychology, 92*, 80-95. https://doi.org/10.1016/j.jsp.2022.03.003
 
-Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (2021). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal, 34*, 2461-2480. [https://doi.org/10.1007/s11145-021-10153-6](https://doi.org/10.1007/s11145-021-10153-6)  
-[link to pre-print of accepted article](https://doi.org/10.31219/osf.io/gcetv)
+Keller-Margulis, M. A., Mercer, S. H., & Matta, M. (2021). Validity of automated text evaluation tools for written-expression curriculum-based measurement: A comparison study. *Reading and Writing: An Interdisciplinary Journal, 34*, 2461-2480. https://doi.org/10.1007/s11145-021-10153-6  
 
-Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (2021). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology, 36*, 304-317. [https://doi.org/10.1177/0829573520987753](https://doi.org/10.1177/0829573520987753)
-[link to pre-print of accepted article](https://doi.org/10.31219/osf.io/yrvq5)
+Mercer, S. H., Cannon, J. E., Squires, B., Guo, Y., & Pinco, E. (2021). Accuracy of automated written expression curriculum-based measurement scoring. *Canadian Journal of School Psychology, 36*, 304-317. https://doi.org/10.1177/0829573520987753
 
-Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. [https://doi.org/10.1177/0731948718803296](https://doi.org/10.1177/0731948718803296)
+Mercer, S. H., Keller-Margulis, M. A., Faith, E. L., Reid, E. K., & Ochs, S. (2019). The potential for automated text evaluation to improve the technical adequacy of written expression curriculum-based measurement. *Learning Disability Quarterly, 42*, 117-128. https://doi.org/10.1177/0731948718803296
 
 ### Conference Presentations
 
@@ -155,5 +151,5 @@ This project is licensed under the GNU General Public License Version 3 ([GPLv3]
 
 ## Acknowledgments
 
- * The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant [R305A190100](https://ies.ed.gov/funding/grantsearch/details.asp?ID=3339). The opinions expressed are those of the authors and do not represent views of the Institute or the U.S. Department of Education. Principal Investigator: [Milena Keller-Margulis](http://voyager.coe.uh.edu/dir/faculty_template.cfm?id=504) (University of Houston). Co-Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Principal Investigator: [Jorge Gonzalez](http://www.uh.edu/education/about/directory/employee-profile/index.php?id=725) (University of Houston). Co-Investigator: [Bruno Zumbo](https://ecps.educ.ubc.ca/person/bruno-zumbo/) (University of British Columbia).
- * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: [Sterett Mercer](https://ecps.educ.ubc.ca/person/sterett-mercer/) (University of British Columbia). Co-Investigators: [Joanna Cannon](https://ecps.educ.ubc.ca/person/joanna-cannon/) (UBC) and [Kate Raven](http://ldsociety.ca/about/) (Learning Disabilities Society of Greater Vancouver).
+ * The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant [R305A190100](https://ies.ed.gov/use-work/awards/identifying-optimal-scoring-metrics-and-prompt-type-written-expression-curriculum-based-measurement?ID=3339). The opinions expressed are those of the authors and do not represent views of the Institute or the U.S. Department of Education. Principal Investigator: Milena Keller-Margulis (University of Houston). Co-Principal Investigator: Sterett Mercer (University of British Columbia). Co-Principal Investigator: Jorge Gonzalez (University of Houston). Co-Investigator: Bruno Zumbo (University of British Columbia).
+ * This work was supported by a Partnership Development Grant (_Assessment for Effective Intervention in Written Expression for Students with Learning Disabilities_) from the Social Sciences and Humanities Research Council of Canada. Principal Investigator: Sterett Mercer (University of British Columbia). Co-Investigators: Joanna Cannon (UBC) and Kate Raven (Learning Disabilities Society of Greater Vancouver).

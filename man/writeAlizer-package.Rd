@@ -16,7 +16,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Mercer Sterett H. \email{sterett.mercer@ubc.ca}
+\strong{Maintainer}: Sterett H. Mercer \email{sterett.mercer@ubc.ca} (\href{https://orcid.org/0000-0002-7940-4221}{ORCID})
 
 }
 \keyword{internal}

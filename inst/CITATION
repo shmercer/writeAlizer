@@ -1,0 +1,8 @@
+bibentry(
+  bibtype = "Manual",
+  title = "{writeAlizer}: Generate predicted writing quality and written expression CBM scores",
+  author = person("Sterett H.", "Mercer"),
+  year = "2025", # Add or modify the year here
+  note = "R package version 1.6.0",
+  url = "https://github.com/shmercer/writeAlizer/"
+)

@@ -1,7 +1,7 @@
 Package: writeAlizer
 Type: Package
 Title: Generate Predicted Writing Quality and Written Expression CBM Scores
-Version: 1.6.0
+Version: 1.6.1
 Authors@R:
     person("Sterett H.", "Mercer", email = "sterett.mercer@ubc.ca",
            role = c("aut", "cre"),

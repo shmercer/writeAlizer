@@ -1,3 +1,23 @@
+# writeAlizer 1.6.1 (2025-09-12)
+
+## Improvements
+- Test coverage raised to ~82% overall.
+- `artifact_registry`: prefer CSV (`inst/metadata/artifacts.csv`) and remove legacy in-code fallback table; tighter input validation.
+- Quieter tests by silencing download/file messages and using local cache paths during tests.
+- More robust `install_model_deps()`:
+  - Clear dry-run behavior (returns Suggests tokens or helper-provided list).
+  - Strips version qualifiers before installation; installs only truly missing packages.
+  - New helper hook via `options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) {...})`.
+- Documentation: examples added for `install_model_deps()`; tidied roxygen.
+
+## Fixes
+- Stabilized artifact fetching in tests (`.wa_ensure_file`) with explicit cache dirs and checksum paths.
+- Eliminated intermittent warnings from `download.file()` and file URLs during tests.
+
+## Internal
+- Added/expanded tests for registry filtering, checksum guards, loader utilities, and package-requirement collection.
+- Removed unused/legacy code paths exercised only by fallback artifact table.
+
 # writeAlizer 1.6.0 (2025-09-12)
 
 - Replaced the ReaderBench mod3 models with their v2 counterparts (e.g., `rb_mod3all` now calls the `rb_mod3all_v2` models).

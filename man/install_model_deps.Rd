@@ -7,14 +7,36 @@
 install_model_deps(model = "all", dry_run = FALSE)
 }
 \arguments{
-\item{model}{Character (reserved for future use). Currently ignored.}
+\item{model}{Character (reserved for future use). Currently "all" by default.}
 
 \item{dry_run}{Logical. If TRUE, do not install; simply return the names.}
 }
 \value{
-Invisibly returns the character vector of package names considered.
+Invisibly returns the character vector of package names considered
+  (may include version qualifiers as declared in DESCRIPTION).
 }
 \description{
 Installs packages listed in **Suggests** that writeAlizer may use.
 Use `dry_run = TRUE` to just list the packages without installing.
+}
+\details{
+Optionally, an internal/helper hook can be provided to override dependency
+resolution (useful in tests or specialized setups):
+* Option: set \code{options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) \{ ... \})}
+* Internal (if present): \code{.wa_require_pkgs_for_fits(model, install, return_pkgs)}
+}
+\examples{
+# Safe for R CMD check: just list, do not install
+pkgs <- install_model_deps(dry_run = TRUE)
+pkgs
+
+# Optional helper via option (useful in tests)
+old_opt <- getOption("writeAlizer.require_pkgs_for_fits", NULL)
+on.exit(options(writeAlizer.require_pkgs_for_fits = old_opt), add = TRUE)
+options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) {
+  if (isTRUE(return_pkgs)) return(c("A_pkg_from_helper", "B_pkg_from_helper"))
+  invisible(NULL)
+})
+install_model_deps(model = "all", dry_run = TRUE)
+
 }

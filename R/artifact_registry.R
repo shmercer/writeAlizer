@@ -1,144 +1,4 @@
 # Internal utilities for centralizing model artifacts (files & URLs).
-# Keep this file data-driven so adding a new model is a one-line edit.
-
-# Table of artifacts: kind ("rds" varlists, "rda" model files), model key, part, file name, URL.
-.wa_artifacts <- function() {
-  data.frame(
-    kind  = c(
-      # -------- RDS (variable lists) ----------
-      # rb_mod2
-      "rds","rds","rds",
-      # rb_mod3 v2 single-genre
-      "rds","rds","rds",
-      # rb_mod3 v2 all
-      "rds","rds","rds",
-      # coh_mod2
-      "rds","rds","rds",
-      # coh_mod3 single-genre
-      "rds","rds","rds",
-      # coh_mod3 all
-      "rds","rds","rds",
-
-      # -------- RDA (trained models) ----------
-      # rb_mod1 (6 parts)
-      "rda","rda","rda","rda","rda","rda",
-      # rb_mod2 (3 parts)
-      "rda","rda","rda",
-      # rb_mod3 v2 single-genre
-      "rda","rda","rda",
-      # rb_mod3 v2 all (bundle the three v2 fits)
-      "rda","rda","rda",
-      # coh_mod1 (6 parts)
-      "rda","rda","rda","rda","rda","rda",
-      # coh_mod2 (3 parts)
-      "rda","rda","rda",
-      # coh_mod3 single-genre
-      "rda","rda","rda",
-      # coh_mod3 all
-      "rda","rda","rda",
-      # gamet_cws1 (2 parts)
-      "rda","rda"
-    ),
-    model = c(
-      # -------- RDS ----------
-      # rb_mod2
-      "rb_mod2","rb_mod2","rb_mod2",
-      # rb_mod3 v2 single-genre
-      "rb_mod3narr_v2","rb_mod3exp_v2","rb_mod3per_v2",
-      # rb_mod3 v2 all
-      "rb_mod3all_v2","rb_mod3all_v2","rb_mod3all_v2",
-      # coh_mod2
-      "coh_mod2","coh_mod2","coh_mod2",
-      # coh_mod3 single-genre
-      "coh_mod3narr","coh_mod3exp","coh_mod3per",
-      # coh_mod3 all
-      "coh_mod3all","coh_mod3all","coh_mod3all",
-
-      # -------- RDA ----------
-      # rb_mod1
-      "rb_mod1","rb_mod1","rb_mod1","rb_mod1","rb_mod1","rb_mod1",
-      # rb_mod2
-      "rb_mod2","rb_mod2","rb_mod2",
-      # rb_mod3 v2 single-genre
-      "rb_mod3narr_v2","rb_mod3exp_v2","rb_mod3per_v2",
-      # rb_mod3 v2 all (same three v2 fits)
-      "rb_mod3all_v2","rb_mod3all_v2","rb_mod3all_v2",
-      # coh_mod1
-      "coh_mod1","coh_mod1","coh_mod1","coh_mod1","coh_mod1","coh_mod1",
-      # coh_mod2
-      "coh_mod2","coh_mod2","coh_mod2",
-      # coh_mod3 single-genre
-      "coh_mod3narr","coh_mod3exp","coh_mod3per",
-      # coh_mod3 all
-      "coh_mod3all","coh_mod3all","coh_mod3all",
-      # gamet_cws1
-      "gamet_cws1","gamet_cws1"
-    ),
-    part  = c(
-      # -------- RDS ----------
-      "a","b","c",  # rb_mod2
-      "a","a","a",  # rb_mod3 v2 single-genre
-      "a","b","c",  # rb_mod3 v2 all
-      "a","b","c",  # coh_mod2
-      "a","a","a",  # coh_mod3 single-genre
-      "a","b","c",  # coh_mod3 all
-
-      # -------- RDA ----------
-      "a","b","c","d","e","f",  # rb_mod1
-      "a","b","c",              # rb_mod2
-      "a","a","a",              # rb_mod3 v2 single-genre
-      "a","b","c",              # rb_mod3 v2 all
-      "a","b","c","d","e","f",  # coh_mod1
-      "a","b","c",              # coh_mod2
-      "a","a","a",              # coh_mod3 single-genre
-      "a","b","c",              # coh_mod3 all
-      "a","b"                   # gamet_cws1
-    ),
-    file  = c(
-      # -------- RDS ----------
-      "rb_mod2a_vars.rds","rb_mod2b_vars.rds","rb_mod2c_vars.rds",
-      "rb_narr_vars_v2.rds","rb_exp_vars_v2.rds","rb_per_vars_v2.rds",
-      "rb_exp_vars_v2.rds","rb_narr_vars_v2.rds","rb_per_vars_v2.rds",
-      "coh_mod2a_vars.rds","coh_mod2b_vars.rds","coh_mod2c_vars.rds",
-      "coh_narr_vars.rds","coh_exp_vars.rds","coh_per_vars.rds",
-      "coh_exp_vars.rds","coh_narr_vars.rds","coh_per_vars.rds",
-
-      # -------- RDA ----------
-      "rb_mod1a.rda","rb_mod1b.rda","rb_mod1c.rda","rb_mod1d.rda","rb_mod1e.rda","rb_mod1f.rda",
-      "rb_mod2a.rda","rb_mod2b.rda","rb_mod2c.rda",
-      "rb_mod3narr_v2.rda","rb_mod3exp_v2.rda","rb_mod3per_v2.rda",
-      "rb_mod3exp_v2.rda","rb_mod3narr_v2.rda","rb_mod3per_v2.rda",
-      "coh_mod1a.rda","coh_mod1b.rda","coh_mod1c.rda","coh_mod1d.rda","coh_mod1e.rda","coh_mod1f.rda",
-      "coh_mod2a.rda","coh_mod2b.rda","coh_mod2c.rda",
-      "coh_mod3narr.rda","coh_mod3exp.rda","coh_mod3per.rda",
-      "coh_mod3exp.rda","coh_mod3narr.rda","coh_mod3per.rda",
-      "CWS_mod1a.rda","CIWS_mod1a.rda"
-    ),
-    url   = c(
-      # -------- RDS ----------
-      "https://osf.io/2rsnc/download","https://osf.io/qjg68/download","https://osf.io/kqdvt/download",
-      "https://osf.io/8v6nz/download","https://osf.io/gvtyx/download","https://osf.io/7dhc6/download",
-      "https://osf.io/gvtyx/download","https://osf.io/8v6nz/download","https://osf.io/7dhc6/download",
-      "https://osf.io/qp7fc/download","https://osf.io/upn6j/download","https://osf.io/8qmzv/download",
-      "https://osf.io/rbg9n/download","https://osf.io/v5wf3/download","https://osf.io/ekrgu/download",
-      "https://osf.io/v5wf3/download","https://osf.io/rbg9n/download","https://osf.io/ekrgu/download",
-
-      # -------- RDA ----------
-      "https://osf.io/eq9rw/download","https://osf.io/sy4dw/download","https://osf.io/64dxf/download",
-      "https://osf.io/5yghv/download","https://osf.io/kgxtu/download","https://osf.io/5wdet/download",
-      "https://osf.io/bpzhs/download","https://osf.io/vzkhn/download","https://osf.io/cqkrv/download",
-      "https://osf.io/rqtzm/download","https://osf.io/hknxf/download","https://osf.io/ntgfm/download",
-      "https://osf.io/hknxf/download","https://osf.io/rqtzm/download","https://osf.io/ntgfm/download",
-      "https://osf.io/qws5x/download","https://osf.io/rdmfw/download","https://osf.io/dq2s9/download",
-      "https://osf.io/be6qv/download","https://osf.io/pv3gm/download","https://osf.io/myk6f/download",
-      "https://osf.io/mr7kg/download","https://osf.io/zxhcu/download","https://osf.io/n6hqg/download",
-      "https://osf.io/y5hjz/download","https://osf.io/6x95q/download","https://osf.io/vrnt9/download",
-      "https://osf.io/6x95q/download","https://osf.io/y5hjz/download","https://osf.io/vrnt9/download",
-      "https://osf.io/tfw95/download","https://osf.io/yjuxn/download"
-    ),
-    stringsAsFactors = FALSE
-  )
-}
 
 # ------- helpers (internal; do NOT export) -------
 
@@ -152,38 +12,39 @@
   )
 }
 
-# Read the shipped CSV registry (preferred), or fall back to the in-code table.
+# Read the shipped CSV registry (required).
 .wa_registry <- function() {
   csv <- system.file("metadata", "artifacts.csv", package = "writeAlizer")
-  if (nzchar(csv) && file.exists(csv)) {
-    df <- utils::read.csv(csv, stringsAsFactors = FALSE)
-    need <- c("kind","model","part","file","url","sha")
-    miss <- setdiff(need, names(df))
-    if (length(miss)) stop("artifacts.csv missing columns: ", paste(miss, collapse = ", "), call. = FALSE)
-    return(df)
+  if (!nzchar(csv) || !file.exists(csv)) {
+    stop(
+      "Registry CSV not found (inst/metadata/artifacts.csv). ",
+      "Reinstall writeAlizer or ensure the file is included in the package.",
+      call. = FALSE
+    )
   }
-  if (exists(".wa_artifacts", mode = "function")) {
-    df <- .wa_artifacts()
-    if (!"sha" %in% names(df)) df$sha <- NA_character_
-    return(df)
+  df <- utils::read.csv(csv, stringsAsFactors = FALSE)
+  need <- c("kind","model","part","file","url","sha")
+  miss <- setdiff(need, names(df))
+  if (length(miss)) {
+    stop(
+      "artifacts.csv missing columns: ", paste(miss, collapse = ", "),
+      call. = FALSE
+    )
   }
-  stop("No registry found (inst/metadata/artifacts.csv or .wa_artifacts()).", call. = FALSE)
+  df
 }
 
 # Helper to filter registry by kind/model and return rows (including sha)
 .wa_parts_for <- function(kind, model) {
   reg <- .wa_registry()
-  # guard rails
-  if (!all(c("kind", "model", "part", "file", "url") %in% names(reg))) {
+  if (!all(c("kind","model","part","file","url") %in% names(reg))) {
     stop("artifacts registry is missing required columns.", call. = FALSE)
   }
   if (!is.character(kind) || length(kind) != 1L) {
     stop("`kind` must be a single string ('rds' or 'rda').", call. = FALSE)
   }
   key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
-
   out <- reg[reg$kind == kind & reg$model == key, , drop = FALSE]
-  # order by part if present
   if ("part" %in% names(out)) {
     out <- out[order(out$part), , drop = FALSE]
   }

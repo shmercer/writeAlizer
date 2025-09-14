@@ -1,126 +1,93 @@
-#' Install model dependencies (Suggests)
+#' Install optional model dependencies
 #'
-#' Installs packages listed in **Suggests** that writeAlizer may use.
-#' Use `dry_run = TRUE` to just list the packages without installing.
+#' Discovers package dependencies for model fitting from the package
+#' `Suggests` field, or via the option hook
+#' `options(writeAlizer.require_pkgs_for_fits = function() c("pkgA", "pkgB (>= 1.2.3)"))`.
 #'
-#' Optionally, an internal/helper hook can be provided to override dependency
-#' resolution (useful in tests or specialized setups):
-#' * Option: set \code{options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) \{ ... \})}
-#' * Internal (if present): \code{.wa_require_pkgs_for_fits(model, install, return_pkgs)}
+#' If a hook function is provided via the option above, its return value
+#' (a character vector of package tokens, optionally with version qualifiers)
+#' takes precedence over reading the package `Suggests`.
 #'
-#' @param model Character (reserved for future use). Currently "all" by default.
-#' @param dry_run Logical. If TRUE, do not install; simply return the names.
-#' @return Invisibly returns the character vector of package names considered
-#'   (may include version qualifiers as declared in DESCRIPTION).
+#' @param dry_run Logical. If `TRUE`, returns the discovered package tokens
+#'   (possibly including version qualifiers) without attempting installation.
+#' @return
+#' - If `dry_run = TRUE`: **visible** character vector of package tokens
+#'   (e.g., `c("ranger", "glmnet (>= 4.1)")`).
+#' - Otherwise: (invisibly) the character vector of base package names that were
+#'   required/checked for installation (e.g., `c("ranger", "glmnet")`).
 #'
 #' @examples
-#' # Safe for R CMD check: just list, do not install
-#' pkgs <- install_model_deps(dry_run = TRUE)
-#' pkgs
+#' # See which packages would be required without installing:
+#' install_model_deps(dry_run = TRUE)
 #'
-#' # Optional helper via option (useful in tests)
-#' old_opt <- getOption("writeAlizer.require_pkgs_for_fits", NULL)
-#' on.exit(options(writeAlizer.require_pkgs_for_fits = old_opt), add = TRUE)
-#' options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) {
-#'   if (isTRUE(return_pkgs)) return(c("A_pkg_from_helper", "B_pkg_from_helper"))
-#'   invisible(NULL)
-#' })
-#' install_model_deps(model = "all", dry_run = TRUE)
+#' # Provide a custom hook to override discovery:
+#' old <- options(writeAlizer.require_pkgs_for_fits = function() c("glmnet (>= 4.1)", "ranger"))
+#' on.exit(options(old), add = TRUE)
+#' install_model_deps(dry_run = TRUE)
 #'
 #' @export
-install_model_deps <- function(model = "all", dry_run = FALSE) {
-  # -------- 0) Optional helper hook (used only if it yields a non-empty set) --------
-  helper <- getOption("writeAlizer.require_pkgs_for_fits", NULL)
-  if (is.null(helper)) {
-    helper <- tryCatch(get(".wa_require_pkgs_for_fits", envir = asNamespace("writeAlizer")),
-                       error = function(e) NULL)
-  }
-  if (is.function(helper)) {
-    if (isTRUE(dry_run)) {
-      pkgs_from_helper <- tryCatch(
-        helper(model = model, install = FALSE, return_pkgs = TRUE),
-        error = function(e) character(0)
-      )
-      if (length(pkgs_from_helper) > 0L) {
-        return(invisible(as.character(pkgs_from_helper)))
-      }
-      # else fall through to Suggests
-    } else {
-      invisible(tryCatch(
-        helper(model = model, install = TRUE, return_pkgs = FALSE),
-        error = function(e) NULL
-      ))
-      # continue to return canonical list
-    }
+install_model_deps <- function(dry_run = FALSE) {
+  # --- helpers ---------------------------------------------------------------
+
+  # Parse a DESCRIPTION Suggests field into tokens, preserving version qualifiers.
+  parse_suggests <- function(x) {
+    if (is.null(x) || length(x) == 0L || is.na(x)) return(character(0))
+    # Replace newlines with spaces, then split on commas
+    x <- gsub("[\r\n]+", " ", x)
+    tokens <- trimws(unlist(strsplit(x, "," , fixed = TRUE), use.names = FALSE))
+    tokens <- tokens[nzchar(tokens)]
+    unique(tokens)
   }
 
-  # -------- 1) Read Suggests from package metadata or DESCRIPTION --------
-  read_suggests_dcf <- function(path) {
-    if (!is.character(path) || !nzchar(path) || !file.exists(path)) return(NA_character_)
-    d <- tryCatch(read.dcf(path), error = function(e) NULL)
-    if (is.null(d) || nrow(d) < 1 || !"Suggests" %in% colnames(d)) return(NA_character_)
-    v <- d[1, "Suggests"]; if (is.na(v) || !nzchar(v)) NA_character_ else v
-  }
-  read_suggests_lines <- function(path) {
-    if (!is.character(path) || !nzchar(path) || !file.exists(path)) return(NA_character_)
-    L <- tryCatch(readLines(path, warn = FALSE), error = function(e) character(0))
-    if (!length(L)) return(NA_character_)
-    i <- grep("^\\s*Suggests\\s*:", L)
-    if (!length(i)) return(NA_character_)
-    s <- sub("^\\s*Suggests\\s*:\\s*", "", L[i[1]])
-    j <- i[1] + 1
-    while (j <= length(L) && grepl("^\\s", L[j])) { s <- paste0(s, " ", trimws(L[j])); j <- j + 1 }
-    s <- trimws(s); if (nzchar(s)) s else NA_character_
+  # Strip any trailing version qualifier: "pkg (>= 1.2.3)" -> "pkg"
+  strip_qualifier <- function(x) sub("\\s*\\(.*\\)$", "", x)
+
+  # Check if a package is available without attaching it
+  is_available <- function(pkg) {
+    # requireNamespace returns TRUE/FALSE and doesn't change search path
+    isTRUE(requireNamespace(pkg, quietly = TRUE))
   }
 
-  suggests <- utils::packageDescription("writeAlizer", fields = "Suggests")
+  # --- discover tokens -------------------------------------------------------
 
-  if (is.na(suggests) || !nzchar(suggests)) {
-    ns_path <- tryCatch(getNamespaceInfo(asNamespace("writeAlizer"), "path"),
-                        error = function(e) NULL)
-    if (is.character(ns_path) && nzchar(ns_path)) {
-      desc_ns <- file.path(ns_path, "DESCRIPTION")
-      suggests <- read_suggests_dcf(desc_ns)
-      if (is.na(suggests) || !nzchar(suggests)) suggests <- read_suggests_lines(desc_ns)
-    }
-  }
-  if (is.na(suggests) || !nzchar(suggests)) {
-    desc_cwd <- "DESCRIPTION"
-    suggests <- read_suggests_dcf(desc_cwd)
-    if (is.na(suggests) || !nzchar(suggests)) suggests <- read_suggests_lines(desc_cwd)
+  # Option hook takes precedence if supplied
+  hook <- getOption("writeAlizer.require_pkgs_for_fits", NULL)
+  if (is.function(hook)) {
+    pkgs_raw <- as.character(hook())
+    pkgs_raw <- pkgs_raw[nzchar(pkgs_raw)]
+  } else {
+    # Fall back to reading Suggests from the installed writeAlizer DESCRIPTION
+    suggests <- utils::packageDescription("writeAlizer", fields = "Suggests")
+    pkgs_raw <- parse_suggests(suggests)
   }
 
-  # -------- 1b) STATIC FALLBACK (guarantees non-empty in dev/test) --------
-  if (is.na(suggests) || !nzchar(suggests)) {
-    suggests <- paste(
-      "testthat (>= 3.1.0)",
-      "Cubist",
-      "caretEnsemble",
-      "earth",
-      "gbm",
-      "glmnet",
-      "kernlab",
-      "pls",
-      "randomForest",
-      "withr",
-      sep = ", "
-    )
+  # Ensure character(0) not NA for downstream logic
+  if (length(pkgs_raw) == 0L) {
+    if (isTRUE(dry_run)) return(character(0))
+    return(invisible(character(0)))
   }
 
-  # -------- 2) Parse into return tokens (keep version qualifiers) --------
-  pieces <- unlist(strsplit(suggests, ","))
-  pieces <- trimws(gsub("[\r\n]+", " ", pieces))
-  pkgs_raw <- unique(pieces[nzchar(pieces)])
+  # --- dry run ---------------------------------------------------------------
 
   if (isTRUE(dry_run)) {
-    return(invisible(pkgs_raw))
+    # Visible return so tests/users can inspect easily
+    return(pkgs_raw)
   }
 
-  # -------- 3) Install if missing (strip version qualifiers for checks) --------
-  pkgs_clean <- sub("\\s*\\(.*\\)$", "", pkgs_raw)
-  is_avail <- vapply(pkgs_clean, function(p) requireNamespace(p, quietly = TRUE), logical(1))
-  missing <- pkgs_clean[!is_avail]
-  if (length(missing)) utils::install.packages(missing)
+  # --- install path ----------------------------------------------------------
 
-  invisible(pkgs_raw)
+  # Strip version qualifiers only when checking/installing
+  base_names <- strip_qualifier(pkgs_raw)
+
+  # Which are missing?
+  have <- vapply(base_names, is_available, logical(1))
+  missing <- base_names[!have]
+
+  # Install missing, if any
+  if (length(missing)) {
+    utils::install.packages(missing)
+  }
+
+  # Return the set we checked (invisibly)
+  invisible(base_names)
 }

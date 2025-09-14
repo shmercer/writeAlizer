@@ -2,41 +2,37 @@
 % Please edit documentation in R/install_model_deps.R
 \name{install_model_deps}
 \alias{install_model_deps}
-\title{Install model dependencies (Suggests)}
+\title{Install optional model dependencies}
 \usage{
-install_model_deps(model = "all", dry_run = FALSE)
+install_model_deps(dry_run = FALSE)
 }
 \arguments{
-\item{model}{Character (reserved for future use). Currently "all" by default.}
-
-\item{dry_run}{Logical. If TRUE, do not install; simply return the names.}
+\item{dry_run}{Logical. If `TRUE`, returns the discovered package tokens
+(possibly including version qualifiers) without attempting installation.}
 }
 \value{
-Invisibly returns the character vector of package names considered
-  (may include version qualifiers as declared in DESCRIPTION).
+- If `dry_run = TRUE`: **visible** character vector of package tokens
+  (e.g., `c("ranger", "glmnet (>= 4.1)")`).
+- Otherwise: (invisibly) the character vector of base package names that were
+  required/checked for installation (e.g., `c("ranger", "glmnet")`).
 }
 \description{
-Installs packages listed in **Suggests** that writeAlizer may use.
-Use `dry_run = TRUE` to just list the packages without installing.
+Discovers package dependencies for model fitting from the package
+`Suggests` field, or via the option hook
+`options(writeAlizer.require_pkgs_for_fits = function() c("pkgA", "pkgB (>= 1.2.3)"))`.
 }
 \details{
-Optionally, an internal/helper hook can be provided to override dependency
-resolution (useful in tests or specialized setups):
-* Option: set \code{options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) \{ ... \})}
-* Internal (if present): \code{.wa_require_pkgs_for_fits(model, install, return_pkgs)}
+If a hook function is provided via the option above, its return value
+(a character vector of package tokens, optionally with version qualifiers)
+takes precedence over reading the package `Suggests`.
 }
 \examples{
-# Safe for R CMD check: just list, do not install
-pkgs <- install_model_deps(dry_run = TRUE)
-pkgs
+# See which packages would be required without installing:
+install_model_deps(dry_run = TRUE)
 
-# Optional helper via option (useful in tests)
-old_opt <- getOption("writeAlizer.require_pkgs_for_fits", NULL)
-on.exit(options(writeAlizer.require_pkgs_for_fits = old_opt), add = TRUE)
-options(writeAlizer.require_pkgs_for_fits = function(model, install, return_pkgs) {
-  if (isTRUE(return_pkgs)) return(c("A_pkg_from_helper", "B_pkg_from_helper"))
-  invisible(NULL)
-})
-install_model_deps(model = "all", dry_run = TRUE)
+# Provide a custom hook to override discovery:
+old <- options(writeAlizer.require_pkgs_for_fits = function() c("glmnet (>= 4.1)", "ranger"))
+on.exit(options(old), add = TRUE)
+install_model_deps(dry_run = TRUE)
 
 }

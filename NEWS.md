@@ -1,6 +1,5 @@
 # writeAlizer 1.6.2 (2025-09-14)
 
-## Improvements
 - Simplified `install_model_deps()`:
   - Removed unused `model` argument.
   - Standardized on the `options(writeAlizer.require_pkgs_for_fits = function() ...)` hook; dropped internal helper.

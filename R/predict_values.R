@@ -108,12 +108,11 @@ preprocess <- function(model, data) {
 
 #' @title Predict writing quality
 #' @description Run the specified model(s) on preprocessed data and return predictions.
-#' Apply scoring models to ReaderBench, CohMetrix, and/or
-#' GAMET files. Holistic writing quality can be
-#' generated from Readerbench (model = 'rb_mod3all') or
-#' Coh-Metrix files (model = 'coh_mod3all'). Also,
-#' Correct Word Sequences and Correct Minus Incorrect
-#' Word Sequences can be generated from a GAMET file (model = 'gamet_cws1').
+#' Apply scoring models to ReaderBench, Coh-Metrix, and/or GAMET files. Holistic
+#' writing quality can be generated from ReaderBench (model = 'rb_mod3all') or
+#' Coh-Metrix files (model = 'coh_mod3all'). Also, Correct Word Sequences and
+#' Correct Minus Incorrect Word Sequences can be generated from a GAMET file
+#' (model = 'gamet_cws1').
 #' @importFrom utils write.table
 #' @importFrom stats predict
 #' @importFrom dplyr select
@@ -121,36 +120,44 @@ preprocess <- function(model, data) {
 #' Options are:
 #' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
 #' 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
-#' 'coh_mod1', 'coh_mod2' 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
-#'  or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
+#' 'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per',
+#' or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
 #' and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 #' and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.
 #' @param data Data frame returned by \code{\link{import_gamet}},
 #'   \code{\link{import_coh}}, or \code{\link{import_rb}}.
-#' @return A data.frame with ID and one column per sub-model prediction.
+#' @return A \code{data.frame} with \code{ID} and one column per sub-model prediction.
 #'         If multiple sub-models are used and all predictions are numeric,
-#'         an aggregate column named \code{pred_<model>_mean}
-#'         is added (except for "gamet_cws1").
-#' @export
+#'         an aggregate column named \code{pred_<model>_mean} is added
+#'         (except for "gamet_cws1").
 #' @seealso \code{\link{import_rb}}, \code{\link{import_coh}}, \code{\link{import_gamet}}
 #' @details
 #' **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
 #' directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
-#' are attempted and checks stay fast.
-#'
+#' are attempted and checks stay fast. The temporary files created for the example are
+#' cleaned up at the end of the \code{\\examples{}}.
+#' @export
 #' @examples
 #' # Fast, offline example: seed a tiny 'example' model and predict (no downloads)
 #' coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
 #' coh <- import_coh(coh_path)
 #'
-#' mock_dir <- getOption("writeAlizer.mock_dir")
-#' writeAlizer:::wa_seed_example_models("example", dir = tempdir())
+#' mock_old <- getOption("writeAlizer.mock_dir")
+#' ex_dir <- writeAlizer:::wa_seed_example_models("example", dir = tempdir())
+#' on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
 #'
 #' out <- predict_quality("example", coh)
 #' head(out)
 #'
 #' # IMPORTANT: reset mock_dir before running full demos, so real artifacts load
-#' options(writeAlizer.mock_dir = mock_dir)
+#' options(writeAlizer.mock_dir = mock_old)
+#'
+#' \dontshow{
+#' # Cleanup of example artifacts created under tempdir()
+#' if (is.character(ex_dir) && nzchar(ex_dir) && dir.exists(ex_dir)) {
+#'   unlink(ex_dir, recursive = TRUE, force = TRUE)
+#' }
+#' }
 #'
 #' # More complete demos (skipped on CRAN to keep checks fast)
 #' \donttest{

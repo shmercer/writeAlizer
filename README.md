@@ -81,10 +81,14 @@ Some models are ensembles and will output multiple sub-predictions (e.g., genre-
 
 ### Where model files are stored
 
-By default, writeAlizer caches downloaded model artifacts under the user cache directory returned by:
+By default, writeAlizer caches downloaded model artifacts in a user cache directory.
 
 ```r
-tools::R_user_dir("writeAlizer", "cache")
+# return the cache directory location
+wa_cache_dir()
+
+# list objects in the cache, with option to clear it
+wa_cache_clear()
 ```
 
 ## Documentation

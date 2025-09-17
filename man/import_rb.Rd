@@ -9,6 +9,16 @@ import_rb(path)
 \arguments{
 \item{path}{A string giving the path and filename to import.}
 }
+\value{
+A base \code{data.frame} with one row per record and the following columns:
+\itemize{
+  \item \code{ID} (\code{character}): unique identifier of the text/essay.
+  \item One column per retained ReaderBench feature, kept by original
+        feature name (\code{numeric}). Feature names mirror the ReaderBench
+        output variables.
+}
+The object has class \code{data.frame} (or \code{tibble} if converted by the user).
+}
 \description{
 When available, the function reads the header of the packaged sample
 (\code{inst/extdata/sample_rb.csv}) and keeps the first 404 columns by NAME

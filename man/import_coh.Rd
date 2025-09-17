@@ -9,8 +9,24 @@ import_coh(path)
 \arguments{
 \item{path}{A string giving the path and filename to import.}
 }
+\value{
+A base \code{data.frame} with one row per record and the following columns:
+\itemize{
+  \item \code{ID} (\code{character}): unique identifier of the text/essay.
+  \item One column per retained Coh\emph{-}Metrix feature, kept by original
+        feature name (\code{numeric}). Feature names mirror the Coh\emph{-}Metrix
+        output variables.
+}
+The object has class \code{data.frame} (or \code{tibble} if converted by the user).
+}
 \description{
 Import a Coh-Metrix output file (.csv) into R.
+}
+\examples{
+# Example with package sample data
+file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+coh_file  <- import_coh(file_path)
+head(coh_file)
 }
 \seealso{
 \code{\link{predict_quality}}

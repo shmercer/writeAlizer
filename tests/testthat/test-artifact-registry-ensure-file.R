@@ -1,5 +1,7 @@
 # tests/testthat/test-artifact-registry-ensure-file.R
 
+withr::local_options(download.file.method = "libcurl")
+
 # Helper: run an expression while capturing ALL console output (stdout + messages),
 # and return the expression's value.
 .with_quiet_console <- function(expr) {

@@ -80,6 +80,20 @@
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso \code{\link{predict_quality}}
+#' @return
+#' A base \code{data.frame} with one row per record and the following columns:
+#' \itemize{
+#'   \item \code{ID} (\code{character}): unique identifier of the text/essay.
+#'   \item One column per retained GAMET error/category variable (\code{numeric};
+#'         typically counts or rates). Column names follow the GAMET output
+#'         variable names.
+#' }
+#' The object has class \code{data.frame} (or \code{tibble} if converted by the user).
+#' @examples
+#' # Example with package sample data
+#' file_path   <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#' gamet_file  <- import_gamet(file_path)
+#' head(gamet_file)
 import_gamet <- function(path) {
   dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
 
@@ -115,6 +129,20 @@ import_gamet <- function(path) {
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso \code{\link{predict_quality}}
+#' @return
+#' A base \code{data.frame} with one row per record and the following columns:
+#' \itemize{
+#'   \item \code{ID} (\code{character}): unique identifier of the text/essay.
+#'   \item One column per retained Coh\emph{-}Metrix feature, kept by original
+#'         feature name (\code{numeric}). Feature names mirror the Coh\emph{-}Metrix
+#'         output variables.
+#' }
+#' The object has class \code{data.frame} (or \code{tibble} if converted by the user).
+#' @examples
+#' # Example with package sample data
+#' file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+#' coh_file  <- import_coh(file_path)
+#' head(coh_file)
 import_coh <- function(path) {
   dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
 
@@ -146,10 +174,20 @@ import_coh <- function(path) {
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso \code{\link{predict_quality}}
+#' @return
+#' A base \code{data.frame} with one row per record and the following columns:
+#' \itemize{
+#'   \item \code{ID} (\code{character}): unique identifier of the text/essay.
+#'   \item One column per retained ReaderBench feature, kept by original
+#'         feature name (\code{numeric}). Feature names mirror the ReaderBench
+#'         output variables.
+#' }
+#' The object has class \code{data.frame} (or \code{tibble} if converted by the user).
 #' @examples
-#' rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-#' rb <- import_rb(rb_path)
-#' head(rb)
+#' # Fast, runnable example with package sample data
+#' file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+#' rb_file   <- import_rb(file_path)
+#' head(rb_file)
 import_rb <- function(path) {
   # check first line for "SEP=,"; if present, skip that line on import
   con <- file(path, "r")
@@ -223,6 +261,24 @@ import_rb <- function(path) {
 #' @seealso \code{\link{predict_quality}}
 #' @param rb_path A string giving the path and ReaderBench filename to import.
 #' @param gamet_path A string giving the path and GAMET filename to import.
+#' @return
+#' A base \code{data.frame} created by joining the ReaderBench and GAMET tables
+#' by \code{ID}, with one row per matched ID and the following columns:
+#' \itemize{
+#'   \item \code{ID} (\code{character}): identifier present in both sources.
+#'   \item All retained ReaderBench feature columns (\code{numeric}).
+#'   \item All retained GAMET error/category columns (\code{numeric}).
+#' }
+#' By default, only IDs present in both inputs are kept (inner join). If a
+#' feature name appears in both sources, standard merge suffixes (e.g.,
+#' \code{.x}/\code{.y}) may be applied by the join implementation.
+#' The object has class \code{data.frame} (or \code{tibble} if converted by the user).
+#' @examples
+#' # Example with package sample data
+#' rb_path   <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+#' gam_path  <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#' rb_gam    <- import_merge_gamet_rb(rb_path, gam_path)
+#' head(rb_gam)
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
   dat.RB <- import_rb(rb_path)
   dat.G  <- import_gamet(gamet_path)

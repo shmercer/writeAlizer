@@ -16,17 +16,23 @@ testthat::test_that(".wa_parts_for returns entries for known keys", {
   testthat::expect_gt(nrow(rds_rb3), 0L)
 })
 
-testthat::test_that(".wa_ensure_file uses writeAlizer.mock_dir override (no network)", {
-  ensure_file <- getFromNamespace(".wa_ensure_file", "writeAlizer")
-
+test_that(".wa_ensure_file fetches from a local file:// URL (no network)", {
   tmp <- withr::local_tempdir()
-  withr::local_options(list(writeAlizer.mock_dir = tmp))
+  # Isolate writeAlizer cache so we don't touch user cache
+  withr::local_envvar(R_USER_CACHE_DIR = file.path(tmp, "R-cache"))
 
-  fake_name <- "mock_artifact.rda"
-  fake_path <- file.path(tmp, fake_name)
-  save(list = character(), file = fake_path)  # empty .rda is fine for path check
+  # Create a tiny local source file and expose as file:// URL
+  src <- file.path(tmp, "src.bin")
+  writeBin(as.raw(1:10), src)
+  url <- paste0("file:///", normalizePath(src, winslash = "/"))
 
-  # URL is ignored when override hits; use a placeholder
-  out <- ensure_file(fake_name, url = "https://example.invalid/file")
-  testthat::expect_identical(normalizePath(out), normalizePath(fake_path))
+  # Pick a cache filename and ensure it downloads into the isolated cache
+  fn <- "unit_test_file.bin"
+  p <- writeAlizer:::.wa_ensure_file(fn, url = url, quiet = TRUE)
+  expect_true(file.exists(p))
+
+  # Re-ensure should be a cache hit; still exists and same path
+  p2 <- writeAlizer:::.wa_ensure_file(fn, url = url, quiet = TRUE)
+  expect_identical(p, p2)
 })
+

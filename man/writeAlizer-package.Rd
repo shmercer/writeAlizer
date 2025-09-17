@@ -3,9 +3,9 @@
 \docType{package}
 \name{writeAlizer-package}
 \alias{writeAlizer-package}
-\title{writeAlizer: Generate Predicted Writing Quality and Written Expression CBM Scores}
+\title{writeAlizer: Generate Predicted Writing Quality Scores}
 \description{
-Imports ReaderBench, Coh-Metrix, and GAMET output files; downloads predictive scoring models; and computes predicted writing quality scores from these inputs.
+Imports variables from 'ReaderBench' (Dascalu et al., 2018)\doi{10.1007/978-3-319-66610-5_48}, 'Coh-Metrix' (McNamara et al., 2014)\doi{10.1017/CBO9780511894664}, and/or 'GAMET' (Crossley et al., 2019) \doi{10.17239/jowr-2019.11.02.01} output files; downloads predictive scoring models described in Mercer & Cannon (2022)\doi{10.31244/jero.2022.01.03} and Mercer et al.(2021)\doi{10.1177/0829573520987753}; and generates predicted writing quality and curriculum-based measurement (McMaster & Espin, 2007)\doi{10.1177/00224669070410020301} scores.
 }
 \seealso{
 Useful links:

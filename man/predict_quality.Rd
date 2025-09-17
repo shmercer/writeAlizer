@@ -11,8 +11,8 @@ predict_quality(model, data)
 Options are:
 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
-'coh_mod1', 'coh_mod2' 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per'
- or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
+'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per',
+or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
 and 'gamet_cws1' to generate Correct Word Sequences (CWS)
 and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 
@@ -20,45 +20,66 @@ and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
 \code{\link{import_coh}}, or \code{\link{import_rb}}.}
 }
 \value{
-A data.frame with ID and one column per sub-model prediction.
+A \code{data.frame} with \code{ID} and one column per sub-model prediction.
         If multiple sub-models are used and all predictions are numeric,
-        an aggregate column named \code{pred_<model>_mean}
-        is added (except for "gamet_cws1").
+        an aggregate column named \code{pred_<model>_mean} is added
+        (except for "gamet_cws1").
 }
 \description{
 Run the specified model(s) on preprocessed data and return predictions.
-Apply scoring models to ReaderBench, CohMetrix, and/or
-GAMET files. Holistic writing quality can be
-generated from Readerbench (model = 'rb_mod3all') or
-Coh-Metrix files (model = 'coh_mod3all'). Also,
-Correct Word Sequences and Correct Minus Incorrect
-Word Sequences can be generated from a GAMET file (model = 'gamet_cws1').
+Apply scoring models to ReaderBench, Coh-Metrix, and/or GAMET files. Holistic
+writing quality can be generated from ReaderBench (model = 'rb_mod3all') or
+Coh-Metrix files (model = 'coh_mod3all'). Also, Correct Word Sequences and
+Correct Minus Incorrect Word Sequences can be generated from a GAMET file
+(model = 'gamet_cws1').
+}
+\details{
+**Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
+directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
+are attempted and checks stay fast. The temporary files created for the example are
+cleaned up at the end of the \code{\\examples{}}.
 }
 \examples{
-# Minimal example (fast, offline): import a sample ReaderBench file
-rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-rb <- import_rb(rb_path)
-head(rb)
+# Fast, offline example: seed a tiny 'example' model and predict (no downloads)
+coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+coh <- import_coh(coh_path)
 
-# Full demos (not run on CRAN to avoid heavy/model-dependent steps)
-\dontrun{
-### Example 1: ReaderBench output file
-file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-rb_file <- import_rb(file_path1)
-rb_quality <- predict_quality("rb_mod3all", rb_file)
-rb_quality
+mock_old <- getOption("writeAlizer.mock_dir")
+ex_dir <- writeAlizer:::wa_seed_example_models("example", dir = tempdir())
+on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
 
-### Example 2: Coh-Metrix output file
-file_path2 <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-coh_file <- import_coh(file_path2)
-coh_quality <- predict_quality("coh_mod3all", coh_file)
-coh_quality
+out <- predict_quality("example", coh)
+head(out)
 
-### Example 3: GAMET output file
-file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-gam_file <- import_gamet(file_path3)
-gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
-gamet_CWS_CIWS
+# IMPORTANT: reset mock_dir before running full demos, so real artifacts load
+options(writeAlizer.mock_dir = mock_old)
+
+\dontshow{
+# Cleanup of example artifacts created under tempdir()
+if (is.character(ex_dir) && nzchar(ex_dir) && dir.exists(ex_dir)) {
+  unlink(ex_dir, recursive = TRUE, force = TRUE)
+}
+}
+
+# More complete demos (skipped on CRAN to keep checks fast)
+\donttest{
+  ### Example 1: ReaderBench output file
+  file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+  rb_file <- import_rb(file_path1)
+  rb_quality <- predict_quality("rb_mod3all", rb_file)
+  head(rb_quality)
+
+  ### Example 2: Coh-Metrix output file
+  file_path2 <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+  coh_file <- import_coh(file_path2)
+  coh_quality <- predict_quality("coh_mod3all", coh_file)
+  head(coh_quality)
+
+  ### Example 3: GAMET output file (CWS and CIWS)
+  file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+  gam_file <- import_gamet(file_path3)
+  gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
+  head(gamet_CWS_CIWS)
 }
 }
 \seealso{

@@ -1,70 +1,102 @@
-# R/cache.R
-
-# User cache directory for writeAlizer artifacts (RDS/RDA files)
-.wa_cache_dir <- function() {
-  dir <- tools::R_user_dir("writeAlizer", "cache")
-  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
-  dir
-}
-
-# Build a path inside the cache
-.wa_cached_path <- function(fname) file.path(.wa_cache_dir(), fname)
-
-# Ensure a file is present in the cache; download if missing; verify checksum if provided.
-# In tests, you can set options(writeAlizer.mock_dir = "<path>") to provide prebuilt artifacts.
-.wa_ensure_file <- function(filename, url, sha256 = NULL, quiet = FALSE) {
-  # Test hook: use a mock directory (skip checksum)
-  mock_dir <- getOption("writeAlizer.mock_dir", default = NULL)
-  if (!is.null(mock_dir) && nzchar(mock_dir)) {
-    dest <- file.path(mock_dir, filename)
-    if (!file.exists(dest)) stop("Mock artifact not found: ", dest, call. = FALSE)
-    return(dest)
-  }
-
-  dest <- .wa_cached_path(filename)
-  need_download <- !file.exists(dest)
-
-  # If we have the file and a checksum, verify it
-  if (!need_download && !is.null(sha256) && nzchar(sha256)) {
-    got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
-                    error = function(e) NA_character_)
-    if (!identical(got, sha256)) {
-      warning(sprintf("Checksum mismatch for cached %s; re-downloading", filename))
-      need_download <- TRUE
-    }
-  }
-
-  if (need_download) {
-    utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
-    if (!file.exists(dest)) stop("Download failed for ", filename, call. = FALSE)
-  }
-
-  # Verify after (re)download
-  if (!is.null(sha256) && nzchar(sha256)) {
-    got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
-                    error = function(e) NA_character_)
-    if (!identical(got, sha256)) {
-      stop(sprintf("Checksum mismatch for %s (expected %s, got %s)",
-                   filename, sha256, got), call. = FALSE)
-    }
-  }
-
-  dest
-}
-
-# Optional: a tiny wrapper you can call elsewhere (kept for compatibility)
-#' @title Download artifact into user cache (with optional checksum)
-#' @description Download a registry artifact (RDS/RDA/etc.) into the writeAlizer
-#' user cache (via \code{tools::R_user_dir}) and optionally verify its SHA-256 checksum.
-#' This is a thin wrapper over the internal cache helper used by the package.
-#' @param file Character scalar. Filename to write within the cache (e.g., \code{"rb_mod2a.rda"}).
-#' @param url Character scalar. Remote URL to download from.
-#' @param sha256 Optional character scalar. Expected SHA-256 hex digest of the file
-#'   contents. If provided, the downloaded file is verified; a mismatch raises an error.
-#' @param quiet Logical. Passed to \code{utils::download.file}; \code{TRUE} suppresses progress output.
-#' @return The full filesystem path (character scalar) to the cached file.
-#' @seealso \code{\link{preprocess}}, \code{\link{predict_quality}}
+#' Path to writeAlizer's user cache
+#'
+#' Returns the directory used to store cached model artifacts. By default this is
+#' a platform-appropriate user cache path from \code{tools::R_user_dir("writeAlizer","cache")}.
+#' If the option \code{writeAlizer.cache_dir} is set to a non-empty string, that
+#' location is used instead. This makes it easy to redirect the cache during tests
+#' or examples (e.g., to \code{tempdir()}).
+#'
+#' @return Character scalar path.
+#' @seealso \code{\link{wa_cache_clear}}
+#' @examples
+#' # Inspect the cache directory (no side effects)
+#' wa_cache_dir()
+#'
+#' # Safe demo: redirect cache to a temp folder, create a file, then clear it
+#' \dontshow{
+#' old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
+#' tmp <- file.path(tempdir(), "wa_cache_demo"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
+#' options(writeAlizer.cache_dir = tmp)
+#' writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
+#' wa_cache_clear(ask = FALSE)
+#' }
 #' @export
-wa_download <- function(file, url, sha256 = NULL, quiet = FALSE) {
-  .wa_ensure_file(file, url, sha256 = sha256, quiet = quiet)
+wa_cache_dir <- function() {
+  override <- getOption("writeAlizer.cache_dir", NULL)
+  if (is.character(override) && nzchar(override)) return(override)
+  tools::R_user_dir("writeAlizer", "cache")
+}
+
+# Internal: build a full cache file path for a given filename.
+# Used by the artifact loader when present.
+#' @keywords internal
+#' @noRd
+.wa_cached_path <- function(filename) file.path(wa_cache_dir(), filename)
+
+#' Clear writeAlizer's user cache
+#'
+#' Deletes all files under \code{wa_cache_dir()}. If \code{ask = TRUE} \emph{and} in an
+#' interactive session, a short preview (item count, total size, and up to 10 sample
+#' paths) is printed before asking for confirmation.
+#'
+#' @param ask Logical; if \code{TRUE} and interactive, ask for confirmation.
+#' @param preview Logical; if \code{TRUE} and \code{ask} is \code{TRUE}, show a brief
+#'   listing/size summary before asking.
+#' @return Invisibly returns \code{TRUE} if the cache was cleared (or already absent),
+#'   \code{FALSE} if the user declined or deletion failed.
+#' @seealso \code{\link{wa_cache_dir}}
+#' @examples
+#' # Safe demo: redirect cache to tempdir(), create a file, then clear it
+#' \dontshow{
+#' old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
+#' tmp <- file.path(tempdir(), "wa_cache_demo2"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
+#' options(writeAlizer.cache_dir = tmp)
+#' writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
+#' wa_cache_clear(ask = FALSE)
+#' }
+#' @export
+wa_cache_clear <- function(ask = interactive(), preview = TRUE) {
+  path <- wa_cache_dir()
+  if (!dir.exists(path)) {
+    message("Cache directory does not exist: ", path)
+    return(invisible(TRUE))
+  }
+
+  # Preview
+  if (isTRUE(ask) && interactive() && isTRUE(preview)) {
+    files <- list.files(path, all.files = TRUE, full.names = TRUE,
+                        recursive = TRUE, include.dirs = TRUE, no.. = TRUE)
+    n <- length(files)
+    sizes <- tryCatch(sum(file.info(files)$size, na.rm = TRUE), error = function(e) NA_real_)
+    fmt_size <- function(b) {
+      if (is.na(b)) return("unknown")
+      units <- c("B","KB","MB","GB","TB")
+      if (b <= 0) return("0 B")
+      i <- floor(log(b, 1024)); i <- max(0, min(i, length(units)-1))
+      sprintf("%.1f %s", b / (1024^i), units[i+1])
+    }
+    message("About to delete ", n, " item", if (n != 1) "s" else "", " (", fmt_size(sizes), ") under:\n  ", path)
+    if (n) {
+      preview_n <- min(10L, n)
+      message("Preview (first ", preview_n, "):\n  ", paste(files[seq_len(preview_n)], collapse = "\n  "))
+    }
+  }
+
+  proceed <- TRUE
+  if (isTRUE(ask) && interactive()) {
+    ans <- utils::menu(c("No", "Yes"),
+                       title = paste0("Delete ALL files under\n  ", path, "\n?"))
+    proceed <- identical(ans, 2L)
+  }
+  if (!proceed) return(invisible(FALSE))
+
+  ok <- unlink(path, recursive = TRUE, force = TRUE) == 0
+  if (ok) {
+    message("Cleared cache: ", path)
+    # Re-create empty directory so downstream code expecting it won't fail
+    dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  } else {
+    warning("Failed to clear: ", path)
+  }
+  invisible(ok)
 }

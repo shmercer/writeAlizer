@@ -12,9 +12,29 @@ import_merge_gamet_rb(rb_path, gamet_path)
 
 \item{gamet_path}{A string giving the path and GAMET filename to import.}
 }
+\value{
+A base \code{data.frame} created by joining the ReaderBench and GAMET tables
+by \code{ID}, with one row per matched ID and the following columns:
+\itemize{
+  \item \code{ID} (\code{character}): identifier present in both sources.
+  \item All retained ReaderBench feature columns (\code{numeric}).
+  \item All retained GAMET error/category columns (\code{numeric}).
+}
+By default, only IDs present in both inputs are kept (inner join). If a
+feature name appears in both sources, standard merge suffixes (e.g.,
+\code{.x}/\code{.y}) may be applied by the join implementation.
+The object has class \code{data.frame} (or \code{tibble} if converted by the user).
+}
 \description{
 Import a ReaderBench output file (.csv) and GAMET output file (.csv),
 and merge the two files on ID.
+}
+\examples{
+# Example with package sample data
+rb_path   <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+gam_path  <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+rb_gam    <- import_merge_gamet_rb(rb_path, gam_path)
+head(rb_gam)
 }
 \seealso{
 \code{\link{predict_quality}}

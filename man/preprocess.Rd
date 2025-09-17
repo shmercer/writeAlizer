@@ -28,10 +28,16 @@ Pre-process Coh-Metrix and ReaderBench data files before applying predictive mod
 Uses the artifact registry to load the correct variable lists and applies
 centering and scaling per sub-model, preserving the original behavior by model key.
 }
+\details{
+**Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
+directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
+are attempted and checks stay fast.
+}
 \examples{
-# Offline-safe minimal example
+# Minimal, offline example using the built-in 'example' model (no downloads)
 rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
 rb <- import_rb(rb_path)
-rb2 <- preprocess("rb_mod1", rb)   # model first, data second
-str(rb2[[1L]])
+
+pp <- preprocess("example", rb)
+length(pp); lapply(pp, nrow)
 }

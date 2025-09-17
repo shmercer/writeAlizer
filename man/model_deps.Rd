@@ -9,8 +9,11 @@ model_deps()
 \value{
 A named list:
 \describe{
-  \item{required}{Character vector of discovered package tokens (may include version qualifiers), e.g. \code{c("glmnet (>= 4.1)", "ranger")}.}
-  \item{missing}{Character vector of base package names that are not installed, e.g. \code{c("glmnet", "ranger")}.}
+  \item{required}{Character vector of discovered package tokens (may include version qualifiers),
+    e.g. \code{c("glmnet (>= 4.1)", "ranger")}. This is the union of the package
+    \emph{Suggests} field and the optional \code{writeAlizer.required_pkgs} override.}
+  \item{missing}{Character vector of base package names that are not installed,
+    e.g. \code{c("glmnet", "ranger")}.}
 }
 
 The function also emits a message. If nothing is missing, it reports that all
@@ -23,8 +26,21 @@ Discovers package dependencies for model fitting from the package
 which packages are required and which are currently missing, and prints
 a ready-to-copy command you can run to install the missing ones manually.
 }
+\details{
+You can add or override discovered packages for testing or CI with
+`options(writeAlizer.required_pkgs = c("pkgA", "pkgB (>= 1.2.3)"))`.
+Any version qualifiers you include are preserved in the `required` output,
+but stripped for the availability check in `missing`.
+}
 \examples{
 md <- model_deps()
 md$missing
+
+\dontshow{
+# Test hook: pretend a package is required but not installed
+old <- getOption("writeAlizer.required_pkgs"); on.exit(options(writeAlizer.required_pkgs = old), add = TRUE)
+options(writeAlizer.required_pkgs = c("thispkgdoesnotexist123", "another.fake (>= 1.0)"))
+md2 <- model_deps()
+}
 
 }

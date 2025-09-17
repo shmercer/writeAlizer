@@ -9,6 +9,27 @@ wa_download(file, url, sha256 = NULL, quiet = TRUE)
 
 download(file, url) # deprecated
 }
+\arguments{
+\item{file}{Character scalar; filename to use in the cache (e.g., `"rb_mod1a.rda"`).}
+
+\item{url}{Character scalar; source URL. May be a `file://` URL for local testing.}
+
+\item{sha256}{Optional 64-hex SHA-256 checksum for verification. If provided,
+the downloaded/cached file must match it (or re-download is attempted).}
+
+\item{quiet}{Logical; if `TRUE`, suppresses download progress messages.}
+}
+\value{
+A character scalar: the absolute path to the cached file.
+}
 \description{
-Download artifact into cache with optional checksum
+Internal helper used by writeAlizer to fetch an artifact into the cache.
+Returns the absolute path to the cached file.
+}
+\examples{
+# Offline-friendly example using a local source (no network):
+src <- tempfile(fileext = ".bin")
+writeBin(as.raw(1:10), src)
+dest <- wa_download("example.bin", url = paste0("file:///", normalizePath(src, winslash = "/")))
+file.exists(dest)
 }

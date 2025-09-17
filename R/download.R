@@ -1,8 +1,24 @@
-# R/download.R
-#' @title Download artifact into cache with optional checksum
-#' @export
+#' Download artifact into cache with optional checksum
+#'
+#' Internal helper used by writeAlizer to fetch an artifact into the cache.
+#' Returns the absolute path to the cached file.
+#'
+#' @param file Character scalar; filename to use in the cache (e.g., `"rb_mod1a.rda"`).
+#' @param url  Character scalar; source URL. May be a `file://` URL for local testing.
+#' @param sha256 Optional 64-hex SHA-256 checksum for verification. If provided,
+#'   the downloaded/cached file must match it (or re-download is attempted).
+#' @param quiet Logical; if `TRUE`, suppresses download progress messages.
+#'
+#' @return A character scalar: the absolute path to the cached file.
 #' @importFrom utils download.file
 #' @importFrom digest digest
+#' @export
+#' @examples
+#' # Offline-friendly example using a local source (no network):
+#' src <- tempfile(fileext = ".bin")
+#' writeBin(as.raw(1:10), src)
+#' dest <- wa_download("example.bin", url = paste0("file:///", normalizePath(src, winslash = "/")))
+#' file.exists(dest)
 wa_download <- function(file, url, sha256 = NULL, quiet = TRUE) {
   dest <- .wa_cached_path(file)
   utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)

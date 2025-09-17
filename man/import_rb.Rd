@@ -17,9 +17,10 @@ appearing after position 404 in that header. If the sample is unavailable,
 it falls back to keeping the first 404 columns by position.
 }
 \examples{
-rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-rb <- import_rb(rb_path)
-head(rb)
+# Fast, runnable example with package sample data
+file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+rb_file   <- import_rb(file_path)
+head(rb_file)
 }
 \seealso{
 \code{\link{predict_quality}}

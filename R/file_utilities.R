@@ -80,6 +80,11 @@
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso \code{\link{predict_quality}}
+#' @examples
+#' # Example with package sample data
+#' file_path   <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#' gamet_file  <- import_gamet(file_path)
+#' head(gamet_file)
 import_gamet <- function(path) {
   dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
 
@@ -115,6 +120,11 @@ import_gamet <- function(path) {
 #' @param path A string giving the path and filename to import.
 #' @export
 #' @seealso \code{\link{predict_quality}}
+#' @examples
+#' # Example with package sample data
+#' file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+#' coh_file  <- import_coh(file_path)
+#' head(coh_file)
 import_coh <- function(path) {
   dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
 
@@ -147,9 +157,10 @@ import_coh <- function(path) {
 #' @export
 #' @seealso \code{\link{predict_quality}}
 #' @examples
-#' rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-#' rb <- import_rb(rb_path)
-#' head(rb)
+#' # Fast, runnable example with package sample data
+#' file_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+#' rb_file   <- import_rb(file_path)
+#' head(rb_file)
 import_rb <- function(path) {
   # check first line for "SEP=,"; if present, skip that line on import
   con <- file(path, "r")
@@ -223,6 +234,12 @@ import_rb <- function(path) {
 #' @seealso \code{\link{predict_quality}}
 #' @param rb_path A string giving the path and ReaderBench filename to import.
 #' @param gamet_path A string giving the path and GAMET filename to import.
+#' @examples
+#' # Example with package sample data
+#' rb_path   <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+#' gam_path  <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+#' rb_gam    <- import_merge_gamet_rb(rb_path, gam_path)
+#' head(rb_gam)
 import_merge_gamet_rb <- function(rb_path, gamet_path) {
   dat.RB <- import_rb(rb_path)
   dat.G  <- import_gamet(gamet_path)

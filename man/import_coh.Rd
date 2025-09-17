@@ -12,6 +12,12 @@ import_coh(path)
 \description{
 Import a Coh-Metrix output file (.csv) into R.
 }
+\examples{
+# Example with package sample data
+file_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
+coh_file  <- import_coh(file_path)
+head(coh_file)
+}
 \seealso{
 \code{\link{predict_quality}}
 }

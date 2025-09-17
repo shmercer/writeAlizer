@@ -41,12 +41,21 @@ help("writeAlizer")
 
 ### Install model dependencies (Suggests)
 
-Some models rely on packages listed in `Suggests`. You can install them in one
-shot with:
+Some models rely on packages listed in `Suggests`. use `model_deps()` to discover what’s needed on your machine to run those models locally.
 
 ```r
-install_model_deps()           # installs writeAlizer's Suggests
-install_model_deps(dry_run=TRUE)  # just show what would be installed
+# Discover optional model packages from writeAlizer's Suggests
+md <- writeAlizer::model_deps()
+
+md$required
+md$missing
+```
+`model_deps()` also prints a helpful message. If anything is missing, it includes a copy-paste command like:
+
+```css
+Missing required packages: glmnet, ranger
+Install them manually, e.g.:
+  install.packages(c("glmnet", "ranger"))
 ```
 
 ### Quickstart: generate predicted quality scores with the rb_mod3all / coh_mod3all models

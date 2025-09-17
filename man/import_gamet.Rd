@@ -12,6 +12,12 @@ import_gamet(path)
 \description{
 Import a GAMET output file into R.
 }
+\examples{
+# Example with package sample data
+file_path   <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+gamet_file  <- import_gamet(file_path)
+head(gamet_file)
+}
 \seealso{
 \code{\link{predict_quality}}
 }

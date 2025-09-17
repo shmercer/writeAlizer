@@ -8,6 +8,7 @@
          "rb_mod3exp"  = "rb_mod3exp_v2",
          "rb_mod3per"  = "rb_mod3per_v2",
          "rb_mod3all"  = "rb_mod3all_v2",
+         "example"     = "example",
          model
   )
 }
@@ -149,21 +150,63 @@
 }
 
 .wa_load_model_rdas <- function(model, envir = parent.frame()) {
-  parts <- .wa_parts_for(kind = "rda", model = model)
+  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+  mock_dir <- getOption("writeAlizer.mock_dir", NULL)
+
+  if (identical(key, "example") && !is.null(mock_dir)) {
+    mock <- file.path(mock_dir, "example.rda")
+    if (file.exists(mock)) {
+      load(mock, envir = envir)
+      return(invisible(TRUE))
+    } else {
+      stop("Mock dir is set but 'example.rda' not found; seed it via wa_seed_example_models().", call. = FALSE)
+    }
+  }
+
+  parts <- .wa_parts_for(kind = "rda", model = key)
   if (nrow(parts) == 0L) stop(sprintf("No model artifacts registered for '%s'", model))
+
   for (i in seq_len(nrow(parts))) {
     p <- parts[i, ]
-    load(.wa_ensure_file(p$file, p$url), envir = envir)
+    ## NEW: if a mock with the same filename exists, use it instead of downloading
+    mock_candidate <- if (!is.null(mock_dir)) file.path(mock_dir, basename(p$file)) else NULL
+    if (!is.null(mock_candidate) && file.exists(mock_candidate)) {
+      load(mock_candidate, envir = envir)
+    } else {
+      load(.wa_ensure_file(p$file, p$url), envir = envir)
+    }
   }
   invisible(TRUE)
 }
 
-# Load trained model fits (RDA) from cache for a given model key.
-# Returns a named list where names are canonicalized from filenames (e.g., "rb_mod1a").
-.wa_load_fits_list <- function(model) {
-  # Map legacy keys (e.g., rb_mod3narr -> rb_mod3narr_v2), if mapping helper exists
-  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
 
+# Load trained model fits (RDA) from cache for a given model key.
+# Returns a named list where names are canonicalized from filenames.
+.wa_load_fits_list <- function(model) {
+  # Canonicalize key and check for mocks
+  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+  mock_dir <- getOption("writeAlizer.mock_dir", NULL)
+
+  ## short-circuit for the built-in example model
+  if (identical(key, "example") && !is.null(mock_dir)) {
+    mock_path <- file.path(mock_dir, "example.rda")
+    if (file.exists(mock_path)) {
+      tmp  <- new.env(parent = emptyenv())
+      objs <- load(mock_path, envir = tmp)
+      pick <- if ("fit" %in% objs) "fit" else objs[[1L]]
+      fit_obj <- get(pick, envir = tmp, inherits = FALSE)
+
+      # Dependency check on the single fit (reuses existing helper)
+      if (exists(".wa_require_pkgs_for_fits", mode = "function")) {
+        .wa_require_pkgs_for_fits(list(fit_obj))
+      }
+      return(list("example" = fit_obj))
+    } else {
+      stop("Mock dir is set but 'example.rda' not found; seed it via wa_seed_example_models().", call. = FALSE)
+    }
+  }
+
+  # use registry to discover artifacts
   parts <- .wa_parts_for("rda", key)
   if (nrow(parts) == 0L) {
     stop(sprintf("No model artifacts registered for '%s'", model), call. = FALSE)
@@ -173,9 +216,14 @@
   for (i in seq_len(nrow(parts))) {
     p <- parts[i, ]
 
-    # Ensure .rda file exists in user cache (download + optional checksum)
-    sha  <- if ("sha" %in% names(parts)) parts$sha[i] else NULL
-    path <- .wa_ensure_file(p$file, p$url, sha256 = sha)
+    ## if a mock with the same filename exists, use it; else ensure/download
+    mock_candidate <- if (!is.null(mock_dir)) file.path(mock_dir, basename(p$file)) else NULL
+    if (!is.null(mock_candidate) && file.exists(mock_candidate)) {
+      path <- mock_candidate
+    } else {
+      sha  <- if ("sha" %in% names(parts)) parts$sha[i] else NULL
+      path <- .wa_ensure_file(p$file, p$url, sha256 = sha)
+    }
 
     # Load into a throwaway environment and pick a sensible object
     tmp  <- new.env(parent = emptyenv())
@@ -188,7 +236,7 @@
     }
     if (is.null(pick)) pick <- objs[[1L]]
 
-    canonical <- tools::file_path_sans_ext(basename(p$file))  # e.g., "rb_mod1a"
+    canonical <- tools::file_path_sans_ext(basename(p$file))
     fits[[canonical]] <- get(pick, envir = tmp, inherits = FALSE)
   }
 

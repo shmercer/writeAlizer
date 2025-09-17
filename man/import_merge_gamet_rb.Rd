@@ -16,6 +16,13 @@ import_merge_gamet_rb(rb_path, gamet_path)
 Import a ReaderBench output file (.csv) and GAMET output file (.csv),
 and merge the two files on ID.
 }
+\examples{
+# Example with package sample data
+rb_path   <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+gam_path  <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+rb_gam    <- import_merge_gamet_rb(rb_path, gam_path)
+head(rb_gam)
+}
 \seealso{
 \code{\link{predict_quality}}
 }

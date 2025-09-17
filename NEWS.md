@@ -1,3 +1,19 @@
+# writeAlizer 1.6.3 (2025-09-17)
+
+## CRAN policy & documentation improvements
+- DESCRIPTION: acronyms expanded (e.g., CBM), software/package names single-quoted, and method references added with CRAN auto-link format (DOIs).
+- Documentation: `@return` added to `import_coh()`, `import_rb()`, `import_gamet()`, `import_merge_gamet_rb()`.
+- Examples: `\\dontrun{}` replaced with `\\donttest{}` where needed; fast examples unwrapped; `predict_quality()` uses a tiny offline `'example'` model seeded in `tempdir()` with cleanup.
+- File I/O: no writes to home by default; examples/tests use `tempdir()`; caching standardized via `tools::R_user_dir("writeAlizer","cache")`.
+- New helpers: `wa_cache_dir()` and `wa_cache_clear(ask=)` for cache discovery/cleanup.
+- Optional deps: new `model_deps()` reports (does not install) optional packages and prints an install hint; `install_model_deps()` deprecated.
+- Tests: self-cleaning with `withr` fixtures; no temp detritus; removed deprecated global teardown.
+
+## Bug fixes & maintenance
+- Stabilized example/test behavior when offline by mocking artifacts via `writeAlizer.mock_dir`.
+- Suppressed noisy pre-processing variance warnings in integration tests.
+
+
 # writeAlizer 1.6.2 (2025-09-14)
 
 - Simplified `install_model_deps()`:

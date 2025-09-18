@@ -27,6 +27,26 @@ wa_cache_dir <- function() {
   tools::R_user_dir("writeAlizer", "cache")
 }
 
+# --- internal test hooks (not exported) ---------------------------------------
+# These let tests drive interactive/confirm/unlink branches deterministically
+# without patching base functions or prompting users.
+
+.wa_is_interactive <- function() {
+  opt <- getOption("writeAlizer.force_interactive", NULL)
+  if (!is.null(opt)) return(isTRUE(opt))
+  interactive()
+}
+
+.wa_menu <- function(choices, title = NULL) {
+  fn <- getOption("writeAlizer.menu_fn", utils::menu)
+  fn(choices, title = title)
+}
+
+.wa_unlink <- function(path, recursive = FALSE, force = FALSE) {
+  fn <- getOption("writeAlizer.unlink_fn", unlink)
+  fn(path, recursive = recursive, force = force)
+}
+
 # Internal: build a full cache file path for a given filename.
 # Used by the artifact loader when present.
 #' @keywords internal
@@ -63,7 +83,7 @@ wa_cache_clear <- function(ask = interactive(), preview = TRUE) {
   }
 
   # Preview
-  if (isTRUE(ask) && interactive() && isTRUE(preview)) {
+  if (isTRUE(ask) && .wa_is_interactive() && isTRUE(preview)) {
     files <- list.files(path, all.files = TRUE, full.names = TRUE,
                         recursive = TRUE, include.dirs = TRUE, no.. = TRUE)
     n <- length(files)
@@ -83,14 +103,14 @@ wa_cache_clear <- function(ask = interactive(), preview = TRUE) {
   }
 
   proceed <- TRUE
-  if (isTRUE(ask) && interactive()) {
-    ans <- utils::menu(c("No", "Yes"),
-                       title = paste0("Delete ALL files under\n  ", path, "\n?"))
+  if (isTRUE(ask) && .wa_is_interactive()) {
+    ans <- .wa_menu(c("No", "Yes"),
+                    title = paste0("Delete ALL files under\n  ", path, "\n?"))
     proceed <- identical(ans, 2L)
   }
   if (!proceed) return(invisible(FALSE))
 
-  ok <- unlink(path, recursive = TRUE, force = TRUE) == 0
+  ok <- .wa_unlink(path, recursive = TRUE, force = TRUE) == 0
   if (ok) {
     message("Cleared cache: ", path)
     # Re-create empty directory so downstream code expecting it won't fail

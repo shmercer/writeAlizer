@@ -30,7 +30,7 @@ centering and scaling per sub-model, preserving the original behavior by model k
 }
 \details{
 **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
+directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
 are attempted and checks stay fast.
 }
 \examples{

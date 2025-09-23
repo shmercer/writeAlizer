@@ -35,7 +35,7 @@ Correct Minus Incorrect Word Sequences can be generated from a GAMET file
 }
 \details{
 **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
+directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
 are attempted and checks stay fast. The temporary files created for the example are
 cleaned up at the end of the \code{\\examples{}}.
 }
@@ -45,7 +45,7 @@ coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
 coh <- import_coh(coh_path)
 
 mock_old <- getOption("writeAlizer.mock_dir")
-ex_dir <- writeAlizer:::wa_seed_example_models("example", dir = tempdir())
+ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
 on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
 
 out <- predict_quality("example", coh)

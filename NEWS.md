@@ -1,3 +1,14 @@
+# writeAlizer 1.6.4 (2025-09-23)
+
+## CRAN policy & documentation improvements
+
+- Replaced `writeAlizer:::wa_seed_example_models()` with `writeAlizer::wa_seed_example_models()` in examples and documentation, per CRAN’s guidance to avoid accessing unexported objects.
+
+- Exported `wa_seed_example_models()` with full documentation:
+  - Added `@return` (returns the created temp path invisibly).
+  - Added a small, runnable example that writes only to `tempdir()` and cleans up; it also restores any prior option value.
+  - Documented the temporary side effect of setting `options(writeAlizer.mock_dir = <path>)`.
+
 # writeAlizer 1.6.3 (2025-09-17)
 
 ## CRAN policy & documentation improvements
@@ -12,7 +23,6 @@
 ## Bug fixes & maintenance
 - Stabilized example/test behavior when offline by mocking artifacts via `writeAlizer.mock_dir`.
 - Suppressed noisy pre-processing variance warnings in integration tests.
-
 
 # writeAlizer 1.6.2 (2025-09-14)
 

@@ -39,7 +39,7 @@
 #' @export
 #' @details
 #' **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-#' directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
+#' directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
 #' are attempted and checks stay fast.
 #' @examples
 #' # Minimal, offline example using the built-in 'example' model (no downloads)
@@ -133,7 +133,7 @@ preprocess <- function(model, data) {
 #' @seealso \code{\link{import_rb}}, \code{\link{import_coh}}, \code{\link{import_gamet}}
 #' @details
 #' **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-#' directory via \code{writeAlizer:::wa_seed_example_models("example")}, so no downloads
+#' directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
 #' are attempted and checks stay fast. The temporary files created for the example are
 #' cleaned up at the end of the \code{\\examples{}}.
 #' @export
@@ -143,7 +143,7 @@ preprocess <- function(model, data) {
 #' coh <- import_coh(coh_path)
 #'
 #' mock_old <- getOption("writeAlizer.mock_dir")
-#' ex_dir <- writeAlizer:::wa_seed_example_models("example", dir = tempdir())
+#' ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
 #' on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
 #'
 #' out <- predict_quality("example", coh)

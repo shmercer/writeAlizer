@@ -3,9 +3,10 @@
 # writeAlizer: An R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
 
 <!-- badges: start -->
+  [![CRAN status](https://www.r-pkg.org/badges/version/writeAlizer)](https://CRAN.R-project.org/package=writeAlizer)
   [![R-CMD-check](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml)
   [![codecov](https://codecov.io/gh/shmercer/writeAlizer/branch/master/graph/badge.svg)](https://app.codecov.io/gh/shmercer/writeAlizer)
-  <!-- badges: end -->
+<!-- badges: end -->
 
 This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the [repository wiki](https://github.com/shmercer/writeAlizer/wiki).
 
@@ -26,17 +27,20 @@ The writeAlizer scoring models assume that column names in the output files have
 
 ### Installing
 
-writeAlizer is not available on [CRAN](https://cran.r-project.org/). To install writeAlizer in R, first make sure that the package *devtools* is installed in R
-```
-install.packages("devtools")
-```
-With *devtools* installed, you can install writeAlizer in R directly from this GitHub repository.
-```
-devtools::install_github("shmercer/writeAlizer")
-```
-After installation, documentation of the file import and predict_quality() functions, and examples of their use, can be found in the R package help file.
-```
+``` r
+# To install from CRAN:
+install.packages("writeAlizer")
+
+# for documentation of the file import and predict_quality() functions
 help("writeAlizer")
+```
+
+### Development version
+
+``` r
+#install.packages("devtools")
+devtools::install_github("shmercer/writeAlizer")
+
 ```
 
 ### Install model dependencies (Suggests)

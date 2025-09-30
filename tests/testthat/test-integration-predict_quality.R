@@ -6,6 +6,9 @@ withr::local_options(writeAlizer.mock_dir = {
 })
 
 testthat::test_that("predict_quality runs for all model keys with mocked artifacts", {
+  needed_urls <- .wa_urls_for_models(models_rb)  # models_rb is used later in this test
+  skip_if_unavailable(needed_urls, "predict_quality() remote artifacts not reachable")
+
   # Keep tests offline
   tmp <- withr::local_tempdir()
   withr::local_options(writeAlizer.mock_dir = tmp)
@@ -134,6 +137,9 @@ test_that("predict_quality('example') runs offline quickly", {
 })
 
 test_that("preprocess rb_mod3all works offline via mocked varlists", {
+  needed_urls <- .wa_urls_for_models("rb_mod3all")
+  skip_if_unavailable(needed_urls, "preprocess() required artifacts not reachable")
+
   rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
   skip_if(!file.exists(rb_path), "sample_rb.csv not installed")
 

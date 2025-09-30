@@ -58,7 +58,7 @@
 
 # Internal: ensure an artifact is present in the user cache.
 # - Honors options(writeAlizer.mock_dir) as an override (used in tests/examples)
-# - Verifies checksum when provided
+# - Verifies checksum when provided (with warnings on mismatch)
 # - Fails gracefully with an informative message if offline / remote unavailable
 .wa_ensure_file <- function(file, url, sha256 = NULL, quiet = TRUE) {
   stopifnot(is.character(file), length(file) == 1L, nzchar(file),
@@ -67,7 +67,7 @@
   cache_dir <- tools::R_user_dir("writeAlizer", "cache")
   if (!dir.exists(cache_dir)) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 
-  # IMPORTANT: preserve subdirectory structure under the cache
+  # Preserve subdirectory structure under the cache
   dest <- file.path(cache_dir, file)
   dest_dir <- dirname(dest)
   if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
@@ -91,8 +91,12 @@
     got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
                     error = function(e) NA_character_)
     if (!is.na(got) && identical(got, sha256)) return(dest)
-    # checksum mismatch -> re-download
-    unlink(dest)
+    # checksum mismatch -> warn and re-download
+    warning(paste0(
+      "Checksum mismatch for cached '", basename(file), "'. ",
+      "Expected ", sha256, ", got ", got, ". Re-downloading."
+    ), call. = FALSE)
+    unlink(dest, force = TRUE)
   }
 
   # 3) If this is a remote URL and we're offline, fail gracefully & informatively
@@ -120,11 +124,15 @@
     stop("Download reported success but the file is missing: ", dest, call. = FALSE)
   }
 
-  # 5) Optional checksum verification
+  # 5) Optional checksum verification (warn + error on mismatch)
   if (!is.null(sha256)) {
     got <- digest::digest(dest, algo = "sha256", file = TRUE)
     if (!identical(got, sha256)) {
-      unlink(dest)
+      warning(paste0(
+        "Checksum mismatch after download for '", basename(file), "'. ",
+        "Expected ", sha256, ", got ", got, "."
+      ), call. = FALSE)
+      unlink(dest, force = TRUE)
       stop(
         "Checksum mismatch for '", basename(file), "'.\n",
         "  expected: ", sha256, "\n",

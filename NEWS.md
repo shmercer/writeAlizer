@@ -1,3 +1,12 @@
+# writeAlizer 1.6.5 (2025-09-30)
+
+- CRAN policy: ensure graceful failure when Internet resources are unavailable or have changed.
+  - Hardened internal downloader to respect offline environments and provide informative messages
+    instead of low-level `download.file` errors.
+  - Tests that require remote artifacts now skip when the concrete URLs/paths are unavailable,
+    while example assets use a seeded mock directory for deterministic, network-free runs.
+- No user-facing API changes.
+
 # writeAlizer 1.6.4 (2025-09-23)
 
 ## CRAN policy & documentation improvements

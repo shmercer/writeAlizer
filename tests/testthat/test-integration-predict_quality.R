@@ -6,9 +6,6 @@ withr::local_options(writeAlizer.mock_dir = {
 })
 
 testthat::test_that("predict_quality runs for all model keys with mocked artifacts", {
-  needed_urls <- .wa_urls_for_models(models_rb)  # models_rb is used later in this test
-  skip_if_unavailable(needed_urls, "predict_quality() remote artifacts not reachable")
-
   # Keep tests offline
   tmp <- withr::local_tempdir()
   withr::local_options(writeAlizer.mock_dir = tmp)
@@ -31,6 +28,10 @@ testthat::test_that("predict_quality runs for all model keys with mocked artifac
                  "rb_mod3all_v2")
   models_coh <- c("coh_mod1","coh_mod2","coh_mod3narr","coh_mod3exp","coh_mod3per","coh_mod3all")
   models_gam <- c("gamet_cws1")
+
+  # PRE-FLIGHT: only after models_rb exists
+  needed_urls <- .wa_urls_for_models(models_rb)
+  skip_if_unavailable(needed_urls, "predict_quality() remote artifacts not reachable")
 
   # Helpers ---------------------------------------------------------------
 
@@ -129,7 +130,7 @@ test_that("predict_quality('example') runs offline quickly", {
   coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
   tmp <- withr::local_tempdir()
   withr::local_options(writeAlizer.mock_dir = tmp)
-  writeAlizer:::wa_seed_example_models("example", dir = tmp)
+  writeAlizer::wa_seed_example_models("example", dir = tmp)
 
   out <- suppressWarnings(predict_quality("example", coh))
   expect_s3_class(out, "data.frame")

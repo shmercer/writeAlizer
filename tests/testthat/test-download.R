@@ -24,9 +24,13 @@ testthat::test_that("wa_download() enforces checksum mismatches", {
   url <- paste0("file:///", normalizePath(src, winslash = "/"))
 
   bad_sha <- paste(rep("0", 64), collapse = "")
-  testthat::expect_error(
-    writeAlizer::wa_download("tiny2.bin", url, sha256 = bad_sha, quiet = TRUE),
-    "Checksum|SHA", ignore.case = TRUE
+  # wa_download() warns about mismatch and then errors; suppress the expected
+  # warning here so the test summary stays clean (no WARN line).
+  suppressWarnings(
+    testthat::expect_error(
+      writeAlizer::wa_download("tiny2.bin", url, sha256 = bad_sha, quiet = TRUE),
+      "Checksum|SHA", ignore.case = TRUE
+    )
   )
 })
 

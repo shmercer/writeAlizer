@@ -1,36 +1,40 @@
-#' Download artifact into cache with optional checksum
+#' Download and cache an artifact (graceful offline behavior)
 #'
-#' Internal helper used by writeAlizer to fetch an artifact into the cache.
-#' Returns the absolute path to the cached file.
+#' Public helper to fetch an artifact into the user cache. This function
+#' delegates to the internal downloader used by the package at runtime,
+#' so it benefits from the same behavior:
+#'
+#' - Respects \code{options(writeAlizer.mock_dir)} to load local mock copies
+#'   (useful for tests/examples and offline runs).
+#' - Fails \emph{gracefully} with a clear, informative message when Internet
+#'   resources are unavailable or have changed (per CRAN policy).
+#' - Verifies an optional SHA-256 checksum and re-downloads or errors if it
+#'   does not match.
 #'
 #' @param file Character scalar; filename to use in the cache (e.g., `"rb_mod1a.rda"`).
 #' @param url  Character scalar; source URL. May be a `file://` URL for local testing.
 #' @param sha256 Optional 64-hex SHA-256 checksum for verification. If provided,
-#'   the downloaded/cached file must match it (or re-download is attempted).
+#'   the cached file must match it (or a re-download is attempted).
 #' @param quiet Logical; if `TRUE`, suppresses download progress messages.
 #'
 #' @return A character scalar: the absolute path to the cached file.
-#' @importFrom utils download.file
-#' @importFrom digest digest
 #' @export
+#'
 #' @examples
 #' # Offline-friendly example using a local source (no network):
 #' src <- tempfile(fileext = ".bin")
 #' writeBin(as.raw(1:10), src)
-#' dest <- wa_download("example.bin", url = paste0("file:///", normalizePath(src, winslash = "/")))
+#' dest <- wa_download(
+#'   "example.bin",
+#'   url = paste0("file:///", normalizePath(src, winslash = "/"))
+#' )
 #' file.exists(dest)
+#'
+#' # Using a mock directory to avoid network access:
+#' # options(writeAlizer.mock_dir = "/path/to/local/artifacts")
+#' # dest <- wa_download("rb_mod1a.rda", url = "https://example.com/rb_mod1a.rda")
 wa_download <- function(file, url, sha256 = NULL, quiet = TRUE) {
-  dest <- .wa_cached_path(file)
-  utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
-  if (!is.null(sha256)) {
-    got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
-                    error = function(e) NA_character_)
-    if (!identical(got, sha256)) {
-      stop(sprintf("Checksum mismatch for %s (expected %s, got %s)", file, sha256, got),
-           call. = FALSE)
-    }
-  }
-  dest
+  .wa_ensure_file(file = file, url = url, sha256 = sha256, quiet = quiet)
 }
 
 #' @export

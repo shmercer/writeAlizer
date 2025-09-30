@@ -66,13 +66,18 @@
 
   cache_dir <- tools::R_user_dir("writeAlizer", "cache")
   if (!dir.exists(cache_dir)) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-  dest <- file.path(cache_dir, basename(file))
+
+  # IMPORTANT: preserve subdirectory structure under the cache
+  dest <- file.path(cache_dir, file)
+  dest_dir <- dirname(dest)
+  if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
 
   # 1) mock_dir override (used by tests/examples to avoid network)
   mock_dir <- getOption("writeAlizer.mock_dir", NULL)
   if (is.character(mock_dir) && nzchar(mock_dir)) {
-    mock_path <- file.path(mock_dir, basename(file))
+    mock_path <- file.path(mock_dir, file)  # preserve subdirs here, too
     if (file.exists(mock_path)) {
+      if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
       ok <- tryCatch({
         file.copy(mock_path, dest, overwrite = TRUE)
       }, warning = function(w) TRUE, error = function(e) FALSE)
@@ -108,6 +113,7 @@
   }
 
   # 4) Download (supports file:// URLs too)
+  if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
   utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
 
   if (!file.exists(dest)) {

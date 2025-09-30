@@ -3,7 +3,7 @@
 \name{wa_download}
 \alias{wa_download}
 \alias{download}
-\title{Download artifact into cache with optional checksum}
+\title{Download and cache an artifact (graceful offline behavior)}
 \usage{
 wa_download(file, url, sha256 = NULL, quiet = TRUE)
 
@@ -15,7 +15,7 @@ download(file, url) # deprecated
 \item{url}{Character scalar; source URL. May be a `file://` URL for local testing.}
 
 \item{sha256}{Optional 64-hex SHA-256 checksum for verification. If provided,
-the downloaded/cached file must match it (or re-download is attempted).}
+the cached file must match it (or a re-download is attempted).}
 
 \item{quiet}{Logical; if `TRUE`, suppresses download progress messages.}
 }
@@ -23,13 +23,29 @@ the downloaded/cached file must match it (or re-download is attempted).}
 A character scalar: the absolute path to the cached file.
 }
 \description{
-Internal helper used by writeAlizer to fetch an artifact into the cache.
-Returns the absolute path to the cached file.
+Public helper to fetch an artifact into the user cache. This function
+delegates to the internal downloader used by the package at runtime,
+so it benefits from the same behavior:
+}
+\details{
+- Respects \code{options(writeAlizer.mock_dir)} to load local mock copies
+  (useful for tests/examples and offline runs).
+- Fails \emph{gracefully} with a clear, informative message when Internet
+  resources are unavailable or have changed (per CRAN policy).
+- Verifies an optional SHA-256 checksum and re-downloads or errors if it
+  does not match.
 }
 \examples{
 # Offline-friendly example using a local source (no network):
 src <- tempfile(fileext = ".bin")
 writeBin(as.raw(1:10), src)
-dest <- wa_download("example.bin", url = paste0("file:///", normalizePath(src, winslash = "/")))
+dest <- wa_download(
+  "example.bin",
+  url = paste0("file:///", normalizePath(src, winslash = "/"))
+)
 file.exists(dest)
+
+# Using a mock directory to avoid network access:
+# options(writeAlizer.mock_dir = "/path/to/local/artifacts")
+# dest <- wa_download("rb_mod1a.rda", url = "https://example.com/rb_mod1a.rda")
 }

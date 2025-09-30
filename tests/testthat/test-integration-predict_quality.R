@@ -1,3 +1,10 @@
+withr::local_options(writeAlizer.mock_dir = {
+  old <- getOption("writeAlizer.mock_dir")
+  ex  <- tryCatch(writeAlizer::wa_seed_example_models("example", dir = tempdir()),
+                  error = function(e) NULL)
+  if (!is.null(ex)) ex else old
+})
+
 testthat::test_that("predict_quality runs for all model keys with mocked artifacts", {
   # Keep tests offline
   tmp <- withr::local_tempdir()

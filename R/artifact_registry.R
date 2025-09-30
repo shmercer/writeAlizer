@@ -56,88 +56,94 @@
   file.path(system.file("extdata", package = "writeAlizer"), filename)
 }
 
-# Internal helper: ensure an artifact exists in the user cache.
-# - Downloads when missing or when checksum fails.
-# - Verifies SHA-256 if provided (string of 64 hex chars).
-# - Returns the absolute path to the cached file.
-.wa_ensure_file <- function(file, url, sha256 = NULL, quiet = FALSE,
-                            overwrite = FALSE, retries = 1L) {
-  # Resolve cache path (use .wa_cached_path() if present; else fallback to R_user_dir)
-  dest <- if (exists(".wa_cached_path", mode = "function")) {
-    .wa_cached_path(file)
-  } else {
-    dir <- tools::R_user_dir("writeAlizer", "cache")
-    if (!dir.exists(dir)) dir.create(dir, recursive = TRUE, showWarnings = FALSE)
-    file.path(dir, file)
+# Internal: ensure an artifact is present in the user cache.
+# - Honors options(writeAlizer.mock_dir) as an override (used in tests/examples)
+# - Verifies checksum when provided (with warnings on mismatch)
+# - Fails gracefully with an informative message if offline / remote unavailable
+.wa_ensure_file <- function(file, url, sha256 = NULL, quiet = TRUE) {
+  stopifnot(is.character(file), length(file) == 1L, nzchar(file),
+            is.character(url),  length(url)  == 1L, nzchar(url))
+
+  cache_dir <- tools::R_user_dir("writeAlizer", "cache")
+  if (!dir.exists(cache_dir)) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+
+  # Preserve subdirectory structure under the cache
+  dest <- file.path(cache_dir, file)
+  dest_dir <- dirname(dest)
+  if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
+
+  # 1) mock_dir override (used by tests/examples to avoid network)
+  mock_dir <- getOption("writeAlizer.mock_dir", NULL)
+  if (is.character(mock_dir) && nzchar(mock_dir)) {
+    mock_path <- file.path(mock_dir, file)  # preserve subdirs here, too
+    if (file.exists(mock_path)) {
+      if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
+      ok <- tryCatch({
+        file.copy(mock_path, dest, overwrite = TRUE)
+      }, warning = function(w) TRUE, error = function(e) FALSE)
+      if (isTRUE(ok) && file.exists(dest)) return(dest)
+    }
   }
-  dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
 
-  # Normalise expected checksum if provided
-  .norm_sha <- function(x) tolower(trimws(as.character(x)))
-  expected <- if (is.null(sha256)) NULL else .norm_sha(sha256)
-
-  # SHA256 verifier
-  .verify_sha <- function(path, expected) {
-    if (is.null(expected)) return(TRUE)
-    got <- tryCatch(digest::digest(path, algo = "sha256", file = TRUE),
+  # 2) Use a valid cached copy if present (and checksum matches, if provided)
+  if (file.exists(dest)) {
+    if (is.null(sha256)) return(dest)
+    got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
                     error = function(e) NA_character_)
-    identical(.norm_sha(got), expected)
+    if (!is.na(got) && identical(got, sha256)) return(dest)
+    # checksum mismatch -> warn and re-download
+    warning(paste0(
+      "Checksum mismatch for cached '", basename(file), "'. ",
+      "Expected ", sha256, ", got ", got, ". Re-downloading."
+    ), call. = FALSE)
+    unlink(dest, force = TRUE)
   }
 
-  # If we already have a file and either no checksum is provided or it matches, we're done
-  if (file.exists(dest) && !overwrite) {
-    if (.verify_sha(dest, expected)) {
-      return(dest)
-    } else {
-      warning(sprintf("Checksum mismatch in cache for '%s'; re-downloading.", basename(dest)))
-      try(unlink(dest, force = TRUE), silent = TRUE)
+  # 3) If this is a remote URL and we're offline, fail gracefully & informatively
+  is_remote <- !startsWith(tolower(url), "file:")
+  offline_flag <- isTRUE(getOption("writeAlizer.offline", FALSE))
+  has_curl <- isTRUE(requireNamespace("curl", quietly = TRUE))
+  offline_now <- has_curl && is_remote && (!curl::has_internet() || offline_flag)
+
+  if (offline_now) {
+    msg <- paste0(
+      "Network resource unavailable. Could not download '", basename(file), "' from\n  ",
+      url, "\n\n",
+      "To run offline, either:\n",
+      "  * Set options(writeAlizer.mock_dir = <dir>) with local copies of artifacts, or\n",
+      "  * Use wa_seed_example_models('example') for offline examples.\n"
+    )
+    stop(msg, call. = FALSE)
+  }
+
+  # 4) Download (supports file:// URLs too)
+  if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
+  utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
+
+  if (!file.exists(dest)) {
+    stop("Download reported success but the file is missing: ", dest, call. = FALSE)
+  }
+
+  # 5) Optional checksum verification (warn + error on mismatch)
+  if (!is.null(sha256)) {
+    got <- digest::digest(dest, algo = "sha256", file = TRUE)
+    if (!identical(got, sha256)) {
+      warning(paste0(
+        "Checksum mismatch after download for '", basename(file), "'. ",
+        "Expected ", sha256, ", got ", got, "."
+      ), call. = FALSE)
+      unlink(dest, force = TRUE)
+      stop(
+        "Checksum mismatch for '", basename(file), "'.\n",
+        "  expected: ", sha256, "\n",
+        "  got:      ", got, "\n",
+        "Please try again later or contact the maintainer.", call. = FALSE
+      )
     }
   }
 
-  # Guard: need a URL to download if missing or invalid
-  if (!nzchar(url)) {
-    stop(sprintf("No URL provided to fetch artifact '%s'.", file), call. = FALSE)
-  }
-
-  # Download with simple retry loop
-  tries <- max(1L, as.integer(retries))
-  last_err <- NULL
-  for (i in seq_len(tries)) {
-    # Clean any partials before each attempt
-    if (file.exists(dest)) try(unlink(dest, force = TRUE), silent = TRUE)
-
-    # Use binary mode for portability
-    ok <- tryCatch({
-      utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
-      TRUE
-    }, error = function(e) {
-      last_err <<- e
-      FALSE
-    })
-
-    if (!ok) {
-      next
-    }
-
-    # Verify checksum if expected
-    if (.verify_sha(dest, expected)) {
-      return(dest)
-    } else {
-      last_err <- simpleError(sprintf(
-        "Checksum mismatch after download for '%s' (expected %s).",
-        basename(dest), if (is.null(expected)) "<none>" else expected
-      ))
-    }
-  }
-
-  # If we get here, all attempts failed
-  # Clean any bad partial
-  if (file.exists(dest)) try(unlink(dest, force = TRUE), silent = TRUE)
-  if (!is.null(last_err)) stop(last_err)
-  stop(sprintf("Failed to ensure artifact '%s' in cache.", file), call. = FALSE)
+  dest
 }
-
-
 
 # Optional convenience loaders used by our refactor
 .wa_load_varlists <- function(model) {

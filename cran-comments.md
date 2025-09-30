@@ -1,12 +1,8 @@
-## Resubmission: writeAlizer 1.6.4
+## writeAlizer 1.6.5
 
-This submission addresses CRAN review feedback.
+- Addresses CRAN policy for Internet resources:
+  - Network access now fails gracefully with informative messages (no low-level `download.file` errors).
+  - Tests that rely on remote artifacts now preflight their exact URLs/paths and skip when unavailable.
+  - Examples/tests seed mock artifacts for deterministic offline runs.
 
-- Replaced `writeAlizer:::wa_seed_example_models()` with `writeAlizer::wa_seed_example_models()` in examples and documentation, per CRAN’s guidance to avoid accessing unexported objects.
-
-- Exported `wa_seed_example_models()` with full documentation:
-  - Added `@return` (returns the created temp path invisibly).
-  - Added a small, runnable example that writes only to `tempdir()` and cleans up; it also restores any prior option value.
-  - Documented the temporary side effect of setting `options(writeAlizer.mock_dir = <path>)`.
-  
-Thank you for reviewing.
+R CMD check --as-cran is clean locally on Windows with and without internet.

@@ -100,6 +100,7 @@ preprocess <- function(model, data) {
 #' @importFrom utils write.table
 #' @importFrom stats predict
 #' @importFrom dplyr select
+#' @importFrom rlang abort
 #' @param model A string telling which scoring model to use.
 #' Options are:
 #' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
@@ -164,7 +165,41 @@ preprocess <- function(model, data) {
 #'   head(gamet_CWS_CIWS)
 #' }
 predict_quality <- function(model, data) {
-  stopifnot(is.data.frame(data), "ID" %in% names(data))
+  # ---- Argument validation with helpful guidance ----
+  # Catch common mistake where args are flipped:
+  if (is.data.frame(model) && !missing(data)) {
+    rlang::abort(
+      paste0(
+        "It looks like you passed `data` as the first argument.\n",
+        "The function signature is predict_quality(model, data).\n\n",
+        "Try one of:\n",
+        "  predict_quality(\"rb_mod3all\", your_data)\n",
+        "  predict_quality(model = \"rb_mod3all\", data = your_data)"
+      ),
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  if (!is.character(model) || length(model) != 1L || !nzchar(model)) {
+    rlang::abort(
+      "`model` must be a non-empty character scalar (e.g., \"rb_mod3all\").",
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  if (!is.data.frame(data)) {
+    rlang::abort(
+      "`data` must be a data.frame produced by import_rb(), import_coh(), or import_gamet().",
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  if (!"ID" %in% names(data)) {
+    rlang::abort(
+      "`data` must include an `ID` column.",
+      .subclass = "writeAlizer_input_error"
+    )
+  }
 
   requested_model  <- model                       # for output naming
   canonical_model  <- .wa_canonical_model(model)  # for artifact/varlist loading
@@ -191,22 +226,55 @@ predict_quality <- function(model, data) {
     "coh_mod3exp"    = "coh_mod3exp",
     "coh_mod3per"    = "coh_mod3per",
     "gamet_cws1"     = c("CWS_mod1a", "CIWS_mod1a"),
-    "example"        = "example",                       # <-- NEW
-    stop(sprintf("Unknown model key '%s' (canonicalized from '%s')",
-                 canonical_model, requested_model))
+    "example"        = "example",
+    {
+      valid <- c(
+        "rb_mod1","rb_mod2","rb_mod3narr","rb_mod3exp","rb_mod3per","rb_mod3all",
+        "coh_mod1","coh_mod2","coh_mod3narr","coh_mod3exp","coh_mod3per","coh_mod3all",
+        "gamet_cws1","example"
+      )
+      rlang::abort(
+        sprintf(
+          "Unknown model key '%s' (canonicalized from '%s'). Valid options are: %s.\nSee ?predict_quality for details.",
+          canonical_model, requested_model, paste(valid, collapse = ", ")
+        ),
+        .subclass = "writeAlizer_model_unknown"
+      )
+    }
   )
 
   if (length(fit_names) != length(data_pp)) {
-    stop(sprintf("Mismatch: expected %d sub-models, got %d preprocessed splits.",
-                 length(fit_names), length(data_pp)))
-  }
-  missing <- setdiff(fit_names, names(fits))
-  if (length(missing)) {
-    stop(sprintf("Missing trained objects for model '%s': %s",
-                 canonical_model, paste(missing, collapse = ", ")))
+    rlang::abort(
+      sprintf(
+        "Internal mismatch: expected %d sub-model(s), but preprocessing produced %d split(s).",
+        length(fit_names), length(data_pp)
+      ),
+      .subclass = "writeAlizer_internal_mismatch"
+    )
   }
 
-  #outward display names have '_v2' stripped for RB mod3
+  missing <- setdiff(fit_names, names(fits))
+  if (length(missing)) {
+    mock_dir <- getOption("writeAlizer.mock_dir")
+    hint <- if (is.character(mock_dir) && nzchar(mock_dir)) {
+      sprintf(
+        "\nNote: writeAlizer.mock_dir is set to '%s'. If you're running the offline demo, (re)seed with writeAlizer::wa_seed_example_models(\"example\") or clear the option.",
+        mock_dir
+      )
+    } else {
+      ""
+    }
+    rlang::abort(
+      paste0(
+        sprintf("Missing trained objects for model '%s': %s.",
+                canonical_model, paste(missing, collapse = ", ")),
+        hint
+      ),
+      .subclass = "writeAlizer_artifact_missing"
+    )
+  }
+
+  # outward display names have '_v2' stripped for RB mod3
   strip_v2 <- function(x) sub("_v2$", "", x)
   out_names <- if (grepl("^rb_mod3", canonical_model)) strip_v2(fit_names) else fit_names
 
@@ -235,4 +303,3 @@ predict_quality <- function(model, data) {
 
   out
 }
-

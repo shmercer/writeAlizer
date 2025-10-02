@@ -88,6 +88,11 @@ Some models are ensembles and will output multiple sub-predictions (e.g., genre-
 
 By default, writeAlizer caches downloaded model artifacts in a user cache directory.
 
+- `wa_cache_dir()` → returns the path to the package cache directory (character scalar).
+- `wa_cache_clear(ask = TRUE)` → clears cached files. When `ask = TRUE` (default), it
+  prompts before deleting; set `ask = FALSE` to clear without a prompt. Returns
+  (invisibly) `TRUE` when the cache was cleared, `FALSE` otherwise.
+
 ```r
 # return the cache directory location
 wa_cache_dir()

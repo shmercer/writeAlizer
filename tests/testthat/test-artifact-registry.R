@@ -40,13 +40,16 @@ testthat::test_that(".wa_parts_for errors if registry lacks required columns", {
 
 testthat::test_that(".wa_registry missing CSV is classed", {
   wa_registry <- getFromNamespace(".wa_registry", "writeAlizer")
-  # Force system.file to return nothing
-  testthat::with_mocked_bindings(
-    system.file = function(...) "",
-    .env = baseenv(),
-    {
-      testthat::expect_error(wa_registry(), class = "writeAlizer_registry_missing")
-    }
+
+  # Mock system.file() in the base namespace, not in writeAlizer
+  testthat::local_mocked_bindings(
+    .package = "base",
+    system.file = function(...) ""  # force missing path
+  )
+
+  testthat::expect_error(
+    wa_registry(),
+    class = "writeAlizer_registry_missing"
   )
 })
 
@@ -237,35 +240,12 @@ testthat::test_that(".wa_load_fits_list maps legacy -> v2 names", {
 
 testthat::test_that(".wa_registry has expected core columns and sha present", {
   wa_registry <- getFromNamespace(".wa_registry", "writeAlizer")
+  out <- wa_registry()
 
-  # Create a tiny, valid artifacts.csv
-  tmp_csv <- withr::local_tempfile(fileext = ".csv")
-  utils::write.csv(
-    data.frame(
-      kind  = "rda",
-      model = "demo_model",
-      part  = "a",
-      file  = "demo.rda",
-      url   = "file:///does/not/matter",
-      sha   = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
-      stringsAsFactors = FALSE
-    ),
-    tmp_csv,
-    row.names = FALSE
-  )
-
-  # Force .wa_registry() to read our temp CSV
-  testthat::with_mocked_bindings(
-    system.file = function(..., package) tmp_csv,
-    .env = baseenv(),
-    {
-      out <- wa_registry()
-      testthat::expect_s3_class(out, "data.frame")
-      testthat::expect_true(all(c("kind","model","part","file","url") %in% names(out)))
-      testthat::expect_true("sha" %in% names(out))
-      testthat::expect_true(any(!is.na(out$sha)))
-    }
-  )
+  testthat::expect_s3_class(out, "data.frame")
+  testthat::expect_true(all(c("kind","model","part","file","url") %in% names(out)))
+  testthat::expect_true("sha" %in% names(out))
+  testthat::expect_true(any(!is.na(out$sha)))
 })
 
 testthat::test_that(".wa_local_path returns a single path string", {

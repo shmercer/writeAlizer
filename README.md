@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
   [![CRAN status](https://www.r-pkg.org/badges/version/writeAlizer)](https://CRAN.R-project.org/package=writeAlizer)
-  [![R-CMD-check](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml)
+  [![R-CMD-check.yaml](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml)
   [![codecov](https://codecov.io/gh/shmercer/writeAlizer/branch/master/graph/badge.svg)](https://app.codecov.io/gh/shmercer/writeAlizer)
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 <!-- badges: end -->

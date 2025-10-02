@@ -1,6 +1,6 @@
 ![writeAlizer Logo](https://www.dropbox.com/s/bxgse42uf44k6me/wA_logo.png?raw=1)
 
-# writeAlizer: An R Package to Generate Automated Writing Quality and Curriculum-Based Measurement (CBM) Scores
+# writeAlizer: An R Package to Generate Automated Writing Quality Scores
 
 <!-- badges: start -->
   [![CRAN status](https://www.r-pkg.org/badges/version/writeAlizer)](https://CRAN.R-project.org/package=writeAlizer)

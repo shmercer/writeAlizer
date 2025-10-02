@@ -1,0 +1,166 @@
+---
+title: "writeAlizer: Getting Started"
+author: "Sterett H. Mercer (sterett.mercer@ubc.ca)"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+csl: apa.csl
+vignette: >
+  %\VignetteIndexEntry{writeAlizer: Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  # Run chunks locally/CI when NOT_CRAN=true; skip on CRAN
+  eval = identical(Sys.getenv("NOT_CRAN"), "true")
+)
+```
+
+> A practical walkthrough of the key functions in **writeAlizer**: importing analysis outputs (ReaderBench, Coh‑Metrix, GAMET), and running predictive models with `predict_quality()`.
+
+## Background
+The **writeAlizer** package downloads predictive models for writing quality and written-expression CBM scores and applies these models to your data.
+More details on model development can be found in the **writeAlizer** [wiki](https://github.com/shmercer/writeAlizer/wiki).
+
+### Prerequisites
+writeAlizer accepts the following output files as inputs:
+ 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Windows Binaries](https://osf.io/wyq4t)
+ 2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
+ 3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
+
+The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
+
+## Installation
+**writeAlizer** is available on CRAN.
+```r
+install.packages("writeAlizer")
+
+library(writeAlizer)
+```
+
+To install the development version of **writeAlizer**:
+```r
+# From GitHub
+
+# install.packages("pak")
+pak::pak("shmercer/writeAlizer")
+
+library(writeAlizer)
+```
+
+### Optional model dependencies
+Some model families require packages listed in **Suggests**. Discover what you need locally:
+
+```r
+md <- writeAlizer::model_deps()
+md$required   # packages already available
+md$missing    # packages you may want to install for full functionality
+```
+
+---
+
+## Quick start
+This minimal example shows how to import a small sample dataset that ships with the package and (optionally) run a model you have available locally.
+
+```r
+# Load a small ReaderBench sample shipped with the package
+rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+rb <- import_rb(rb_path)
+head(rb)
+
+# Example: run a ReaderBench predictive model (model artifacts will be downloaded on the first run)
+quality <- predict_quality("rb_mod3all", rb)
+head(quality)
+```
+
+---
+
+## Importing data
+**About the examples below:** each code snippet loads a **small example CSV** that ships with the package using `system.file(...)`. Replace with your own files when running analyses on your data.
+`writeAlizer` expects tidy CSV outputs from common text analysis tools. Use the matching import helper for each format:
+
+```r
+# ReaderBench CSV	rb_path  <- system.file("extdata", "sample_rb.csv",    package = "writeAlizer")
+rb  <- import_rb(rb_path)
+
+# Coh‑Metrix CSV	coh_path <- system.file("extdata", "sample_coh.csv",   package = "writeAlizer")
+coh <- import_coh(coh_path)
+
+# GAMET CSV      	gam_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+gam <- import_gamet(gam_path)
+
+# Peek at structure
+str(rb)
+str(coh)
+str(gam)
+```
+
+All three imports return a `data.frame` with an `ID` column; `predict_quality()` relies on that `ID` to keep rows aligned in outputs.
+
+---
+
+## Predicting writing quality
+Use `predict_quality(model, data)` to run one of the built‑in model families:
+
+- **ReaderBench**: `rb_mod1`, `rb_mod2`, `rb_mod3narr`, `rb_mod3exp`, `rb_mod3per`, `rb_mod3all`
+- **Coh‑Metrix**: `coh_mod1`, `coh_mod2`, `coh_mod3narr`, `coh_mod3exp`, `coh_mod3per`, `coh_mod3all`
+- **GAMET** (CWS/CIWS): `gamet_cws1`
+- **Offline demo**: `example`
+
+### Examples
+
+```r
+# ReaderBench -> holistic quality
+rb_quality <- predict_quality("rb_mod3all", rb)
+head(rb_quality)
+
+# Coh‑Metrix -> holistic quality
+coh_quality <- predict_quality("coh_mod3all", coh)
+head(coh_quality)
+
+# GAMET -> CWS and CIWS (two prediction columns)
+gamet_scores <- predict_quality("gamet_cws1", gam)
+head(gamet_scores)
+```
+
+**Return value.** A `data.frame` with `ID` plus one column per sub‑model prediction (prefixed `pred_`). When there are multiple numeric prediction columns (and the model isn’t `gamet_cws1`), a row‑wise mean column (e.g., `score_mean`) is added to summarize overall quality.
+
+---
+
+## Model keys at a glance (with references)
+Use this table to pick a model and keep track of published uses. Fill the **References** column with citations (e.g., “Smith & Lee, 2022; doi:…”) as you go.
+
+| Model key        | Data source / import | Target(s) predicted                  | Output columns (typical)                       | Notes/References (published uses) |
+|---|---|---|---|---|
+| `rb_mod1`        | ReaderBench → `import_rb()` | Holistic writing quality               | `ID`, `pred_rb_mod1`, `score_mean`    | [@Keller-Margulis2022; @Matta2022; @Mercer2022] |
+| `rb_mod2`        | ReaderBench → `import_rb()` | Holistic writing quality               | `ID`, `pred_rb_mod2`, `score_mean`    | This is a simplified version of rb_mod1 that handles errors on multi-paragraph compositions. [@Matta2023] |
+| `rb_mod3narr`    | ReaderBench → `import_rb()` | Narrative genre quality                | `ID`, `pred_rb_mod3narr`, `score_mean`| — |
+| `rb_mod3exp`     | ReaderBench → `import_rb()` | Expository genre quality               | `ID`, `pred_rb_mod3exp`, `score_mean` | — |
+| `rb_mod3per`     | ReaderBench → `import_rb()` | Persuasive genre quality               | `ID`, `pred_rb_mod3per`, `score_mean` | — |
+| `rb_mod3all`     | ReaderBench → `import_rb()` | Holistic (all‑genre) quality           | `ID`, `pred_rb_mod3all`, `score_mean` | *Recommended ReaderBench model for use |
+| `coh_mod1`       | Coh‑Metrix → `import_coh()`  | Holistic writing quality               | `ID`, `pred_coh_mod1`, `score_mean`   | [@Keller-Margulis2022; @Matta2022] |
+| `coh_mod2`       | Coh‑Metrix → `import_coh()`  | Holistic writing quality               | `ID`, `pred_coh_mod2`, `score_mean`   | This is a simplified version of coh_mod1 |
+| `coh_mod3narr`   | Coh‑Metrix → `import_coh()`  | Narrative genre quality                | `ID`, `pred_coh_mod3narr`, `score_mean`| — |
+| `coh_mod3exp`    | Coh‑Metrix → `import_coh()`  | Expository genre quality               | `ID`, `pred_coh_mod3exp`, `score_mean`| — |
+| `coh_mod3per`    | Coh‑Metrix → `import_coh()`  | Persuasive genre quality               | `ID`, `pred_coh_mod3per`, `score_mean`| — |
+| `coh_mod3all`    | Coh‑Metrix → `import_coh()`  | Holistic (all‑genre) quality           | `ID`, `pred_coh_mod3all`, `score_mean`| *Recommended Coh-Metrix model for use |
+| `gamet_cws1`     | GAMET → `import_gamet()`     | **CWS** and **CIWS**                   | `ID`, `pred_cws`, `pred_ciws`         | [@Matta2025; @Mercer2021] |
+| `example`        | Any (demo)                   | Minimal demo score(s)                  | `ID`, `pred_example`, `score_mean?`   | Offline, CRAN‑safe mock; seeded via `wa_seed_example_models("example")`|
+
+## Working with the model download cache
+The package downloads and caches model artifacts the first time you use a model.
+
+```r
+# See where model artifacts are cached
+writeAlizer::wa_cache_dir()
+
+# Clear cache if needed 
+writeAlizer::wa_cache_clear()
+```
+---
+

@@ -180,7 +180,7 @@ predict_quality <- function(model, data) {
     )
   }
 
-  if (!is.character(model) || length(model) != 1L || !nzchar(model)) {
+  if (!is.character(model) || length(model) != 1L || is.na(model) || !nzchar(model)) {
     rlang::abort(
       "`model` must be a non-empty character scalar (e.g., \"rb_mod3all\").",
       .subclass = "writeAlizer_input_error"

@@ -35,6 +35,8 @@
 #' md2 <- model_deps()
 #' }
 #'
+#' @importFrom utils packageDescription
+#' @import cli
 #' @export
 model_deps <- function() {
   # helpers
@@ -53,18 +55,18 @@ model_deps <- function() {
 
   # optional test/CI hook: allow callers to inject/override required packages
   extra <- getOption("writeAlizer.required_pkgs", character(0))
-  if (!is.null(extra)) {
+  if (is.null(extra)) {
+    extra <- character(0)
+  } else {
     extra <- as.character(extra)
     extra <- extra[nzchar(extra)]
-  } else {
-    extra <- character(0)
   }
 
   # union (preserve qualifiers), then unique
   pkgs_raw <- unique(c(pkgs_raw, extra))
 
   if (length(pkgs_raw) == 0L) {
-    message("No optional model dependencies discovered.")
+    cli::cli_alert_info("No optional model dependencies discovered.")
     return(list(required = character(0), missing = character(0)))
   }
 
@@ -73,15 +75,12 @@ model_deps <- function() {
   missing <- base_names[!have]
 
   if (length(missing) == 0L) {
-    message("All required packages are installed: ",
-            paste(base_names, collapse = ", "))
+    cli::cli_alert_success("All required packages are installed: {paste(base_names, collapse = ', ')}")
   } else {
-    cmd <- sprintf('install.packages(c("%s"))',
-                   paste(missing, collapse = '", "'))
-    message(
-      "Missing required packages: ", paste(missing, collapse = ", "),
-      "\nInstall them manually, e.g.:\n  ", cmd
-    )
+    cli::cli_alert_danger("Missing required packages:")
+    cli::cli_ul(missing)
+    cmd <- sprintf('install.packages(c("%s"))', paste(missing, collapse = '", "'))
+    cli::cli_code(cmd)
   }
 
   list(required = pkgs_raw, missing = missing)

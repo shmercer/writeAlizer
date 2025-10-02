@@ -29,7 +29,6 @@
 #' # ...
 #' unlink(ex, recursive = TRUE, force = TRUE)
 #'
-#' @keywords internal
 #' @export
 wa_seed_example_models <- function(model = c("example"), dir = tempdir()) {
   model <- match.arg(model)

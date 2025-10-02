@@ -1,6 +1,7 @@
 # writeAlizer 1.6.6 (2025-10-01)
 
 - Added a package vignette
+- switch to MIT license
 
 # writeAlizer 1.6.5 (2025-09-30)
 

@@ -15,7 +15,7 @@ Description: Imports variables from 'ReaderBench' (Dascalu et al.,
     al.(2021)<doi:10.1177/0829573520987753>; and generates predicted
     writing quality and curriculum-based measurement (McMaster & Espin,
     2007)<doi:10.1177/00224669070410020301> scores.
-License: GPL-3
+License: MIT + file LICENSE
 URL: https://github.com/shmercer/writeAlizer/
 BugReports: https://github.com/shmercer/writeAlizer/issues
 Depends:

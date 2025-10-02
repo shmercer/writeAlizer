@@ -27,6 +27,7 @@ Imports:
     dplyr,
     glue,
     magrittr,
+    rlang (>= 1.1.0),
     stats,
     tidyselect
 Suggests:

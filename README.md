@@ -57,7 +57,7 @@ md$missing
 ```
 `model_deps()` also prints a helpful message. If anything is missing, it includes a copy-paste command like:
 
-```css
+```r
 Missing required packages: glmnet, ranger
 Install them manually, e.g.:
   install.packages(c("glmnet", "ranger"))
@@ -71,13 +71,13 @@ library(writeAlizer)
 ## ReaderBench example
 rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer") #read path of included sample rb output file
 rb <- import_rb(rb_path) #import the rb file
-rb_pred <- predict_quality(rb, model = "rb_mod3all") #generate predicted values
+rb_pred <- predict_quality(model = "rb_mod3all", rb) #generate predicted values
 
 ## Coh-Metrix example
 
 coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer") #read path of included sample Cooh-Metrix output file
 coh <- import_coh(coh_path) #import the file
-coh_pred <- predict_quality(coh, model = "coh_mod3all") #generate predicted values
+coh_pred <- predict_quality(model = "coh_mod3all", coh) #generate predicted values
 ```
 
 ### About predict_quality() output
@@ -87,6 +87,11 @@ Some models are ensembles and will output multiple sub-predictions (e.g., genre-
 ### Where model files are stored
 
 By default, writeAlizer caches downloaded model artifacts in a user cache directory.
+
+- `wa_cache_dir()` → returns the path to the package cache directory (character scalar).
+- `wa_cache_clear(ask = TRUE)` → clears cached files. When `ask = TRUE` (default), it
+  prompts before deleting; set `ask = FALSE` to clear without a prompt. Returns
+  (invisibly) `TRUE` when the cache was cleared, `FALSE` otherwise.
 
 ```r
 # return the cache directory location

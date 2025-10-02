@@ -22,6 +22,7 @@ Depends:
     R (>= 2.10)
 Imports:
     caret,
+    cli,
     digest,
     dplyr,
     glue,

@@ -1,50 +1,46 @@
 testthat::test_that("preprocess rb_mod3all works offline via mocked varlists", {
-  rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-  testthat::skip_if_not(rb_path != "", "sample_rb.csv not found in inst/extdata")
+  rb_path <- wa_sample_path("sample_rb.csv")
+  testthat::skip_if(!nzchar(rb_path) || !file.exists(rb_path), "sample_rb.csv not found")
   rb <- writeAlizer::import_rb(rb_path)
 
   tmp <- withr::local_tempdir()
-  withr::local_options(writeAlizer.mock_dir = tmp)
+  withr::local_options(writeAlizer.mock_dir = tmp, writeAlizer.offline = TRUE)
 
   all_cols <- setdiff(colnames(rb), "ID")
   testthat::skip_if(length(all_cols) < 15, "Not enough columns in sample RB file")
 
-  canon <- getFromNamespace(".wa_canonical_model", "writeAlizer")
-  parts_for <- getFromNamespace(".wa_parts_for", "writeAlizer")
-
-  model <- canon("rb_mod3all")  # canonical key (may be *_v2, etc.)
-  parts <- parts_for("rds", model)
-  testthat::skip_if(nrow(parts) < 1, sprintf("No RDS parts registered for %s", model))
-
-  # Detect the column with .rds varlist paths; drop NAs/empties
-  col_has_rds <- vapply(
-    parts,
-    function(x) is.character(x) && any(grepl("\\.rds$", x, ignore.case = TRUE), na.rm = TRUE),
-    logical(1)
+  # Minimal registry rows (rds only) for rb_mod3all_v2
+  reg <- data.frame(
+    kind  = rep("rds", 3),
+    model = rep("rb_mod3all_v2", 3),
+    part  = c("a","b","c"),
+    file  = c("rb_exp_vars_v2.rds", "rb_narr_vars_v2.rds", "rb_per_vars_v2.rds"),
+    url   = file.path("file://", normalizePath(tmp, winslash = "/", mustWork = TRUE),
+                      c("rb_exp_vars_v2.rds", "rb_narr_vars_v2.rds", "rb_per_vars_v2.rds")),
+    sha   = NA_character_,
+    stringsAsFactors = FALSE
   )
-  testthat::skip_if(!any(col_has_rds), "Registry has no .rds filename column")
-  files <- unname(parts[[names(parts)[which(col_has_rds)[1]]]])
-  files <- files[!is.na(files) & nzchar(files) & grepl("\\.rds$", files, ignore.case = TRUE)]
-  testthat::skip_if(length(files) == 0, "No .rds filenames resolved from registry")
+  testthat::local_mocked_bindings(.package = "writeAlizer", .wa_registry = function() reg)
 
-  # Build up to three non-overlapping varlists from available columns
   vlist <- list(all_cols[1:5], all_cols[6:10], all_cols[11:15])
-  n_make <- min(3L, length(files), length(vlist))
+  saveRDS(vlist[[1]], file.path(tmp, "rb_exp_vars_v2.rds"))
+  saveRDS(vlist[[2]], file.path(tmp, "rb_narr_vars_v2.rds"))
+  saveRDS(vlist[[3]], file.path(tmp, "rb_per_vars_v2.rds"))
 
-  mk_rds <- function(relpath, vec) {
-    full <- file.path(tmp, relpath)
-    dir.create(dirname(full), recursive = TRUE, showWarnings = FALSE)
-    saveRDS(vec, full)
-    TRUE
-  }
-  for (i in seq_len(n_make)) mk_rds(files[i], vlist[[i]])
+  res <- writeAlizer:::preprocess("rb_mod3all", rb)
 
-  res <- writeAlizer:::preprocess(model, rb)
+  # Allow consolidation: require between 1 and 3 splits
+  testthat::expect_true(is.list(res) && length(res) >= 1L && length(res) <= 3L)
 
-  # Some registries may consolidate splits; require at least one and at most what we created
-  testthat::expect_true(is.list(res) && length(res) >= 1 && length(res) <= n_make)
+  # Basic shape checks
   for (df in res) {
     testthat::expect_s3_class(df, "data.frame")
     testthat::expect_true("ID" %in% names(df))
   }
+
+  # Each varlist should be fully present in at least one split
+  has_set <- function(set) any(vapply(res, function(df) all(set %in% names(df)), logical(1)))
+  testthat::expect_true(has_set(vlist[[1]]))
+  testthat::expect_true(has_set(vlist[[2]]))
+  testthat::expect_true(has_set(vlist[[3]]))
 })

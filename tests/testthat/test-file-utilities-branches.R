@@ -35,47 +35,49 @@ testthat::test_that(".wa_naify_nan_chars replaces literal 'NaN' only in characte
 testthat::test_that("import_rb(): SEP header + read.table(text=readLines()) path + 'NaN' handling + ID normalization", {
   tmp <- withr::local_tempdir()
 
-  # Names to keep from the packaged sample header
-  k <- writeAlizer:::.wa_rb_keep_exclude_from_sample()
-  testthat::skip_if(is.null(k), "Sample RB header not available to build names")
-  testthat::skip_if(length(k$keep) < 4, "Not enough names to exercise keep phase")
+  # Provide a deterministic keep list via mocking so we don't skip if the sample header isn't present.
+  testthat::with_mocked_bindings(
+    .package = "writeAlizer",
+    .wa_rb_keep_exclude_from_sample = function() {
+      # Keep File.name so ID normalization path is exercised, plus 3 feature columns.
+      list(keep = c("File.name", "RB.Keep1", "RB.Keep2", "RB.Keep3"),
+           exclude = character(0))
+    },
+    {
+      # Build a tiny 2-row CSV with SEP header forcing readLines() branch
+      dat <- data.frame(
+        check.names = FALSE,
+        "File name" = c("docA", "docB"),
+        stringsAsFactors = FALSE
+      )
+      # RB.Keep1: character with "NaN"/"text" to trigger .wa_naify_nan_chars()
+      dat[["RB.Keep1"]] <- c("NaN", "text")
+      # RB.Keep2 / RB.Keep3: numeric-like strings to trigger .wa_convert_numeric_like()
+      dat[["RB.Keep2"]] <- c("1", "2")
+      dat[["RB.Keep3"]] <- c("3", "4")
 
-  # IMPORTANT: do NOT include 'File.name' in the trio we mutate
-  keep_extras <- setdiff(k$keep, "File.name")
-  testthat::skip_if(length(keep_extras) < 3, "Need at least 3 non-File.name keep names")
-  keep3 <- keep_extras[seq_len(3)]
+      header <- paste(names(dat), collapse = ",")
+      rows   <- apply(dat, 1, function(r) paste(r, collapse = ","))
+      csv    <- file.path(tmp, "rb_small_sep.csv")
+      writeLines(c("SEP=,", header, rows), csv)
 
-  # Build a tiny 2-row CSV:
-  # - "File name" column (will become File.name -> ID)
-  # - keep3[1]: character with "NaN"/"text" to trigger .wa_naify_nan_chars()
-  # - keep3[2], keep3[3]: numeric-like strings
-  dat <- data.frame(
-    check.names = FALSE,
-    "File name" = c("docA", "docB"),
-    stringsAsFactors = FALSE
+      rb <- writeAlizer::import_rb(csv)
+
+      # 1) ID comes from "File name" (renamed to ID)
+      testthat::expect_true("ID" %in% names(rb))
+      testthat::expect_identical(rb$ID, c("docA", "docB"))
+
+      # 2) 'NaN' -> NA for character columns
+      testthat::expect_true(is.na(rb[["RB.Keep1"]][1]))
+      testthat::expect_identical(rb[["RB.Keep1"]][2], "text")
+
+      # 3) The chosen keep names made it through (exclude 'File.name' which is renamed to ID)
+      testthat::expect_true(all(c("RB.Keep1","RB.Keep2","RB.Keep3") %in% names(rb)))
+      # 4) Numeric-like keep cols converted
+      testthat::expect_true(is.numeric(rb[["RB.Keep2"]]))
+      testthat::expect_true(is.numeric(rb[["RB.Keep3"]]))
+    }
   )
-  dat[[keep3[1]]] <- c("NaN", "text")
-  dat[[keep3[2]]] <- c("1", "2")
-  dat[[keep3[3]]] <- c("3", "4")
-
-  # Force the 'SEP=,' branch (read.table(text = readLines(...)))
-  header <- paste(names(dat), collapse = ",")
-  rows   <- apply(dat, 1, function(r) paste(r, collapse = ","))
-  csv    <- file.path(tmp, "rb_small_sep.csv")
-  writeLines(c("SEP=,", header, rows), csv)
-
-  rb <- writeAlizer::import_rb(csv)
-
-  # 1) ID comes from "File name" (renamed to ID)
-  testthat::expect_true("ID" %in% names(rb))
-  testthat::expect_identical(rb$ID, c("docA", "docB"))
-
-  # 2) 'NaN' -> NA for character columns
-  testthat::expect_true(is.na(rb[[keep3[1]]][1]))
-  testthat::expect_identical(rb[[keep3[1]]][2], "text")
-
-  # 3) The chosen keep names made it through (exclude 'File.name' which is renamed to ID)
-  testthat::expect_true(all(keep3 %in% names(rb)))
 })
 
 testthat::test_that("import_rb(): fallback branch when sample header helper returns NULL", {

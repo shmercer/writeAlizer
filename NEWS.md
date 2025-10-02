@@ -1,3 +1,7 @@
+# writeAlizer 1.6.6 (2025-10-01)
+
+- Added a package vignette
+
 # writeAlizer 1.6.5 (2025-09-30)
 
 - CRAN policy: ensure graceful failure when Internet resources are unavailable or have changed.

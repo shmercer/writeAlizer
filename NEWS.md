@@ -1,7 +1,63 @@
 # writeAlizer 1.6.6 (2025-10-01)
 
+## Error handling & classes
+- Introduced structured errors via `rlang::abort()`:
+  - `writeAlizer_registry_missing` – missing/invalid `artifacts.csv`.
+  - `writeAlizer_unknown_model` – unknown/unsupported model key (raised by `preprocess()` / `predict_quality()`).
+  - `writeAlizer_download_failed` – offline/bad URL/checksum fetch failures.
+  - `writeAlizer_internal_mismatch` – expected submodel count ≠ preprocessing splits.
+
+## Loaders & caching
+- `.wa_ensure_file()`:
+  - Honors `options(writeAlizer.mock_dir=)` (preserves subdirs).
+  - Supports `file://` URLs; clearer offline guidance.
+  - Warns on cached checksum mismatch; hard-errors if post-download checksum mismatches.
+- `.wa_parts_for()` validates inputs and uses canonicalized model keys.
+- `.wa_load_model_rdas()` / `.wa_load_fits_list()`:
+  - Prefer `mock_dir` artifacts; load via temp env; pick sensible object (`fit`, `model`, etc.).
+  - Legacy → v2 name mapping; special-case `example`.
+- `.wa_require_pkgs_for_fits()` collects deps from model classes and `train$modelInfo$library`; errors with install hint.
+
+## `model_deps()`
+- Reports `required` vs `missing` from `Suggests` + override `options(writeAlizer.required_pkgs=)`.
+- Preserves version qualifiers in `required`; strips qualifiers for `missing`.
+- Emits copy-paste `install.packages()` command.
+- Tests updated to capture output/messages cleanly (no stray console prints).
+
+## Predict API & preprocessing
+- Better validation for swapped args and `NA`/invalid `model` with actionable messages.
+- `predict_quality()` surfaces unknown model keys (includes canonicalized key).
+- Preprocessing preserves row counts/`ID`; supports v2 varlists and consolidated-split behavior.
+
+## Test infrastructure
+- Added `wa_sample_path()` to reliably find `inst/extdata` in dev/install contexts.
+- Network helper hardened; integration tests force offline via `options(writeAlizer.offline=TRUE)` and avoid HEAD probes.
+- Introduced `.quiet_eval()` to silence messages/warnings in targeted assertions.
+
+## Integration & smoke tests
+- Integration test now **mocks the registry** (RDS + RDA) for all exercised models:
+  - RB: `rb_mod1`, `rb_mod2`, `rb_mod3narr_v2`, `rb_mod3exp_v2`, `rb_mod3per_v2`, `rb_mod3all_v2`
+  - Coh: `coh_mod1`, `coh_mod2`, `coh_mod3narr`, `coh_mod3exp`, `coh_mod3per`, `coh_mod3all`
+  - GAMET: `gamet_cws1`
+- Writes matching varlists/fits into `mock_dir`; verifies prediction columns and mean-column rules.
+- `rb_mod3all` smoke test made offline-only with mocked varlists.
+
+## RB/COH import utilities tests
+- Coverage for:
+  - `import_rb()` path with `SEP=,` + `read.table(text=readLines())`.
+  - `NaN`→`NA` in character columns; guarded numeric-like conversion (accepts integer where appropriate).
+  - Name-based keep/drop assertions driven by sample header.
+- Skips only when assets truly missing (via `wa_sample_path()`).
+
+## Misc
 - Added a package vignette
 - switch to MIT license
+- Added/updated tests for:
+  - Mismatched expected submodels.
+  - Bad registry columns.
+  - Checksum errors.
+  - Legacy → v2 artifact-name mapping.
+
 
 # writeAlizer 1.6.5 (2025-09-30)
 

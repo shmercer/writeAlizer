@@ -1,6 +1,6 @@
 test_that("import + preprocess (rb_mod1) runs offline quickly", {
-  rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-  skip_if(!file.exists(rb_path), "sample_rb.csv not installed")
+  rb_path <- wa_sample_path("sample_rb.csv")
+  testthat::skip_if(!nzchar(rb_path)  || !file.exists(rb_path),  "sample_rb.csv not found")
 
   rb <- import_rb(rb_path)
   expect_gt(nrow(rb), 0)

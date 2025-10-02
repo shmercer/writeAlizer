@@ -1,4 +1,4 @@
-# tests/testthat/test-artifact-registry-consolidated.R
+# tests/testthat/test-artifact-registry.R
 # Consolidated coverage for R/artifact_registry.R
 
 .quiet_eval <- function(expr) {
@@ -12,10 +12,16 @@
 testthat::test_that(".wa_parts_for returns expected shapes and validates inputs", {
   parts_for <- getFromNamespace(".wa_parts_for", "writeAlizer")
 
-  testthat::expect_error(parts_for(kind = c("rds", "rda"), model = "x"),
-                         "single string", ignore.case = TRUE)
+  # invalid kind vector -> classed input error
+  testthat::expect_error(
+    parts_for(kind = c("rds", "rda"), model = "x"),
+    class = "writeAlizer_input_error"
+  )
+
+  # unknown kind should still return a data.frame (empty)
   testthat::expect_s3_class(parts_for(kind = "zip", model = "x"), "data.frame")
 
+  # missing model rows -> empty df
   df <- parts_for("rds", "no_such_model")
   testthat::expect_true(is.data.frame(df))
   testthat::expect_equal(nrow(df), 0L)
@@ -26,11 +32,25 @@ testthat::test_that(".wa_parts_for errors if registry lacks required columns", {
   bad_reg <- data.frame(kind = "rda", model = "x", part = "a", file = "x.rda",
                         stringsAsFactors = FALSE)
   testthat::local_mocked_bindings(.package = "writeAlizer", .wa_registry = function() bad_reg)
-  testthat::expect_error(parts_for("rda", "x"),
-                         "missing.*required.*column|required columns", ignore.case = TRUE)
+  testthat::expect_error(
+    parts_for("rda", "x"),
+    class = "writeAlizer_registry_malformed"
+  )
 })
 
-testthat::test_that(".wa_ensure_file: cache hit + checksum; no-URL guard; file:// download; checksum mismatch", {
+testthat::test_that(".wa_registry missing CSV is classed", {
+  wa_registry <- getFromNamespace(".wa_registry", "writeAlizer")
+  # Force system.file to return nothing
+  testthat::with_mocked_bindings(
+    system.file = function(...) "",
+    .env = baseenv(),
+    {
+      testthat::expect_error(wa_registry(), class = "writeAlizer_registry_missing")
+    }
+  )
+})
+
+testthat::test_that(".wa_ensure_file: cache hit + checksum; input guard; file:// download; checksum mismatch", {
   ensure_file  <- getFromNamespace(".wa_ensure_file",  "writeAlizer")
   cached_path  <- getFromNamespace(".wa_cached_path",  "writeAlizer")
 
@@ -46,11 +66,11 @@ testthat::test_that(".wa_ensure_file: cache hit + checksum; no-URL guard; file:/
   out_ok <- .quiet_eval(ensure_file(rel_ok, url = "file:///not/used", sha256 = good_sha))
   testthat::expect_identical(normalizePath(out_ok), normalizePath(dest_ok))
 
-  # B) Not cached, empty URL -> error
+  # B) Not cached, empty URL -> classed input error
   rel_need  <- file.path("models", "demo", "need_url.rda")
   testthat::expect_error(
     suppressWarnings(.quiet_eval(ensure_file(rel_need, url = ""))),
-    "url|provide", ignore.case = TRUE
+    class = "writeAlizer_input_error"
   )
 
   # C) file:// download works
@@ -62,14 +82,14 @@ testthat::test_that(".wa_ensure_file: cache hit + checksum; no-URL guard; file:/
   out <- .quiet_eval(ensure_file(rel_dl, url = url))
   testthat::expect_true(file.exists(out))
 
-  # D) checksum mismatch throws
+  # D) checksum mismatch throws a classed error
   wrong_sha <- paste(rep("0", 64), collapse = "")
   rel_bad  <- file.path("models", "demo", "badsha.rda")
   dest_bad <- cached_path(rel_bad)
   dir.create(dirname(dest_bad), recursive = TRUE, showWarnings = FALSE)
   testthat::expect_error(
     suppressWarnings(.quiet_eval(ensure_file(rel_bad, url = url, sha256 = wrong_sha))),
-    "checksum", ignore.case = TRUE
+    class = "writeAlizer_checksum_mismatch"
   )
 })
 
@@ -144,7 +164,18 @@ testthat::test_that(".wa_load_model_rdas loads into provided environment; last w
   testthat::expect_identical(get("fit", envir = env), 2L)
 })
 
-testthat::test_that(".wa_load_fits_list returns named list; canonicalizes; unknown model errors", {
+testthat::test_that(".wa_load_model_rdas: missing example mock is classed", {
+  load_model_rdas <- getFromNamespace(".wa_load_model_rdas", "writeAlizer")
+
+  tmp <- withr::local_tempdir()
+  withr::local_options(writeAlizer.mock_dir = tmp)
+  testthat::expect_error(
+    load_model_rdas("example"),
+    class = "writeAlizer_mock_missing"
+  )
+})
+
+testthat::test_that(".wa_load_fits_list returns named list; canonicalizes; unknown model errors (classed)", {
   load_fits_list <- getFromNamespace(".wa_load_fits_list", "writeAlizer")
   withr::local_envvar(R_USER_CACHE_DIR = withr::local_tempdir())
 
@@ -171,7 +202,10 @@ testthat::test_that(".wa_load_fits_list returns named list; canonicalizes; unkno
   testthat::expect_identical(fits$rb_mod1a, 11)
   testthat::expect_identical(fits$rb_mod1b, 22)
 
-  testthat::expect_error(load_fits_list("no_such_model"), "No model artifacts|unknown", ignore.case = TRUE)
+  testthat::expect_error(
+    load_fits_list("no_such_model"),
+    class = "writeAlizer_parts_missing"
+  )
 })
 
 testthat::test_that(".wa_load_fits_list maps legacy -> v2 names", {
@@ -203,11 +237,35 @@ testthat::test_that(".wa_load_fits_list maps legacy -> v2 names", {
 
 testthat::test_that(".wa_registry has expected core columns and sha present", {
   wa_registry <- getFromNamespace(".wa_registry", "writeAlizer")
-  out <- wa_registry()
-  testthat::expect_s3_class(out, "data.frame")
-  testthat::expect_true(all(c("kind","model","part","file","url") %in% names(out)))
-  testthat::expect_true("sha" %in% names(out))
-  testthat::expect_true(any(!is.na(out$sha)))
+
+  # Create a tiny, valid artifacts.csv
+  tmp_csv <- withr::local_tempfile(fileext = ".csv")
+  utils::write.csv(
+    data.frame(
+      kind  = "rda",
+      model = "demo_model",
+      part  = "a",
+      file  = "demo.rda",
+      url   = "file:///does/not/matter",
+      sha   = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      stringsAsFactors = FALSE
+    ),
+    tmp_csv,
+    row.names = FALSE
+  )
+
+  # Force .wa_registry() to read our temp CSV
+  testthat::with_mocked_bindings(
+    system.file = function(..., package) tmp_csv,
+    .env = baseenv(),
+    {
+      out <- wa_registry()
+      testthat::expect_s3_class(out, "data.frame")
+      testthat::expect_true(all(c("kind","model","part","file","url") %in% names(out)))
+      testthat::expect_true("sha" %in% names(out))
+      testthat::expect_true(any(!is.na(out$sha)))
+    }
+  )
 })
 
 testthat::test_that(".wa_local_path returns a single path string", {
@@ -216,7 +274,7 @@ testthat::test_that(".wa_local_path returns a single path string", {
   testthat::expect_true(is.character(p) && length(p) == 1L)
 })
 
-testthat::test_that(".wa_require_pkgs_for_fits collects needed pkgs and errors when missing", {
+testthat::test_that(".wa_require_pkgs_for_fits collects needed pkgs and errors when missing (classed)", {
   req_pkgs <- getFromNamespace(".wa_require_pkgs_for_fits", "writeAlizer")
 
   # A) Collection across classes
@@ -240,7 +298,7 @@ testthat::test_that(".wa_require_pkgs_for_fits collects needed pkgs and errors w
   testthat::expect_true(all(c("randomForest","gbm","glmnet","earth","Cubist","kernlab","pls",
                               "caretEnsemble","pkgA","pkgB") %in% called))
 
-  # B) Missing package path
+  # B) Missing package path (classed)
   fits2 <- list(
     structure(list(), class = "randomForest"),
     structure(list(modelInfo = list(library = c("pkg_missing"))), class = "train")
@@ -249,5 +307,5 @@ testthat::test_that(".wa_require_pkgs_for_fits collects needed pkgs and errors w
     .package = "base",
     requireNamespace = function(pkg, quietly = TRUE) { !identical(pkg, "pkg_missing") }
   )
-  testthat::expect_error(req_pkgs(fits2), "pkg_missing|install.packages|required", ignore.case = TRUE)
+  testthat::expect_error(req_pkgs(fits2), class = "writeAlizer_dependency_missing")
 })

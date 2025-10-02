@@ -1,7 +1,17 @@
-testthat::test_that("preprocess() errors on unknown model key", {
-  testthat::skip_on_cran()
-  dat <- data.frame(ID = 1:3, x = 1:3, y = 3:1)
-  testthat::expect_error(writeAlizer::preprocess("no_such_model", dat), "No variable lists|Unknown model")
+testthat::test_that("preprocess() errors on unknown model key (classed) even when registry is present", {
+  dat <- data.frame(ID = 1:2)
+
+  empty_reg <- data.frame(
+    kind = character(), model = character(), part = character(),
+    file = character(), url = character(), sha = character(),
+    stringsAsFactors = FALSE
+  )
+  testthat::local_mocked_bindings(.package = "writeAlizer", .wa_registry = function() empty_reg)
+
+  testthat::expect_error(
+    writeAlizer::preprocess("no_such_model", dat),
+    regexp = "No variable lists registered|Unknown model|Valid options"
+  )
 })
 
 testthat::test_that("predict_quality() errors when trained fits are missing", {

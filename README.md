@@ -39,8 +39,10 @@ help("writeAlizer")
 ### Development version
 
 ``` r
-#install.packages("devtools")
-devtools::install_github("shmercer/writeAlizer")
+# To install from GitHub
+
+#install.packages("pak")
+pak::pak("shmercer/writeAlizer")
 
 ```
 

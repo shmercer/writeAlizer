@@ -1,4 +1,4 @@
-# writeAlizer 1.6.6 (2025-10-01)
+# writeAlizer 1.6.6 (2025-10-06)
 
 ## Error handling & classes
 - Introduced structured errors via `rlang::abort()`:
@@ -6,6 +6,7 @@
   - `writeAlizer_unknown_model` – unknown/unsupported model key (raised by `preprocess()` / `predict_quality()`).
   - `writeAlizer_download_failed` – offline/bad URL/checksum fetch failures.
   - `writeAlizer_internal_mismatch` – expected submodel count ≠ preprocessing splits.
+  - `.wa_ensure_file` - added classed errors and download retries
 
 ## Loaders & caching
 - `.wa_ensure_file()`:
@@ -17,6 +18,7 @@
   - Prefer `mock_dir` artifacts; load via temp env; pick sensible object (`fit`, `model`, etc.).
   - Legacy → v2 name mapping; special-case `example`.
 - `.wa_require_pkgs_for_fits()` collects deps from model classes and `train$modelInfo$library`; errors with install hint.
+- `.wa_validate_import()` - checks ID column for duplicates and character type
 
 ## `model_deps()`
 - Reports `required` vs `missing` from `Suggests` + override `options(writeAlizer.required_pkgs=)`.

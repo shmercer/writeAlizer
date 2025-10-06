@@ -32,9 +32,9 @@
   df
 }
 
-#' Internal: derive keep/exclude RB feature names from packaged sample file
-#' We read ONLY the header (nrows=0). If the file has a "SEP=," first line,
-#' we skip it. Names are made syntactic (check.names=TRUE), so "File name" -> "File.name".
+# Internal: derive keep/exclude RB feature names from packaged sample file
+# We read ONLY the header (nrows=0). If the file has a "SEP=," first line,
+# we skip it. Names are made syntactic (check.names=TRUE), so "File name" -> "File.name".
 .wa_rb_keep_exclude_from_sample <- function() {
   path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
   if (!nzchar(path) || !file.exists(path)) return(NULL)

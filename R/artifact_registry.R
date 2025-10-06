@@ -69,19 +69,36 @@
 }
 
 # Internal: convert file:// URL to local path, cross-platform
+# Normalize a file:// URL into a local filesystem path
+# - POSIX: keep leading "/" → "/private/var/..."
+# - Windows: drop leading "/" before drive letter → "C:/...", then backslashes
 .wa_from_file_url <- function(url) {
-  stopifnot(is.character(url), length(url) == 1L, startsWith(url, "file://"))
-  # Remove scheme and any number of slashes after it
-  p <- sub("^file://+", "", url)
-  # Decode %xx (spaces etc.)
+  stopifnot(is.character(url), length(url) == 1L, nzchar(url))
+  if (!startsWith(url, "file://")) return(url)
+
+  # Ensure exactly one leading slash after the scheme for local paths
+  # e.g., "file:///tmp/x" -> "/tmp/x"
+  #       "file://C:/x"   -> "/C:/x" (we handle Windows below)
+  p <- sub("^file://+", "/", url, perl = TRUE)
+
+  # URL-decode (%20 etc.)
   p <- utils::URLdecode(p)
 
   if (.Platform$OS.type == "windows") {
-    # If path starts with /C:/..., drop the first slash
-    p <- sub("^/([A-Za-z]:/)", "\\1", p)
-    # Normalize backslashes for Windows APIs
-    p <- gsub("/", "\\\\", p)
+    # UNC host form: file://server/share/path -> \\server\share\path
+    if (grepl("^//[^/]", p)) {
+      p <- sub("^//", "\\\\", p)
+      p <- chartr("/", "\\", p)
+      return(p)
+    }
+    # Local drive form: "/C:/path" -> "C:/path"
+    if (grepl("^/[A-Za-z]:", p)) {
+      p <- substring(p, 2L)
+    }
+    # Normalize separators
+    p <- chartr("/", "\\", p)
   }
+
   p
 }
 

@@ -58,8 +58,10 @@
   file.path(system.file("extdata", package = "writeAlizer"), filename)
 }
 
-# Ensure an artifact is present in the user cache; may download.
-.wa_ensure_file <- function(file, url, sha256 = NULL, quiet = TRUE) {
+# Ensure a cached artifact exists (internal)
+# Internal helper that ensures an artifact is present in the writeAlizer cache.
+.wa_ensure_file <- function(file, url, sha256 = NULL, quiet = TRUE,
+                            max_retries = 3L, base_sleep = 0.5) {
   if (!is.character(file) || length(file) != 1L || !nzchar(file) ||
       !is.character(url)  || length(url)  != 1L || !nzchar(url)) {
     rlang::abort("`file` and `url` must be non-empty character scalars.",
@@ -78,79 +80,88 @@
   if (is.character(mock_dir) && nzchar(mock_dir)) {
     mock_path <- file.path(mock_dir, file)
     if (file.exists(mock_path)) {
-      if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
       ok <- tryCatch({ file.copy(mock_path, dest, overwrite = TRUE) },
                      warning = function(w) TRUE, error = function(e) FALSE)
       if (isTRUE(ok) && file.exists(dest)) return(dest)
     }
   }
 
-  # 2) Use cached copy if present (verify checksum when provided)
+  # 2) Cached copy (verify checksum when provided)
   if (file.exists(dest)) {
     if (is.null(sha256)) return(dest)
     got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
                     error = function(e) NA_character_)
     if (!is.na(got) && identical(got, sha256)) return(dest)
-    warning(paste0(
-      "Checksum mismatch for cached '", basename(file), "'. ",
-      "Expected ", sha256, ", got ", got, ". Re-downloading."
-    ), call. = FALSE)
+    warning(sprintf("Checksum mismatch for cached '%s'. Expected %s, got %s. Re-downloading.",
+                    basename(file), sha256, got), call. = FALSE)
     unlink(dest, force = TRUE)
   }
 
-  # 3) Offline case
-  is_remote   <- !startsWith(tolower(url), "file:")
-  offline_opt <- isTRUE(getOption("writeAlizer.offline", FALSE))
-  has_curl    <- isTRUE(requireNamespace("curl", quietly = TRUE))
-  offline_now <- has_curl && is_remote && (!curl::has_internet() || offline_opt)
-
-  if (offline_now) {
+  # 3) Respect offline
+  if (isTRUE(getOption("writeAlizer.offline", FALSE))) {
     rlang::abort(
-      paste0(
-        "Network resource unavailable. Could not download '", basename(file), "' from\n  ",
-        url, "\n\n",
-        "To run offline, either:\n",
-        "  * Set options(writeAlizer.mock_dir = <dir>) with local copies of artifacts, or\n",
-        "  * Use wa_seed_example_models('example') for offline examples.\n"
-      ),
-      .subclass = "writeAlizer_offline"
+      paste0("Cannot download '", basename(file),
+             "' while offline. Set options(writeAlizer.offline = FALSE) to enable."),
+      .subclass = "writeAlizer_offline_error"
     )
   }
 
-  # 4) Download (supports file:// URLs too)
-  if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
-  utils::download.file(url = url, destfile = dest, mode = "wb", quiet = quiet)
+  # 4) Download with retry + backoff; support file:// URLs
+  attempt <- 0L
+  last_error <- NULL
+  while (attempt <= max_retries) {
+    attempt <- attempt + 1L
+    ok <- FALSE
+    tryCatch({
+      if (startsWith(url, "file://")) {
+        src <- sub("^file://", "", url)
+        if (!file.exists(src)) {
+          rlang::abort(sprintf("Local artifact not found at '%s'.", src),
+                       .subclass = "writeAlizer_artifact_missing")
+        }
+        ok <- file.copy(src, dest, overwrite = TRUE)
+      } else {
+        utils::download.file(url, dest, quiet = quiet, mode = "wb", cacheOK = TRUE)
+        ok <- file.exists(dest)
+      }
+    }, error = function(e) {
+      last_error <<- e
+      ok <<- FALSE
+    }, warning = function(w) {
+      # treat warnings (e.g., HTTP issues) as retryable errors
+      last_error <<- w
+      ok <<- FALSE
+    })
 
-  if (!file.exists(dest)) {
-    rlang::abort(
-      paste0("Download reported success but the file is missing: ", dest),
-      .subclass = "writeAlizer_download_failed"
-    )
-  }
+    if (ok && file.exists(dest)) {
+      # Optional checksum verify
+      if (!is.null(sha256)) {
+        got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
+                        error = function(e) NA_character_)
+        if (!is.na(got) && identical(got, sha256)) return(dest)
+        # bad checksum; delete and retry
+        unlink(dest, force = TRUE)
+        last_error <- simpleError(
+          sprintf("Checksum mismatch after download. Expected %s, got %s.", sha256, got)
+        )
+      } else {
+        return(dest)
+      }
+    }
 
-  # 5) Optional checksum verification (warn + abort on mismatch)
-  if (!is.null(sha256)) {
-    got <- digest::digest(dest, algo = "sha256", file = TRUE)
-    if (!identical(got, sha256)) {
-      warning(paste0(
-        "Checksum mismatch after download for '", basename(file), "'. ",
-        "Expected ", sha256, ", got ", got, "."
-      ), call. = FALSE)
-      unlink(dest, force = TRUE)
-      rlang::abort(
-        paste0(
-          "Checksum mismatch for '", basename(file), "'.\n",
-          "  expected: ", sha256, "\n",
-          "  got:      ", got, "\n",
-          "Please try again later or contact the maintainer."
-        ),
-        .subclass = "writeAlizer_checksum_mismatch"
-      )
+    if (attempt <= max_retries) {
+      Sys.sleep(base_sleep * (2 ^ (attempt - 1L)))
     }
   }
 
-  dest
+  # Give up with a typed error
+  rlang::abort(
+    paste0("Failed to download '", basename(file), "' from ", url, " after ",
+           max_retries + 1L, " attempts: ", conditionMessage(last_error %||% simpleError("unknown error"))),
+    .subclass = "writeAlizer_download_error"
+  )
 }
+
 
 .wa_load_varlists <- function(model) {
   parts <- .wa_parts_for(kind = "rds", model = model)

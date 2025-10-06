@@ -13,17 +13,27 @@
 
 # Read the shipped CSV registry (required).
 .wa_registry <- function() {
-  csv <- system.file("metadata", "artifacts.csv", package = "writeAlizer")
+  # Allow tests (or power users) to override the registry CSV location.
+  csv_opt <- getOption("writeAlizer.registry_csv", NULL)
+  if (is.character(csv_opt) && nzchar(csv_opt)) {
+    csv <- csv_opt
+  } else {
+    csv <- system.file("metadata", "artifacts.csv", package = "writeAlizer")
+  }
+
   if (!nzchar(csv) || !file.exists(csv)) {
     rlang::abort(
       c(
         "Registry CSV not found (inst/metadata/artifacts.csv)." =
-          "Reinstall writeAlizer or ensure the file is included in the package."
+          "Reinstall writeAlizer or ensure the file is included in the package.",
+        "You can also set options(writeAlizer.registry_csv = '/path/to/artifacts.csv') to override during tests."
       ),
       .subclass = "writeAlizer_registry_missing"
     )
   }
+
   df <- utils::read.csv(csv, stringsAsFactors = FALSE)
+
   need <- c("kind","model","part","file","url","sha")
   miss <- setdiff(need, names(df))
   if (length(miss)) {
@@ -56,6 +66,23 @@
 
 .wa_local_path <- function(filename) {
   file.path(system.file("extdata", package = "writeAlizer"), filename)
+}
+
+# Internal: convert file:// URL to local path, cross-platform
+.wa_from_file_url <- function(url) {
+  stopifnot(is.character(url), length(url) == 1L, startsWith(url, "file://"))
+  # Remove scheme and any number of slashes after it
+  p <- sub("^file://+", "", url)
+  # Decode %xx (spaces etc.)
+  p <- utils::URLdecode(p)
+
+  if (.Platform$OS.type == "windows") {
+    # If path starts with /C:/..., drop the first slash
+    p <- sub("^/([A-Za-z]:/)", "\\1", p)
+    # Normalize backslashes for Windows APIs
+    p <- gsub("/", "\\\\", p)
+  }
+  p
 }
 
 # Ensure a cached artifact exists (internal)
@@ -114,7 +141,7 @@
     ok <- FALSE
     tryCatch({
       if (startsWith(url, "file://")) {
-        src <- sub("^file://", "", url)
+        src <- .wa_from_file_url(url)
         if (!file.exists(src)) {
           rlang::abort(sprintf("Local artifact not found at '%s'.", src),
                        .subclass = "writeAlizer_artifact_missing")
@@ -141,8 +168,9 @@
         if (!is.na(got) && identical(got, sha256)) return(dest)
         # bad checksum; delete and retry
         unlink(dest, force = TRUE)
-        last_error <- simpleError(
-          sprintf("Checksum mismatch after download. Expected %s, got %s.", sha256, got)
+        last_error <- structure(
+          simpleError(sprintf("Checksum mismatch after download. Expected %s, got %s.", sha256, got)),
+          class = c("writeAlizer_checksum_mismatch", "simpleError", "error", "condition")
         )
       } else {
         return(dest)
@@ -155,13 +183,24 @@
   }
 
   # Give up with a typed error
+  msg <- if (is.null(last_error)) "unknown error" else conditionMessage(last_error)
+
+  # Preserve specific subclasses when they were the terminal failure
+  if (!is.null(last_error)) {
+    if (inherits(last_error, "writeAlizer_artifact_missing")) {
+      rlang::abort(msg, .subclass = "writeAlizer_artifact_missing")
+    }
+    if (inherits(last_error, "writeAlizer_checksum_mismatch")) {
+      rlang::abort(msg, .subclass = "writeAlizer_checksum_mismatch")
+    }
+  }
+
   rlang::abort(
     paste0("Failed to download '", basename(file), "' from ", url, " after ",
-           max_retries + 1L, " attempts: ", conditionMessage(last_error %||% simpleError("unknown error"))),
+           max_retries + 1L, " attempts: ", msg),
     .subclass = "writeAlizer_download_error"
   )
 }
-
 
 .wa_load_varlists <- function(model) {
   parts <- .wa_parts_for(kind = "rds", model = model)

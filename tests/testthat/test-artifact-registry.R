@@ -41,10 +41,10 @@ testthat::test_that(".wa_parts_for errors if registry lacks required columns", {
 testthat::test_that(".wa_registry missing CSV is classed", {
   wa_registry <- getFromNamespace(".wa_registry", "writeAlizer")
 
-  # Mock system.file() in the base namespace, not in writeAlizer
+  withr::local_options(writeAlizer.registry_csv = tempfile())  # force missing
   testthat::local_mocked_bindings(
     .package = "base",
-    system.file = function(...) ""  # force missing path
+    system.file = function(...) ""  # belt-and-suspenders
   )
 
   testthat::expect_error(

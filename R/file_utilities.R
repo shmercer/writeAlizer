@@ -53,6 +53,46 @@
   list(keep = keep, drop = drop)
 }
 
+# Internal: validate required columns and IDs
+.wa_validate_import <- function(df, required, strict = FALSE, context = "import") {
+  stopifnot(is.data.frame(df))
+  missing <- setdiff(required, names(df))
+  if (length(missing)) {
+    rlang::abort(
+      paste0("Missing required column(s) for ", context, ": ",
+             paste(missing, collapse = ", ")),
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+  # ID must exist, be character, and unique
+  if (!"ID" %in% names(df)) {
+    rlang::abort("Imported data must contain an 'ID' column.", .subclass = "writeAlizer_input_error")
+  }
+  df[["ID"]] <- as.character(df[["ID"]])
+  dups <- df$ID[duplicated(df$ID)]
+  if (length(dups)) {
+    rlang::abort(
+      paste0("Duplicate IDs detected (", length(unique(dups)), "): e.g., ",
+             paste(utils::head(unique(dups), 3L), collapse = ", ")),
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  if (isTRUE(strict)) {
+    unknown <- setdiff(names(df), c(required, "ID"))
+    if (length(unknown)) {
+      rlang::abort(
+        paste0("Unexpected column(s) for ", context, ": ",
+               paste(utils::head(unknown, 10L), collapse = ", "),
+               if (length(unknown) > 10) " ..." else ""),
+        .subclass = "writeAlizer_input_error"
+      )
+    }
+  }
+
+  df
+}
+
 # --------------------------------------------------------------------------
 
 #' Import a GAMET output file into R.
@@ -101,6 +141,9 @@ import_gamet <- function(path) {
   dat4$per_gram  <- ifelse(dat4$word_count == 0, NA_real_, dat4$grammar    / dat4$word_count)
   dat4$per_spell <- ifelse(dat4$word_count == 0, NA_real_, dat4$misspelling / dat4$word_count)
 
+  # validate IDs
+  dat4 <- .wa_validate_import(dat4, required = c("ID"), strict = strict, context = "import_gamet")
+
   dat4
 }
 
@@ -141,6 +184,10 @@ import_coh <- function(path) {
 
   # sort by ID
   dat1 <- dat1[order(dat1$ID), ]
+
+  #validate IDs
+  dat1 <- .wa_validate_import(dat1, required = c("ID"), strict = strict, context = "import_coh")
+
   dat1
 }
 
@@ -232,6 +279,10 @@ import_rb <- function(path) {
 
   # sort by ID
   dat_RB2 <- dat_RB2[order(dat_RB2$ID), ]
+
+  #validate IDs
+  dat_RB2 <- .wa_validate_import(dat_RB2, required = c("ID"), strict = strict, context = "import_rb")
+
   dat_RB2
 }
 

@@ -1,3 +1,5 @@
+withr::local_options(writeAlizer.offline = FALSE, writeAlizer.mock_dir = NULL)
+
 testthat::test_that("checksum is enforced for downloads and cached reads", {
   tmp <- withr::local_tempdir()
   # Prepare a small local "remote" file and its correct sha

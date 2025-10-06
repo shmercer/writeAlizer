@@ -32,9 +32,9 @@
   df
 }
 
-#' Internal: derive keep/exclude RB feature names from packaged sample file
-#' We read ONLY the header (nrows=0). If the file has a "SEP=," first line,
-#' we skip it. Names are made syntactic (check.names=TRUE), so "File name" -> "File.name".
+# Internal: derive keep/exclude RB feature names from packaged sample file
+# We read ONLY the header (nrows=0). If the file has a "SEP=," first line,
+# we skip it. Names are made syntactic (check.names=TRUE), so "File name" -> "File.name".
 .wa_rb_keep_exclude_from_sample <- function() {
   path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
   if (!nzchar(path) || !file.exists(path)) return(NULL)
@@ -51,6 +51,49 @@
   drop <- if (length(nm) > 404L) nm[(404L + 1L):length(nm)] else character(0)
 
   list(keep = keep, drop = drop)
+}
+
+# Internal: validate required columns and IDs
+# Internal: validate required columns and IDs
+.wa_validate_import <- function(df, required, context = "import") {
+  # Try to coerce to a data frame if possible (tibble, list of equal-length vectors, etc.)
+  if (!is.data.frame(df)) {
+    df <- tryCatch(as.data.frame(df, stringsAsFactors = FALSE),
+                   error = function(e) df)
+  }
+  if (!is.data.frame(df)) {
+    rlang::abort(
+      paste0("Internal error: ", context, " did not return a data.frame."),
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  # Required columns present?
+  missing <- setdiff(required, names(df))
+  if (length(missing)) {
+    rlang::abort(
+      paste0("Missing required column(s) for ", context, ": ",
+             paste(missing, collapse = ", ")),
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  # ID column must exist, be character, and unique
+  if (!"ID" %in% names(df)) {
+    rlang::abort("Imported data must contain an 'ID' column.", .subclass = "writeAlizer_input_error")
+  }
+  df[["ID"]] <- as.character(df[["ID"]])
+
+  dups <- df$ID[duplicated(df$ID)]
+  if (length(dups)) {
+    rlang::abort(
+      paste0("Duplicate IDs detected (", length(unique(dups)), "): e.g., ",
+             paste(utils::head(unique(dups), 3L), collapse = ", ")),
+      .subclass = "writeAlizer_input_error"
+    )
+  }
+
+  df
 }
 
 # --------------------------------------------------------------------------
@@ -101,6 +144,9 @@ import_gamet <- function(path) {
   dat4$per_gram  <- ifelse(dat4$word_count == 0, NA_real_, dat4$grammar    / dat4$word_count)
   dat4$per_spell <- ifelse(dat4$word_count == 0, NA_real_, dat4$misspelling / dat4$word_count)
 
+  # validate IDs
+  dat4 <- .wa_validate_import(dat4, required = c("ID"), context = "import_gamet")
+
   dat4
 }
 
@@ -141,6 +187,10 @@ import_coh <- function(path) {
 
   # sort by ID
   dat1 <- dat1[order(dat1$ID), ]
+
+  #validate IDs
+  dat1 <- .wa_validate_import(dat1, required = c("ID"), context = "import_coh")
+
   dat1
 }
 
@@ -173,39 +223,43 @@ import_coh <- function(path) {
 #' rb_file   <- import_rb(file_path)
 #' head(rb_file)
 import_rb <- function(path) {
-  # check first line for "SEP=,"; if present, skip that line on import
+  # --- robust header detection (handles empty file edge cases) ---
   con <- file(path, "r")
-  first_line <- readLines(con, n = 1)
-  close(con)
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  first_line <- tryCatch(readLines(con, n = 1L), error = function(e) character(0))
+  first_line <- if (length(first_line)) first_line else ""
 
+  # Read CSV (ReaderBench sometimes writes "SEP=," in the first line)
+  txt <- readLines(path, warn = FALSE)
   if (identical(first_line, "SEP=,")) {
     dat_RB <- utils::read.table(
-      text = readLines(path, warn = FALSE),
-      header = TRUE, sep = ",", skip = 1, stringsAsFactors = FALSE, check.names = TRUE
+      text = txt, header = TRUE, sep = ",", skip = 1L,
+      stringsAsFactors = FALSE, check.names = TRUE
     )
   } else {
     dat_RB <- utils::read.table(
-      text = readLines(path, warn = FALSE),
-      header = TRUE, sep = ",", stringsAsFactors = FALSE, check.names = TRUE
+      text = txt, header = TRUE, sep = ",",
+      stringsAsFactors = FALSE, check.names = TRUE
     )
   }
 
-  # replace "NaN" (as strings) in character cols only
+  # Replace "NaN" strings in character columns only
   dat_RB <- .wa_naify_nan_chars(dat_RB)
 
-  # Name-based selection using the packaged sample header:
-  # - keep: first 404 column NAMES from sample_rb.csv (made syntactic)
-  # - drop: columns 405+ by name
-  # If anything goes sideways (e.g., sample missing), we fall back to first 404 by position.
+  # Name-based selection using the packaged sample header, if available:
+  # - keep: first 404 NAMES from sample_rb.csv (syntactic)
+  # - drop: names beyond 404, if present
+  # Fall back: first 404 columns by POSITION.
   k <- .wa_rb_keep_exclude_from_sample()
 
   if (!is.null(k)) {
-    # ensure we include File.name if present
-    keep_names <- unique(c("File.name", setdiff(k$keep, "File.name")))
+    # Always ensure ID/File.name are retained if present
+    base_keep <- c("File.name", "ID")
+    keep_names <- unique(c(base_keep, setdiff(k$keep, base_keep)))
     keep_names <- intersect(colnames(dat_RB), keep_names)
     dat_RB2 <- dat_RB[, keep_names, drop = FALSE]
 
-    # If the sample suggested drop names exist, remove them explicitly (belt & suspenders)
+    # Drop any explicitly excluded names if they slipped in
     if (length(k$drop)) {
       drop_these <- intersect(colnames(dat_RB2), k$drop)
       if (length(drop_these)) {
@@ -213,25 +267,40 @@ import_rb <- function(path) {
       }
     }
   } else {
-    # Fallback to legacy behavior if sample not available
+    # Fallback: positional subset (keep first 404 cols if they exist)
     n <- min(404L, ncol(dat_RB))
     dat_RB2 <- dat_RB[, seq_len(n), drop = FALSE]
   }
 
-  # normalize ID
+  # --- Normalize ID before any validation ---
+  # Priority:
+  #  1) If File.name present in the current subset, rename to ID
+  #  2) Else if ID already present (some exports), keep as-is
+  #  3) Else if File.name existed in the original, construct ID from it
   if ("File.name" %in% names(dat_RB2)) {
     names(dat_RB2)[names(dat_RB2) == "File.name"] <- "ID"
-  }
-  if (!"ID" %in% names(dat_RB2) && "File.name" %in% names(dat_RB)) {
+  } else if (!"ID" %in% names(dat_RB2) && "File.name" %in% names(dat_RB)) {
     dat_RB2$ID <- as.character(dat_RB[["File.name"]])
   }
-  dat_RB2$ID <- as.character(dat_RB2$ID)
 
-  # auto-convert numeric-like character columns to numeric, excluding ID
+  # Ensure character type for ID if present now
+  if ("ID" %in% names(dat_RB2)) {
+    dat_RB2$ID <- as.character(dat_RB2$ID)
+  }
+
+  # Auto-convert numeric-like character columns to numeric, excluding ID
   dat_RB2 <- .wa_convert_numeric_like(dat_RB2, exclude = "ID")
 
-  # sort by ID
-  dat_RB2 <- dat_RB2[order(dat_RB2$ID), ]
+  # Stable sort by ID when available (no-op if ID missing; validator will catch)
+  if ("ID" %in% names(dat_RB2)) {
+    dat_RB2 <- dat_RB2[order(dat_RB2$ID), , drop = FALSE]
+  }
+
+  # --- Validate IDs (required + uniqueness) ---
+  dat_RB2 <- .wa_validate_import(dat_RB2, required = c("ID"), context = "import_rb")
+
+  # Ensure a base data.frame (not tibble) for downstream expectations
+  dat_RB2 <- as.data.frame(dat_RB2, stringsAsFactors = FALSE)
   dat_RB2
 }
 

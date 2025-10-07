@@ -122,48 +122,6 @@ preprocess <- function(model, data) {
 #' are attempted and checks stay fast. The temporary files created for the example are
 #' cleaned up at the end of the \code{\\examples{}}.
 #' @export
-#' @examples
-#' # Fast, offline example: seed a tiny 'example' model and predict (no downloads)
-#' coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-#' coh <- import_coh(coh_path)
-#'
-#' mock_old <- getOption("writeAlizer.mock_dir")
-#' ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
-#' on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
-#'
-#' out <- predict_quality("example", coh)
-#' head(out)
-#'
-#' # IMPORTANT: reset mock_dir before running full demos, so real artifacts load
-#' options(writeAlizer.mock_dir = mock_old)
-#'
-#' \dontshow{
-#' # Cleanup of example artifacts created under tempdir()
-#' if (is.character(ex_dir) && nzchar(ex_dir) && dir.exists(ex_dir)) {
-#'   unlink(ex_dir, recursive = TRUE, force = TRUE)
-#' }
-#' }
-#'
-#' # More complete demos (skipped on CRAN to keep checks fast)
-#' \donttest{
-#'   ### Example 1: ReaderBench output file
-#'   file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-#'   rb_file <- import_rb(file_path1)
-#'   rb_quality <- predict_quality("rb_mod3all", rb_file)
-#'   head(rb_quality)
-#'
-#'   ### Example 2: Coh-Metrix output file
-#'   file_path2 <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-#'   coh_file <- import_coh(file_path2)
-#'   coh_quality <- predict_quality("coh_mod3all", coh_file)
-#'   head(coh_quality)
-#'
-#'   ### Example 3: GAMET output file (CWS and CIWS)
-#'   file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-#'   gam_file <- import_gamet(file_path3)
-#'   gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
-#'   head(gamet_CWS_CIWS)
-#' }
 predict_quality <- function(model, data) {
   # ---- Argument validation with helpful guidance ----
   # Catch common mistake where args are flipped:
@@ -278,23 +236,28 @@ predict_quality <- function(model, data) {
   strip_v2 <- function(x) sub("_v2$", "", x)
   out_names <- if (grepl("^rb_mod3", canonical_model)) strip_v2(fit_names) else fit_names
 
-  # 4) Predict per sub-model
+  # 4) Predict per sub-model (normalize each prediction to a plain vector)
   drop_id <- function(df) if ("ID" %in% names(df)) df[setdiff(names(df), "ID")] else df
   preds <- vector("list", length(fit_names))
   names(preds) <- out_names
 
   for (i in seq_along(fit_names)) {
     newx <- drop_id(data_pp[[i]])
-    preds[[out_names[[i]]]] <- predict(fits[[fit_names[[i]]]], newdata = newx)
+    p <- predict(fits[[fit_names[[i]]]], newdata = newx)
+
+    # --- Robust coercion so we always assign a simple numeric/character vector ---
+    if (is.data.frame(p)) p <- p[[1]]
+    if (is.matrix(p))     p <- p[, 1, drop = TRUE]
+    preds[[out_names[[i]]]] <- p
   }
 
   # 5) Assemble output with outward names
   out <- data.frame(ID = data$ID, stringsAsFactors = FALSE)
   for (nm in out_names) out[[paste0("pred_", nm)]] <- preds[[nm]]
 
-  # Mean column: pred_<model>_mean, with any trailing _v2 removed
+  # 6) Add mean column when appropriate: pred_<model>_mean (skip for GAMET)
   pred_cols <- grep("^pred_", names(out), value = TRUE)
-  if (requested_model != "gamet_cws1" &&
+  if (canonical_model != "gamet_cws1" &&
       length(pred_cols) > 1 &&
       all(vapply(out[pred_cols], is.numeric, logical(1)))) {
     model_for_mean <- sub("_v2$", "", requested_model)

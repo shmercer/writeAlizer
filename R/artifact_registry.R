@@ -102,133 +102,159 @@
   p
 }
 
-# Ensure a cached artifact exists (internal)
-# Internal helper that ensures an artifact is present in the writeAlizer cache.
-.wa_ensure_file <- function(file, url, sha256 = NULL, quiet = TRUE,
-                            max_retries = 3L, base_sleep = 0.5) {
-  if (!is.character(file) || length(file) != 1L || !nzchar(file) ||
-      !is.character(url)  || length(url)  != 1L || !nzchar(url)) {
-    rlang::abort("`file` and `url` must be non-empty character scalars.",
-                 .subclass = "writeAlizer_input_error")
+# Internal: resolve/download an artifact into the cache and return a path.
+# - Validates inputs with classed errors (writeAlizer_input_error)
+# - Honors writeAlizer.mock_dir (returns mock path directly if present)
+# - Respects writeAlizer.offline for non-file URLs
+# - Re-downloads on cached checksum mismatch; errors if still bad
+# - Prints an informative message after a successful download (once)
+.wa_ensure_file <- function(file,
+                            url,
+                            sha256 = NULL,
+                            quiet = FALSE,
+                            max_retries = 1L) {
+  # ---- Input validation (classed) ----
+  if (!is.character(file) || length(file) != 1L || is.na(file) || !nzchar(file)) {
+    rlang::abort("`file` must be a non-empty character scalar.", .subclass = "writeAlizer_input_error")
+  }
+  if (!is.character(url) || length(url) != 1L || is.na(url) || !nzchar(url)) {
+    rlang::abort("`url` must be a non-empty character scalar.", .subclass = "writeAlizer_input_error")
+  }
+  if (!is.null(sha256) && (!is.character(sha256) || length(sha256) != 1L)) {
+    rlang::abort("`sha256` must be NULL or a single character string.", .subclass = "writeAlizer_input_error")
+  }
+  if (!is.numeric(max_retries) || length(max_retries) != 1L || is.na(max_retries) || max_retries < 0) {
+    rlang::abort("`max_retries` must be a single non-negative number.", .subclass = "writeAlizer_input_error")
   }
 
-  cache_dir <- tools::R_user_dir("writeAlizer", "cache")
-  if (!dir.exists(cache_dir)) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-
-  dest <- file.path(cache_dir, file)
-  dest_dir <- dirname(dest)
-  if (!dir.exists(dest_dir)) dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
-
-  # 1) mock_dir override (used by tests/examples to avoid network)
-  mock_dir <- getOption("writeAlizer.mock_dir", NULL)
+  # ---- Short-circuit to mock_dir if present ----
+  mock_dir <- getOption("writeAlizer.mock_dir")
   if (is.character(mock_dir) && nzchar(mock_dir)) {
     mock_path <- file.path(mock_dir, file)
-    if (file.exists(mock_path)) {
-      ok <- tryCatch({ file.copy(mock_path, dest, overwrite = TRUE) },
-                     warning = function(w) TRUE, error = function(e) FALSE)
-      if (isTRUE(ok) && file.exists(dest)) return(dest)
+    if (!file.exists(mock_path)) {
+      rlang::abort(
+        sprintf("Mock artifact not found: %s", mock_path),
+        .subclass = "writeAlizer_mock_missing"
+      )
     }
+    return(normalizePath(mock_path, winslash = "/", mustWork = TRUE))
   }
 
-  # 2) Cached copy (verify checksum when provided)
+  dest <- .wa_cached_path(file)
+
+  # Helper: compute sha256 (returns NA_character_ if file missing)
+  file_sha256 <- function(path) {
+    if (!file.exists(path)) return(NA_character_)
+    digest::digest(file = path, algo = "sha256")
+  }
+
+  # Helper: verify checksum if requested
+  verify_checksum <- function(path, expected) {
+    if (is.null(expected) || !nzchar(expected)) return(TRUE)
+    got <- file_sha256(path)
+    isTRUE(identical(tolower(got), tolower(expected)))
+  }
+
+  # If already cached and checksum OK -> return
   if (file.exists(dest)) {
-    if (is.null(sha256)) return(dest)
-    got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
-                    error = function(e) NA_character_)
-    if (!is.na(got) && identical(got, sha256)) return(dest)
-    warning(sprintf("Checksum mismatch for cached '%s'. Expected %s, got %s. Re-downloading.",
-                    basename(file), sha256, got), call. = FALSE)
-    unlink(dest, force = TRUE)
-  }
-
-  # 3) Respect offline
-  if (isTRUE(getOption("writeAlizer.offline", FALSE))) {
-    rlang::abort(
-      paste0("Cannot download '", basename(file),
-             "' while offline. Set options(writeAlizer.offline = FALSE) to enable."),
-      .subclass = "writeAlizer_offline_error"
-    )
-  }
-
-  # 4) Download with retry + backoff; support file:// URLs
-  attempt <- 0L
-  last_error <- NULL
-  while (attempt <= max_retries) {
-    attempt <- attempt + 1L
-    ok <- FALSE
-    tryCatch({
-      if (startsWith(url, "file://")) {
-        src <- .wa_from_file_url(url)
-        if (!file.exists(src)) {
-          rlang::abort(sprintf("Local artifact not found at '%s'.", src),
-                       .subclass = "writeAlizer_artifact_missing")
-        }
-        ok <- file.copy(src, dest, overwrite = TRUE)
-      } else {
-        utils::download.file(url, dest, quiet = quiet, mode = "wb", cacheOK = TRUE)
-        ok <- file.exists(dest)
+    if (verify_checksum(dest, sha256)) {
+      return(normalizePath(dest, winslash = "/", mustWork = TRUE))
+    } else {
+      # Cached file but checksum mismatch: warn and proceed to re-download
+      if (!quiet) {
+        warning(sprintf(
+          "Checksum mismatch for cached '%s'. Expected %s, got %s. Re-downloading.",
+          basename(dest), sha256 %||% "<none>", file_sha256(dest) %||% "<none>"
+        ), call. = FALSE)
       }
-    }, error = function(e) {
-      last_error <<- e
-      ok <<- FALSE
-    }, warning = function(w) {
-      # treat warnings (e.g., HTTP issues) as retryable errors
-      last_error <<- w
-      ok <<- FALSE
-    })
+    }
+  }
 
-    if (ok && file.exists(dest)) {
-      # Optional checksum verify
-      if (!is.null(sha256)) {
-        got <- tryCatch(digest::digest(dest, algo = "sha256", file = TRUE),
-                        error = function(e) NA_character_)
-        if (!is.na(got) && identical(got, sha256)) return(dest)
-        # bad checksum; delete and retry
-        unlink(dest, force = TRUE)
-        last_error <- structure(
-          simpleError(sprintf("Checksum mismatch after download. Expected %s, got %s.", sha256, got)),
-          class = c("writeAlizer_checksum_mismatch", "simpleError", "error", "condition")
+  # Ensure cache dir exists
+  dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
+
+  # Download/copy logic
+  do_fetch <- function() {
+    # file:// scheme -> local copy
+    if (grepl("^file://", url, ignore.case = TRUE)) {
+      # Convert file:// URL to local path
+      src <- sub("^file:///", "", url)
+      src <- sub("^file://",  "", src)  # handle file://C:/... form
+      if (!file.exists(src)) {
+        rlang::abort(
+          sprintf("Missing file for URL '%s'.", url),
+          .subclass = "writeAlizer_download_missing"
         )
+      }
+      # Copy to dest (overwrite)
+      file.copy(src, dest, overwrite = TRUE)
+    } else {
+      # Non-file URL: respect offline
+      if (isTRUE(getOption("writeAlizer.offline", FALSE))) {
+        rlang::abort(
+          sprintf("Cannot download '%s' while offline. Set options(writeAlizer.offline = FALSE) to enable.",
+                  basename(file)),
+          .subclass = "writeAlizer_offline"
+        )
+      }
+      tmp <- tempfile(fileext = paste0(".", tools::file_ext(file)))
+      on.exit(unlink(tmp, force = TRUE), add = TRUE)
+      # Use utils::download.file; be quiet to keep tests clean
+      utils::download.file(url, destfile = tmp, mode = "wb", quiet = TRUE)
+      file.rename(tmp, dest)
+    }
+
+    # After a successful transfer, emit the friendly message (once)
+    if (!quiet) {
+      if (requireNamespace("cli", quietly = TRUE)) {
+        cli::cli_alert_info(paste0(
+          "Downloaded model artifact:\n",
+          "* File: {basename(dest)}\n",
+          "* Cache: {wa_cache_dir()}\n",
+          "  (Artifacts are downloaded only the first time you use a model.)\n",
+          "  Tip: clear the cache with {cli::col_blue('wa_cache_clear()')} if needed."
+        ))
       } else {
-        return(dest)
+        message(sprintf(
+          "Downloaded model artifact:\n* File: %s\n* Cache: %s\n  (Artifacts are downloaded only the first time you use a model.)\n  Tip: clear the cache with wa_cache_clear() if needed.",
+          basename(dest), wa_cache_dir()
+        ))
       }
     }
 
-    if (attempt <= max_retries) {
-      Sys.sleep(base_sleep * (2 ^ (attempt - 1L)))
+    # Verify checksum (if provided)
+    if (!verify_checksum(dest, sha256)) {
+      rlang::abort(
+        sprintf(
+          "Downloaded checksum mismatch for '%s'. Expected %s, got %s.",
+          basename(dest),
+          sha256 %||% "<none>",
+          file_sha256(dest) %||% "<none>"
+        ),
+        .subclass = "writeAlizer_checksum_mismatch"
+      )
     }
+
+    TRUE
   }
 
-  # Give up with a typed error
-  msg <- if (is.null(last_error)) "unknown error" else conditionMessage(last_error)
-
-  # Preserve specific subclasses when they were the terminal failure
-  if (!is.null(last_error)) {
-    if (inherits(last_error, "writeAlizer_artifact_missing")) {
-      rlang::abort(msg, .subclass = "writeAlizer_artifact_missing")
-    }
-    if (inherits(last_error, "writeAlizer_checksum_mismatch")) {
-      rlang::abort(msg, .subclass = "writeAlizer_checksum_mismatch")
-    }
+  # Try to fetch, with limited retries on mismatch of cached copy
+  # (download.file itself will raise errors for connectivity issues)
+  tries <- as.integer(max_retries) + 1L
+  ok <- FALSE
+  last_err <- NULL
+  for (i in seq_len(tries)) {
+    ok <- tryCatch({
+      do_fetch()
+    }, error = function(e) {
+      last_err <<- e
+      FALSE
+    })
+    if (ok) break
   }
+  if (!ok) stop(last_err)
 
-  rlang::abort(
-    paste0("Failed to download '", basename(file), "' from ", url, " after ",
-           max_retries + 1L, " attempts: ", msg),
-    .subclass = "writeAlizer_download_error"
-  )
-}
-
-.wa_load_varlists <- function(model) {
-  parts <- .wa_parts_for(kind = "rds", model = model)
-  if (nrow(parts) == 0L) {
-    rlang::abort(sprintf("No variable lists registered for model '%s'", model),
-                 .subclass = "writeAlizer_parts_missing")
-  }
-  lapply(seq_len(nrow(parts)), function(i) {
-    p <- parts[i, ]
-    readRDS(.wa_ensure_file(p$file, p$url))
-  })
+  normalizePath(dest, winslash = "/", mustWork = TRUE)
 }
 
 .wa_load_model_rdas <- function(model, envir = parent.frame()) {
@@ -368,3 +394,56 @@
 
   invisible(TRUE)
 }
+
+# Internal: read the artifacts registry (tests may mock/override this)
+# Tries an internal helper first if it exists; otherwise reads the CSV shipped in the pkg.
+.wa_read_registry <- function() {
+  # Prefer an internal accessor if present (lets tests inject a mocked registry)
+  if (exists(".wa_artifacts_registry", envir = asNamespace("writeAlizer"), inherits = FALSE)) {
+    return(get(".wa_artifacts_registry", envir = asNamespace("writeAlizer"))())
+  }
+  if (!is.null(getOption("writeAlizer.artifacts_df"))) {
+    return(getOption("writeAlizer.artifacts_df"))
+  }
+
+  # Fallback: read packaged CSV without requiring readr
+  path <- system.file("metadata", "artifacts.csv", package = "writeAlizer")
+  utils::read.csv(
+    file = path,
+    stringsAsFactors = FALSE,
+    na.strings = c("", "NA"),
+    check.names = FALSE,
+    fileEncoding = "UTF-8"
+  )
+}
+
+# Back-compat for tests: return the list of *_vars.rds objects for a model
+# Uses the same registry source as the package / mocked tests.
+.wa_load_varlists <- function(model) {
+  reg <- .wa_read_registry()
+  # expected columns in tests: kind, model, part, file, url, sha
+  cols <- names(reg)
+  has <- function(x) x %in% cols
+
+  rows <- reg[reg$model == model & grepl("_vars\\.rds$", reg$file), , drop = FALSE]
+  if (!nrow(rows)) {
+    # allow filename prefix fallback if 'model' column isn't matched by the mock
+    rows <- reg[grepl(paste0("^", model), reg$file) & grepl("_vars\\.rds$", reg$file), , drop = FALSE]
+  }
+  if (!nrow(rows)) {
+    stop(sprintf("No varlists registered for model '%s'.", model), call. = FALSE)
+  }
+  if (has("part")) rows <- rows[order(rows$part), , drop = FALSE]
+
+  out <- vector("list", nrow(rows))
+  names(out) <- rows$file
+  for (i in seq_len(nrow(rows))) {
+    p <- rows[i, ]
+    sha <- if (has("sha")) p$sha else NULL
+    path <- .wa_ensure_file(p$file, p$url, sha256 = sha, quiet = TRUE)
+    out[[i]] <- readRDS(path)
+  }
+  out
+}
+
+

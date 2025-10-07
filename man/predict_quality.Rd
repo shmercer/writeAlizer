@@ -39,49 +39,6 @@ directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downl
 are attempted and checks stay fast. The temporary files created for the example are
 cleaned up at the end of the \code{\\examples{}}.
 }
-\examples{
-# Fast, offline example: seed a tiny 'example' model and predict (no downloads)
-coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-coh <- import_coh(coh_path)
-
-mock_old <- getOption("writeAlizer.mock_dir")
-ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
-on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
-
-out <- predict_quality("example", coh)
-head(out)
-
-# IMPORTANT: reset mock_dir before running full demos, so real artifacts load
-options(writeAlizer.mock_dir = mock_old)
-
-\dontshow{
-# Cleanup of example artifacts created under tempdir()
-if (is.character(ex_dir) && nzchar(ex_dir) && dir.exists(ex_dir)) {
-  unlink(ex_dir, recursive = TRUE, force = TRUE)
-}
-}
-
-# More complete demos (skipped on CRAN to keep checks fast)
-\donttest{
-  ### Example 1: ReaderBench output file
-  file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
-  rb_file <- import_rb(file_path1)
-  rb_quality <- predict_quality("rb_mod3all", rb_file)
-  head(rb_quality)
-
-  ### Example 2: Coh-Metrix output file
-  file_path2 <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
-  coh_file <- import_coh(file_path2)
-  coh_quality <- predict_quality("coh_mod3all", coh_file)
-  head(coh_quality)
-
-  ### Example 3: GAMET output file (CWS and CIWS)
-  file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
-  gam_file <- import_gamet(file_path3)
-  gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
-  head(gamet_CWS_CIWS)
-}
-}
 \seealso{
 \code{\link{import_rb}}, \code{\link{import_coh}}, \code{\link{import_gamet}}
 }

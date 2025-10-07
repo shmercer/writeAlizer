@@ -227,3 +227,20 @@ test_that("preprocess rb_mod3all works offline via mocked varlists", {
   out <- suppressWarnings(preprocess("rb_mod3all", rb))
   expect_true(is.list(out) && length(out) == 3L)
 })
+
+test_that("predict_quality coerces 1-col df/matrix predictions to vectors", {
+  testthat::skip_if_offline()
+  # Using the tiny example model seeded in tempdir to avoid downloads
+  mock_old <- getOption("writeAlizer.mock_dir")
+  ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
+  on.exit(options(writeAlizer.mock_dir = mock_old), add = TRUE)
+
+  coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
+  out <- predict_quality("example", coh)
+
+  pred_cols <- grep("^pred_", names(out), value = TRUE)
+  expect_true(length(pred_cols) >= 1)
+  # ensure no nested data.frames or matrices slipped through
+  expect_true(all(vapply(out[pred_cols], is.atomic, logical(1))))
+})
+

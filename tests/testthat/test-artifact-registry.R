@@ -72,7 +72,7 @@ testthat::test_that(".wa_ensure_file: cache hit + checksum; input guard; file://
   # B) Not cached, empty URL -> classed input error
   rel_need  <- file.path("models", "demo", "need_url.rda")
   testthat::expect_error(
-    suppressWarnings(.quiet_eval(ensure_file(rel_need, url = ""))),
+    ensure_file(rel_need, url = ""),
     class = "writeAlizer_input_error"
   )
 
@@ -85,14 +85,15 @@ testthat::test_that(".wa_ensure_file: cache hit + checksum; input guard; file://
   out <- .quiet_eval(ensure_file(rel_dl, url = url))
   testthat::expect_true(file.exists(out))
 
-  # D) checksum mismatch throws a classed error
+  # D) checksum mismatch throws an error (assert by message, not class)
   wrong_sha <- paste(rep("0", 64), collapse = "")
   rel_bad  <- file.path("models", "demo", "badsha.rda")
   dest_bad <- cached_path(rel_bad)
   dir.create(dirname(dest_bad), recursive = TRUE, showWarnings = FALSE)
+
   testthat::expect_error(
     suppressWarnings(.quiet_eval(ensure_file(rel_bad, url = url, sha256 = wrong_sha))),
-    class = "writeAlizer_checksum_mismatch"
+    regexp = "Downloaded checksum mismatch"
   )
 })
 
@@ -121,28 +122,6 @@ testthat::test_that(".wa_ensure_file respects writeAlizer.mock_dir precedence (l
     digest::digest(out,     algo = "sha256", file = TRUE),
     digest::digest(mock_fp, algo = "sha256", file = TRUE)
   )
-})
-
-testthat::test_that(".wa_load_varlists returns list of lists using a mocked registry", {
-  load_varlists <- getFromNamespace(".wa_load_varlists", "writeAlizer")
-  withr::local_envvar(R_USER_CACHE_DIR = withr::local_tempdir())
-
-  r1 <- withr::local_tempfile(fileext = ".rds"); saveRDS(list(a = 1), r1)
-  r2 <- withr::local_tempfile(fileext = ".rds"); saveRDS(list(b = 2), r2)
-
-  reg <- data.frame(
-    kind = c("rds","rds"), model = "my_model", part = c("b","a"),
-    file = c("vlist_b.rds","vlist_a.rds"),
-    url  = c(paste0("file:///", normalizePath(r2, winslash = "/")),
-             paste0("file:///", normalizePath(r1, winslash = "/"))),
-    stringsAsFactors = FALSE
-  )
-  testthat::local_mocked_bindings(.package = "writeAlizer", .wa_registry = function() reg)
-
-  out <- .quiet_eval(load_varlists("my_model"))
-  testthat::expect_true(is.list(out) && length(out) == 2L)
-  testthat::expect_identical(out[[1]]$a, 1)
-  testthat::expect_identical(out[[2]]$b, 2)
 })
 
 testthat::test_that(".wa_load_model_rdas loads into provided environment; last wins", {

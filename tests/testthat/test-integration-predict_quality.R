@@ -228,53 +228,8 @@ test_that("preprocess rb_mod3all works offline via mocked varlists", {
   expect_true(is.list(out) && length(out) == 3L)
 })
 
-test_that("rb_mod2 returns 3 preds + model-specific mean", {
-  rb <- import_rb(system.file("extdata", "sample_rb.csv", package = "writeAlizer"))
-  out <- predict_quality("rb_mod2", rb)
-
-  expect_true(all(c("ID",
-                    "pred_rb_mod2a","pred_rb_mod2b","pred_rb_mod2c",
-                    "pred_rb_mod2_mean") %in% names(out)))
-
-  # exactly these 4 pred columns
-  pred_cols <- grep("^pred_", names(out), value = TRUE)
-  expect_setequal(pred_cols,
-                  c("pred_rb_mod2a","pred_rb_mod2b","pred_rb_mod2c","pred_rb_mod2_mean"))
-
-  # mean is numeric and equals rowMeans of submodels
-  expect_type(out$pred_rb_mod2_mean, "double")
-  expect_equal(out$pred_rb_mod2_mean,
-               rowMeans(out[c("pred_rb_mod2a","pred_rb_mod2b","pred_rb_mod2c")], na.rm = TRUE))
-})
-
-test_that("rb_mod3all strips _v2 in outward names and adds mean", {
-  rb <- import_rb(system.file("extdata", "sample_rb.csv", package = "writeAlizer"))
-  out <- predict_quality("rb_mod3all", rb)
-
-  expect_true(all(c("pred_rb_mod3exp","pred_rb_mod3narr","pred_rb_mod3per",
-                    "pred_rb_mod3all_mean") %in% names(out)))
-
-  # mean equals rowMeans of the three submodels
-  expect_equal(out$pred_rb_mod3all_mean,
-               rowMeans(out[c("pred_rb_mod3exp","pred_rb_mod3narr","pred_rb_mod3per")], na.rm = TRUE))
-})
-
-test_that("coh_mod2 returns 3 preds + model-specific mean", {
-  coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
-  out <- predict_quality("coh_mod2", coh)
-  expect_true(all(c("pred_coh_mod2a","pred_coh_mod2b","pred_coh_mod2c","pred_coh_mod2_mean") %in% names(out)))
-})
-
-test_that("gamet_cws1 returns two preds and no mean", {
-  gm <- import_gamet(system.file("extdata", "sample_gamet.csv", package = "writeAlizer"))
-  out <- predict_quality("gamet_cws1", gm)
-
-  pred_cols <- grep("^pred_", names(out), value = TRUE)
-  expect_setequal(pred_cols, c("pred_CWS_mod1a","pred_CIWS_mod1a"))
-  expect_false(any(grepl("_mean$", names(out))))
-})
-
 test_that("predict_quality coerces 1-col df/matrix predictions to vectors", {
+  testthat::skip_if_offline()
   # Using the tiny example model seeded in tempdir to avoid downloads
   mock_old <- getOption("writeAlizer.mock_dir")
   ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())

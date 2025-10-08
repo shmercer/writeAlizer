@@ -12,8 +12,8 @@
 #' # Inspect the cache directory (no side effects)
 #' wa_cache_dir()
 #'
-#' # Safe demo: redirect cache to a temp folder, create a file, then clear it
 #' \dontshow{
+#' # Safe demo: redirect cache to a temp folder, create a file, then clear it
 #' old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
 #' tmp <- file.path(tempdir(), "wa_cache_demo"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 #' options(writeAlizer.cache_dir = tmp)

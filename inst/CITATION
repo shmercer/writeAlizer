@@ -1,8 +1,20 @@
+year <- "2025"
+meta <- utils::packageDescription("writeAlizer")
+ver  <- meta$Version
+
+citHeader("To cite writeAlizer, use:")
+
 bibentry(
   bibtype = "Manual",
-  title = "{writeAlizer}: Generate predicted writing quality scores",
-  author = person("Sterett H.", "Mercer"),
-  year = "2025",
-  note = "R package version 1.6.6",
-  url = "https://cran.r-project.org/package=writeAlizer"
+  title   = "writeAlizer: Generate predicted writing quality scores",
+  author  = person(given = c("Sterett", "H."), family = "Mercer"),
+  year    = year,
+  note    = sprintf("R package version %s", ver),
+  doi     = "10.32614/CRAN.package.writeAlizer",
+  url     = "https://doi.org/10.32614/CRAN.package.writeAlizer",
+  organization = "Comprehensive R Archive Network",
+  textVersion = sprintf(
+    "Mercer, S. H. (%s). writeAlizer: Generate predicted writing quality scores (Version %s) [R package; Computer software]. Comprehensive R Archive Network. https://doi.org/10.32614/CRAN.package.writeAlizer",
+    year, ver
+  )
 )

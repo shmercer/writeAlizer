@@ -47,8 +47,13 @@ To install the development version of **writeAlizer**:
 ```r
 # From GitHub
 
-# install.packages("pak")
+#using the pak package
+#install.packages("pak")
 pak::pak("shmercer/writeAlizer")
+
+#or using devtools
+#install.packages("devtools")
+devtools::install_github("shmercer/writeAlizer")
 
 library(writeAlizer)
 ```

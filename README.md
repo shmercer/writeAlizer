@@ -41,8 +41,13 @@ help("writeAlizer")
 ``` r
 # To install from GitHub
 
+#using the pak package
 #install.packages("pak")
 pak::pak("shmercer/writeAlizer")
+
+#or using devtools
+#install.packages("devtools")
+devtools::install_github("shmercer/writeAlizer")
 
 ```
 

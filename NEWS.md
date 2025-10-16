@@ -1,4 +1,4 @@
-# writeAlizer 1.6.6 (2025-10-06)
+# writeAlizer 1.7.0 (2025-10-20)
 
 ## Error handling & classes
 - Introduced structured errors via `rlang::abort()`:

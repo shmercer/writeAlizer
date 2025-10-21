@@ -2,7 +2,7 @@ Type: Package
 Package: writeAlizer
 Title: Generate Predicted Writing Quality Scores
 Version: 1.7.0
-Date: 2025-10-20
+Date: 2025-10-21
 Authors@R:
     person("Sterett H.", "Mercer", , "sterett.mercer@ubc.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7940-4221"))

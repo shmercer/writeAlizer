@@ -5,6 +5,8 @@ withr::local_options(writeAlizer.mock_dir = {
   if (!is.null(ex)) ex else old
 })
 
+withr::local_envvar(R_USER_CACHE_DIR = tempdir())
+
 testthat::test_that("predict_quality runs for all model keys with mocked artifacts", {
   # Keep tests offline & use a temp mock dir
   tmp <- withr::local_tempdir()

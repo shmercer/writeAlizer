@@ -177,7 +177,7 @@ Mercer, S. H., Tsiriotakis, I., Kwon, E., & Cannon, J. E. (2019, June). _[Evalua
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for details.
+This project is licensed under the MIT License. See [License](https://github.com/shmercer/writeAlizer/blob/main/LICENSE.md) for details.
 
 ## Acknowledgments
 

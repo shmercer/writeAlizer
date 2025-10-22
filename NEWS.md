@@ -1,3 +1,11 @@
+# writeAlizer 1.7.1 (2025-10-22)
+
+## CRAN compliance and offline example guard
+- Fixed `predict_quality()` example to run deterministically when `options(writeAlizer.offline = TRUE)`.
+- Example now seeds a local `'example'` model with `wa_seed_example_models("example", dir = tempdir())` and restores prior options after cleanup.
+- Offline runs now fully skip remote file downloads, avoiding spurious errors during `R CMD check --as-cran --run-donttest`.
+- No user-facing API changes.
+
 # writeAlizer 1.7.0 (2025-10-21)
 
 ## Error handling & classes

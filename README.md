@@ -6,7 +6,7 @@
   [![CRAN status](https://www.r-pkg.org/badges/version/writeAlizer)](https://CRAN.R-project.org/package=writeAlizer)
   [![R-CMD-check.yaml](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml)
   [![codecov](https://codecov.io/gh/shmercer/writeAlizer/branch/master/graph/badge.svg)](https://app.codecov.io/gh/shmercer/writeAlizer)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/shmercer/writeAlizer/blob/master/LICENSE.md)
 <!-- badges: end -->
 
 This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the [repository wiki](https://github.com/shmercer/writeAlizer/wiki).

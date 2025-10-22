@@ -1,32 +1,38 @@
 `%||%` <- function(x, y) if (is.null(x) || length(x) == 0 || is.na(x)) y else x
 
-# Safely read DESCRIPTION whether installed or not
-read_meta <- function() {
-  if (file.exists("DESCRIPTION")) {
-    as.list(read.dcf("DESCRIPTION")[1, ])
-  } else {
-    utils::packageDescription("writeAlizer", drop = FALSE)
+read_meta_from_source <- function() {
+  # Try typical locations depending on working directory
+  cands <- c("DESCRIPTION", file.path("..", "DESCRIPTION"))
+  for (p in cands) {
+    if (file.exists(p)) {
+      dcf <- tryCatch(read.dcf(p), error = function(e) NULL)
+      if (is.null(dcf) || !is.matrix(dcf) || nrow(dcf) < 1) next
+      return(as.list(dcf[1, , drop = FALSE]))
+    }
   }
+  # No DESCRIPTION available (very rare in CRAN runs), return empty list silently
+  list()
 }
 
-meta <- read_meta()
-pkg  <- meta[["Package"]]  %||% "writeAlizer"
-ver  <- meta[["Version"]]  %||% "0.0.0"
-date <- meta[["Date"]]     %||% format(Sys.Date(), "%Y-%m-%d")
+meta <- read_meta_from_source()
+
+pkg  <- meta[["Package"]] %||% "writeAlizer"
+ver  <- meta[["Version"]] %||% "0.0.0"
+date <- meta[["Date"]]    %||% format(Sys.Date(), "%Y-%m-%d")
 year <- substr(date, 1, 4)
 
-citHeader(sprintf("To cite %s, use:", pkg))
+utils::citHeader(sprintf("To cite %s, use:", pkg))
 
-bibentry(
-  bibtype       = "Manual",
-  title         = "writeAlizer: Generate predicted writing quality scores",
-  author        = person(given = c("Sterett", "H."), family = "Mercer"),
-  year          = year,
-  note          = sprintf("R package version %s", ver),
-  doi           = "10.32614/CRAN.package.writeAlizer",
-  url           = "https://doi.org/10.32614/CRAN.package.writeAlizer",
-  organization  = "Comprehensive R Archive Network",
-  textVersion   = sprintf(
+utils::bibentry(
+  bibtype      = "Manual",
+  title        = "writeAlizer: Generate predicted writing quality scores",
+  author       = utils::person(given = c("Sterett", "H."), family = "Mercer"),
+  year         = year,
+  note         = sprintf("R package version %s", ver),
+  doi          = "10.32614/CRAN.package.writeAlizer",
+  url          = "https://doi.org/10.32614/CRAN.package.writeAlizer",
+  organization = "Comprehensive R Archive Network",
+  textVersion  = sprintf(
     "Mercer, S. H. (%s). writeAlizer: Generate predicted writing quality scores (Version %s) [R package; Computer software]. Comprehensive R Archive Network. https://doi.org/10.32614/CRAN.package.writeAlizer",
     year, ver
   )

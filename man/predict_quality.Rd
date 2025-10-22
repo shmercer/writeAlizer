@@ -41,6 +41,11 @@ cleaned up at the end of the \code{\\examples{}}.
 }
 \examples{
 # Fast, offline example: seed a tiny 'example' model and predict (no downloads)
+# Force offline mode for CRAN and automated checks
+old_offline <- getOption("writeAlizer.offline")
+options(writeAlizer.offline = TRUE)
+on.exit(options(writeAlizer.offline = old_offline), add = TRUE)
+
 coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer")
 coh <- import_coh(coh_path)
 
@@ -63,6 +68,8 @@ if (is.character(ex_dir) && nzchar(ex_dir) && dir.exists(ex_dir)) {
 
 # More complete demos (skipped on CRAN to keep checks fast)
 \donttest{
+# If offline mode is set (e.g., by the example guard for CRAN), skip networked demos.
+if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
   ### Example 1: ReaderBench output file
   file_path1 <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
   rb_file <- import_rb(file_path1)
@@ -80,6 +87,9 @@ if (is.character(ex_dir) && nzchar(ex_dir) && dir.exists(ex_dir)) {
   gam_file <- import_gamet(file_path3)
   gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
   head(gamet_CWS_CIWS)
+} else {
+  # Skipped because writeAlizer.offline = TRUE (e.g., on CRAN)
+}
 }
 }
 \seealso{

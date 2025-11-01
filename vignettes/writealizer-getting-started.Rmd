@@ -27,6 +27,8 @@ knitr::opts_chunk$set(
 The **writeAlizer** package downloads predictive models for writing quality and written-expression CBM scores and applies these models to your data.
 More details on model development can be found in the **writeAlizer** [wiki](https://github.com/shmercer/writeAlizer/wiki).
 
+---
+
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
 
@@ -38,10 +40,12 @@ writeAlizer accepts the following output files as inputs:
 
 The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
 
+---
+
 ### File Setup
 ReaderBench, Coh-Metrix, and GAMET all accept a folder of text files (.txt) as inputs, with the filenames read as ID variables for the writing samples. 
 
-#### File Format and Windows-Specific Encodings
+#### File Format and Windows-Specific Encodings {#encoding}
 
 To avoid encoding issues in R and other programs, always save text files as UTF-8. Text files created on Windows systems may sometimes use legacy encodings such as **Windows-1252** (also known as **CP1252**) rather than UTF-8.  
 
@@ -94,6 +98,8 @@ txt <- readLines("example.txt")
 txt_utf8 <- iconv(txt, from = "Windows-1252", to = "UTF-8")
 writeLines(txt_utf8, "example_utf8.txt", useBytes = TRUE)
 ```
+
+---
 
 ### Processing Files in ReaderBench
 
@@ -163,6 +169,36 @@ Copy this full path. You’ll need it in the next step.
 java -version
 ```
 
+---
+
+### Processing Files in Coh-Metrix
+
+1. Request a copy of `Coh-Metrix` here (available for research purposes): <https://soletlab.asu.edu/coh-metrix/>
+
+2. Run `CohMetrix3.exe` in the Release folder.
+
+3. Click on `Coh-Metrix`.
+
+![Figure 4. Main Coh-Metrix Window.](CohMetrix1.png)
+
+4. Select the folder containing your `.txt` files to be processed and click on `Run`.
+
+![Figure 5. Coh-Metrix Processing Window.](CohMetrix2.png)
+
+---
+
+### Processing Files in GAMET
+
+1. Download the GAMET program and manual from: <https://www.linguisticanalysistools.org/gamet.html>
+
+2. After loading, 'Select All' error indices and follow the on-screen directions.
+
+![Figure 6. GAMET Processing Window.](GAMET1.png)
+
+3. If some `.txt` files do not process, double check [file encoding](#encoding).
+
+---
+
 ## Installing writeAlizer
 **writeAlizer** is available on CRAN.
 ```r
@@ -186,8 +222,10 @@ devtools::install_github("shmercer/writeAlizer")
 library(writeAlizer)
 ```
 
+---
+
 ### Optional model dependencies
-Some model families require packages listed in **Suggests**. Discover what you need locally:
+Running models requires packages listed in **Suggests**. Discover what you need:
 
 ```r
 md <- writeAlizer::model_deps()
@@ -195,10 +233,18 @@ md$required   # packages already available
 md$missing    # packages you may want to install for full functionality
 ```
 
+`model_deps()` prints a helpful message. If any packages are missing, it includes a copy-paste command like:
+
+```r
+Missing required packages: glmnet, ranger
+Install them manually, e.g.:
+  install.packages(c("glmnet", "ranger"))
+```
+
 ---
 
 ## Quick start
-This minimal example shows how to import a small sample dataset that ships with the package and (optionally) run a model you have available locally.
+This minimal example shows how to import a small sample dataset that ships with the package and run a model.
 
 ```r
 # Load a small ReaderBench sample shipped with the package
@@ -214,23 +260,40 @@ head(quality)
 ---
 
 ## Importing data
-**About the examples below:** each code snippet loads a **small example CSV** that ships with the package using `system.file(...)`. Replace with your own files when running analyses on your data.
-`writeAlizer` expects tidy CSV outputs from common text analysis tools. Use the matching import helper for each format:
+**About the examples below:** each code snippet loads a **small example CSV** that ships with the package using `system.file(...)`. Replace with paths to your own files when running analyses on your data.
+`writeAlizer` expects CSV outputs from ReaderBench, Coh-Metrix, and/or GAMET as inputs. Use the matching import helper for each format:
 
 ```r
-# ReaderBench CSV	rb_path  <- system.file("extdata", "sample_rb.csv",    package = "writeAlizer")
+# ReaderBench CSV	
+rb_path  <- system.file("extdata", "sample_rb.csv",    package = "writeAlizer")
 rb  <- import_rb(rb_path)
 
-# Coh‑Metrix CSV	coh_path <- system.file("extdata", "sample_coh.csv",   package = "writeAlizer")
+# Coh‑Metrix CSV	
+coh_path <- system.file("extdata", "sample_coh.csv",   package = "writeAlizer")
 coh <- import_coh(coh_path)
 
-# GAMET CSV      	gam_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
+# GAMET CSV      	
+gam_path <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
 gam <- import_gamet(gam_path)
 
 # Peek at structure
 str(rb)
 str(coh)
 str(gam)
+
+# ------------------------------------------------------------------
+# Example: loading your own files instead of the built-in samples
+# ------------------------------------------------------------------
+
+# Example file paths (replace with your actual paths)
+# rb_path  <- "C:/Users/YourName/Documents/Files/ReaderBench_output.csv"
+# coh_path <- "C:/Users/YourName/Documents/Files/CohMetrix_output.csv"
+# gam_path <- "C:/Users/YourName/Documents/Files/GAMET_output.csv"
+
+# Import your own CSVs
+# rb  <- import_rb(rb_path)
+# coh <- import_coh(coh_path)
+# gam <- import_gamet(gam_path)
 ```
 
 All three imports return a `data.frame` with an `ID` column; `predict_quality()` relies on that `ID` to keep rows aligned in outputs.
@@ -265,7 +328,7 @@ head(gamet_scores)
 
 ---
 
-## Model keys at a glance (with references)
+## Available models at a glance (with references)
 Use this table to pick a model and keep track of published uses. Fill the **References** column with citations (e.g., “Smith & Lee, 2022; doi:…”) as you go.
 
 | Model key        | Data source / import | Target(s) predicted                  | Output columns (typical)                       | Notes/References (published uses) |
@@ -285,6 +348,8 @@ Use this table to pick a model and keep track of published uses. Fill the **Refe
 | `gamet_cws1`     | GAMET → `import_gamet()`     | **CWS** and **CIWS**                   | `ID`, `pred_cws`, `pred_ciws`         | [@Matta2025; @Mercer2021] |
 | `example`        | Any (demo)                   | Minimal demo score(s)                  | `ID`, `pred_example`, `score_mean?`   | Offline, CRAN‑safe mock; seeded via `wa_seed_example_models("example")`|
 
+---
+
 ## Working with the model download cache
 The package downloads and caches model artifacts the first time you use a model.
 
@@ -295,5 +360,7 @@ writeAlizer::wa_cache_dir()
 # Clear cache if needed 
 writeAlizer::wa_cache_clear()
 ```
+
 ---
 
+## References

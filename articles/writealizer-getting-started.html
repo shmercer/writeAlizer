@@ -80,6 +80,7 @@ Coh‑Metrix, GAMET), and running predictive models with
 for writing quality and written-expression CBM scores and applies these
 models to your data. More details on model development can be found in
 the <strong>writeAlizer</strong> <a href="https://github.com/shmercer/writeAlizer/wiki" class="external-link">wiki</a>.</p>
+<hr>
 <div class="section level3">
 <h3 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
 </h3>
@@ -106,6 +107,7 @@ CSVs, the original <code>File.name</code> column is renamed to
 <code>ID</code> and stored as character. Numeric IDs are fine too, but
 they are not coerced to numeric to avoid losing leading zeros or other
 formatting.</p>
+<hr>
 </div>
 <div class="section level3">
 <h3 id="file-setup">File Setup<a class="anchor" aria-label="anchor" href="#file-setup"></a>
@@ -114,7 +116,7 @@ formatting.</p>
 (.txt) as inputs, with the filenames read as ID variables for the
 writing samples.</p>
 <div class="section level4">
-<h4 id="file-format-and-windows-specific-encodings">File Format and Windows-Specific Encodings<a class="anchor" aria-label="anchor" href="#file-format-and-windows-specific-encodings"></a>
+<h4 id="encoding">File Format and Windows-Specific Encodings<a class="anchor" aria-label="anchor" href="#encoding"></a>
 </h4>
 <p>To avoid encoding issues in R and other programs, always save text
 files as UTF-8. Text files created on Windows systems may sometimes use
@@ -214,6 +216,7 @@ convert it safely to UTF-8:</p>
 <code class="sourceCode R"><span><span class="va">txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="st">"example.txt"</span><span class="op">)</span></span>
 <span><span class="va">txt_utf8</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/iconv.html" class="external-link">iconv</a></span><span class="op">(</span><span class="va">txt</span>, from <span class="op">=</span> <span class="st">"Windows-1252"</span>, to <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">txt_utf8</span>, <span class="st">"example_utf8.txt"</span>, useBytes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<hr>
 </div>
 </div>
 <div class="section level3">
@@ -309,7 +312,45 @@ select the variable named <strong>Path</strong>, then click
 command:</li>
 </ol>
 <div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">java</span> <span class="at">-version</span></span></code></pre></div>
+<hr>
 </div>
+</div>
+<div class="section level3">
+<h3 id="processing-files-in-coh-metrix">Processing Files in Coh-Metrix<a class="anchor" aria-label="anchor" href="#processing-files-in-coh-metrix"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li><p>Request a copy of <code>Coh-Metrix</code> here (available for
+research purposes): <a href="https://soletlab.asu.edu/coh-metrix/" class="external-link uri">https://soletlab.asu.edu/coh-metrix/</a></p></li>
+<li><p>Run <code>CohMetrix3.exe</code> in the Release folder.</p></li>
+<li><p>Click on <code>Coh-Metrix</code>.</p></li>
+</ol>
+<div class="float">
+<img src="CohMetrix1.png" alt="Figure 4. Main Coh-Metrix Window."><div class="figcaption">Figure 4. Main Coh-Metrix Window.</div>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Select the folder containing your <code>.txt</code> files to be
+processed and click on <code>Run</code>.</li>
+</ol>
+<div class="float">
+<img src="CohMetrix2.png" alt="Figure 5. Coh-Metrix Processing Window."><div class="figcaption">Figure 5. Coh-Metrix Processing Window.</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="processing-files-in-gamet">Processing Files in GAMET<a class="anchor" aria-label="anchor" href="#processing-files-in-gamet"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li><p>Download the GAMET program and manual from: <a href="https://www.linguisticanalysistools.org/gamet.html" class="external-link uri">https://www.linguisticanalysistools.org/gamet.html</a></p></li>
+<li><p>After loading, ‘Select All’ error indices and follow the
+on-screen directions.</p></li>
+</ol>
+<div class="float">
+<img src="GAMET1.png" alt="Figure 6. GAMET Processing Window."><div class="figcaption">Figure 6. GAMET Processing Window.</div>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>If some <code>.txt</code> files do not process, double check <a href="#encoding">file encoding</a>.</li>
+</ol>
+<hr>
 </div>
 </div>
 <div class="section level2">
@@ -334,15 +375,21 @@ command:</li>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"shmercer/writeAlizer"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shmercer/writeAlizer/" class="external-link">writeAlizer</a></span><span class="op">)</span></span></code></pre></div>
+<hr>
 <div class="section level3">
 <h3 id="optional-model-dependencies">Optional model dependencies<a class="anchor" aria-label="anchor" href="#optional-model-dependencies"></a>
 </h3>
-<p>Some model families require packages listed in
-<strong>Suggests</strong>. Discover what you need locally:</p>
+<p>Running models requires packages listed in <strong>Suggests</strong>.
+Discover what you need:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">md</span> <span class="op">&lt;-</span> <span class="fu">writeAlizer</span><span class="fu">::</span><span class="fu"><a href="../reference/model_deps.html">model_deps</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">md</span><span class="op">$</span><span class="va">required</span>   <span class="co"># packages already available</span></span>
 <span><span class="va">md</span><span class="op">$</span><span class="va">missing</span>    <span class="co"># packages you may want to install for full functionality</span></span></code></pre></div>
+<p><code><a href="../reference/model_deps.html">model_deps()</a></code> prints a helpful message. If any packages
+are missing, it includes a copy-paste command like:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>Missing required packages<span class="sc">:</span> glmnet, ranger</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>Install them manually, e.g.<span class="sc">:</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"glmnet"</span>, <span class="st">"ranger"</span>))</span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -350,9 +397,8 @@ command:</li>
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>This minimal example shows how to import a small sample dataset that
-ships with the package and (optionally) run a model you have available
-locally.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+ships with the package and run a model.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load a small ReaderBench sample shipped with the package</span></span>
 <span><span class="va">rb_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_rb.csv"</span>, package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span><span class="va">rb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="va">rb_path</span><span class="op">)</span></span>
@@ -368,24 +414,41 @@ locally.</p>
 </h2>
 <p><strong>About the examples below:</strong> each code snippet loads a
 <strong>small example CSV</strong> that ships with the package using
-<code>system.file(...)</code>. Replace with your own files when running
-analyses on your data. <code>writeAlizer</code> expects tidy CSV outputs
-from common text analysis tools. Use the matching import helper for each
-format:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># ReaderBench CSV   rb_path  &lt;- system.file("extdata", "sample_rb.csv",    package = "writeAlizer")</span></span>
+<code>system.file(...)</code>. Replace with paths to your own files when
+running analyses on your data. <code>writeAlizer</code> expects CSV
+outputs from ReaderBench, Coh-Metrix, and/or GAMET as inputs. Use the
+matching import helper for each format:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ReaderBench CSV   </span></span>
+<span><span class="va">rb_path</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_rb.csv"</span>,    package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span><span class="va">rb</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="va">rb_path</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Coh‑Metrix CSV    coh_path &lt;- system.file("extdata", "sample_coh.csv",   package = "writeAlizer")</span></span>
+<span><span class="co"># Coh‑Metrix CSV    </span></span>
+<span><span class="va">coh_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_coh.csv"</span>,   package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span><span class="va">coh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_coh.html">import_coh</a></span><span class="op">(</span><span class="va">coh_path</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># GAMET CSV         gam_path &lt;- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")</span></span>
+<span><span class="co"># GAMET CSV         </span></span>
+<span><span class="va">gam_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_gamet.csv"</span>, package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span><span class="va">gam</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_gamet.html">import_gamet</a></span><span class="op">(</span><span class="va">gam_path</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Peek at structure</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">rb</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">coh</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">gam</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">gam</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># ------------------------------------------------------------------</span></span>
+<span><span class="co"># Example: loading your own files instead of the built-in samples</span></span>
+<span><span class="co"># ------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="co"># Example file paths (replace with your actual paths)</span></span>
+<span><span class="co"># rb_path  &lt;- "C:/Users/YourName/Documents/Files/ReaderBench_output.csv"</span></span>
+<span><span class="co"># coh_path &lt;- "C:/Users/YourName/Documents/Files/CohMetrix_output.csv"</span></span>
+<span><span class="co"># gam_path &lt;- "C:/Users/YourName/Documents/Files/GAMET_output.csv"</span></span>
+<span></span>
+<span><span class="co"># Import your own CSVs</span></span>
+<span><span class="co"># rb  &lt;- import_rb(rb_path)</span></span>
+<span><span class="co"># coh &lt;- import_coh(coh_path)</span></span>
+<span><span class="co"># gam &lt;- import_gamet(gam_path)</span></span></code></pre></div>
 <p>All three imports return a <code>data.frame</code> with an
 <code>ID</code> column; <code><a href="../reference/predict_quality.html">predict_quality()</a></code> relies on that
 <code>ID</code> to keep rows aligned in outputs.</p>
@@ -418,7 +481,7 @@ built‑in model families:</p>
 <div class="section level3">
 <h3 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ReaderBench -&gt; holistic quality</span></span>
 <span><span class="va">rb_quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_quality.html">predict_quality</a></span><span class="op">(</span><span class="st">"rb_mod3all"</span>, <span class="va">rb</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rb_quality</span><span class="op">)</span></span>
@@ -440,7 +503,7 @@ quality.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="model-keys-at-a-glance-with-references">Model keys at a glance (with references)<a class="anchor" aria-label="anchor" href="#model-keys-at-a-glance-with-references"></a>
+<h2 id="available-models-at-a-glance-with-references">Available models at a glance (with references)<a class="anchor" aria-label="anchor" href="#available-models-at-a-glance-with-references"></a>
 </h2>
 <p>Use this table to pick a model and keep track of published uses. Fill
 the <strong>References</strong> column with citations (e.g., “Smith
@@ -625,19 +688,24 @@ multi-paragraph compositions. <span class="citation">(Matta et al.,
 </tr>
 </tbody>
 </table>
+<hr>
 </div>
 <div class="section level2">
 <h2 id="working-with-the-model-download-cache">Working with the model download cache<a class="anchor" aria-label="anchor" href="#working-with-the-model-download-cache"></a>
 </h2>
 <p>The package downloads and caches model artifacts the first time you
 use a model.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># See where model artifacts are cached</span></span>
 <span><span class="fu">writeAlizer</span><span class="fu">::</span><span class="fu"><a href="../reference/wa_cache_dir.html">wa_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Clear cache if needed </span></span>
 <span><span class="fu">writeAlizer</span><span class="fu">::</span><span class="fu"><a href="../reference/wa_cache_clear.html">wa_cache_clear</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-Keller-Margulis2022" class="csl-entry">
 Keller-Margulis, M. A., Mercer, S. H., &amp; Matta, M. (2021). Validity

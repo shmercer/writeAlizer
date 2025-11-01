@@ -18,6 +18,12 @@ The version history of writeAlizer is available in the package [NEWS.md](https:/
 
 ## Getting Started
 
+For a step‑by‑step walkthrough of installing and using **writeAlizer**, see the online tutorial:
+<https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html>
+
+Documentation of **writeAlizer** functions can be found here:
+<https://shmercer.github.io/writeAlizer/reference/index.html>
+
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
  1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Windows Binaries](https://osf.io/wyq4t)

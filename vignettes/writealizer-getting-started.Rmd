@@ -29,13 +29,141 @@ More details on model development can be found in the **writeAlizer** [wiki](htt
 
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Windows Binaries](https://osf.io/wyq4t)
- 2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format).
- 3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format).
+
+1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Windows Binaries](https://osf.io/wyq4t)
+ 
+2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format). [Request a Copy of Coh-Metrix](https://soletlab.asu.edu/coh-metrix/)
+ 
+3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format). [Download for Windows and Mac](https://www.linguisticanalysistools.org/gamet.html)
 
 The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
 
-## Installation
+### File Setup
+ReaderBench, Coh-Metrix, and GAMET all accept a folder of text files (.txt) as inputs, with the filenames read as ID variables for the writing samples. 
+
+#### File Format and Windows-Specific Encodings
+
+To avoid encoding issues in R and other programs, always save text files as UTF-8. Text files created on Windows systems may sometimes use legacy encodings such as **Windows-1252** (also known as **CP1252**) rather than UTF-8.  
+
+These encodings include typographic punctuation and symbols that are not part of standard ASCII and can cause problems when read on macOS or Linux systems, or by R functions that assume UTF-8 input.
+
+Typical problematic characters include:
+
+| Character | Description | Example |
+|------------|--------------|----------|
+| `‘` `’` | Curly (typographic) single quotes | e.g., `It’s` instead of `It's` |
+| `“` `”` | Curly double quotes | e.g., `“Hello”` instead of `"Hello"` |
+| `–` | En dash | e.g., `2010–2020` |
+| `—` | Em dash | e.g., `Wait—what?` |
+| `…` | Ellipsis | e.g., `and so on…` |
+| `™`, `€`, `•` | Trademark, Euro, bullet symbols | e.g., `Product™`, `€100`, `• Item` |
+
+Programs expecting UTF-8 may display these characters incorrectly (as “garbled” symbols) or fail to read the file entirely.
+
+#### Detecting File Encoding
+
+You can use the `readr` package to guess the encoding of a text file:
+
+```r
+library(readr)
+
+# Detect the likely encoding of a text file
+guess_encoding("example.txt")
+
+# A tibble: 2 × 2
+  encoding   confidence
+  <chr>           <dbl>
+1 UTF-8            0.95
+2 windows-1252     0.05
+```
+
+#### Converting to UTF-8
+
+If the file uses Windows-1252 or another legacy encoding, you can convert it safely to UTF-8:
+
+```r
+# Read and re-encode a text file
+txt <- readLines("example.txt", encoding = "Windows-1252")
+writeLines(txt, "example_utf8.txt", useBytes = TRUE)
+```
+
+Alternatively, you can use iconv() directly:
+
+```r
+txt <- readLines("example.txt")
+txt_utf8 <- iconv(txt, from = "Windows-1252", to = "UTF-8")
+writeLines(txt_utf8, "example_utf8.txt", useBytes = TRUE)
+```
+
+### Processing Files in ReaderBench
+
+1. Download the [Windows binary](https://osf.io/wyq4t) or [build from source](https://github.com/readerbench/readerbench-java)
+
+2. ReaderBench requires Java to run. The Java SE Runtime Environment can be downloaded [here](https://www.oracle.com/ca-en/java/technologies/javase/javase8u211-later-archive-downloads.html). After Java is installed the Java path must be set in Windows. To check if the Java path is set, open `Command Prompt` (cmd.exe), and run the following command:
+
+```bash
+java -version
+```
+You should see output similar to:
+
+```bash
+java version "1.8.0_451"
+Java(TM) SE Runtime Environment (build 1.8.0_451-b10)
+Java HotSpot(TM) 64-Bit Server VM (build 25.451-b10, mixed mode)
+```
+If no Java version is returned, follow the [instructions below for setting the Java Path](#java-path).
+
+3. Unzip and open the ReaderBench folder. Click on 'run.bat'. A screen similar to the one below should appear. If it appears briefly and then closes, [double check that the Java path is specified correctly](#java-path).
+
+![Figure 1. ReaderBench startup log in Windows Command Prompt.](ReaderBench1.png)
+
+4. Click on Textual Complexity -> Run Textual Complexity Indices
+
+![Figure 2. ReaderBench Textual Complexity Window.](ReaderBench2.png)
+
+5. Specify the path to the folder containing your writing sample .txt files.
+
+![Figure 3. ReaderBench Run Indices Window.](ReaderBench3.png)
+
+6. The output .csv will appear in that same folder after processing is complete.
+
+#### Setting the Java Path in Windows {#java-path}
+
+1. Open **File Explorer** and navigate to (or the directory Java is installed in):
+
+```bash
+C:\Program Files\Java\
+```
+
+2. Inside, locate your Java folder — for example: 
+
+```bash
+C:\Program Files\Java\jre1.8.0_451
+```
+
+Copy this full path. You’ll need it in the next step.
+
+3. Set `JAVA_HOME` (via Windows Settings)
+
+- Press **Windows + R**, type `sysdm.cpl`, and press **Enter**.  
+- Go to the **Advanced** tab → click **Environment Variables**.  
+- Under **System variables**, click **New...**
+-- **Variable name:** `JAVA_HOME`
+-- **Variable value:** paste your Java path (e.g., `C:\Program Files\Java\jre1.8.0_451`)
+- Click **OK** to save.
+
+4. Add Java to your system Path
+
+- In the same **Environment Variables** window, find and select the variable named **Path**, then click **Edit**.  
+- Click **New**, and add the following entry: %JAVA_HOME%\bin
+
+5. In **Command Prompt**, check the Java version with this command: 
+
+```bash
+java -version
+```
+
+## Installing writeAlizer
 **writeAlizer** is available on CRAN.
 ```r
 install.packages("writeAlizer")

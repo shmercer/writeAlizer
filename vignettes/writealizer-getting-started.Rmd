@@ -161,12 +161,17 @@ Copy this full path. You’ll need it in the next step.
 4. Add Java to your system Path
 
 - In the same **Environment Variables** window, find and select the variable named **Path**, then click **Edit**.  
-- Click **New**, and add the following entry: %JAVA_HOME%\bin
+- Click **New**, and add the following entry: `%JAVA_HOME%\bin`
 
 5. In **Command Prompt**, check the Java version with this command: 
 
 ```bash
 java -version
+```
+Also check your environment variable. It should print your Java installation directory.
+
+```bash
+echo %JAVA_HOME%
 ```
 
 ---

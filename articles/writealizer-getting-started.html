@@ -305,13 +305,17 @@ select the variable named <strong>Path</strong>, then click
 <strong>Edit</strong>.<br>
 </li>
 <li>Click <strong>New</strong>, and add the following entry:
-%JAVA_HOME%</li>
+<code>%JAVA_HOME%\bin</code>
+</li>
 </ul>
 <ol start="5" style="list-style-type: decimal">
 <li>In <strong>Command Prompt</strong>, check the Java version with this
 command:</li>
 </ol>
 <div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">java</span> <span class="at">-version</span></span></code></pre></div>
+<p>Also check your environment variable. It should print your Java
+installation directory.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="bu">echo</span> %JAVA_HOME%</span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -357,13 +361,13 @@ on-screen directions.</p></li>
 <h2 id="installing-writealizer">Installing writeAlizer<a class="anchor" aria-label="anchor" href="#installing-writealizer"></a>
 </h2>
 <p><strong>writeAlizer</strong> is available on CRAN.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shmercer/writeAlizer/" class="external-link">writeAlizer</a></span><span class="op">)</span></span></code></pre></div>
 <p>To install the development version of
 <strong>writeAlizer</strong>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># From GitHub</span></span>
 <span></span>
 <span><span class="co">#using the pak package</span></span>
@@ -381,15 +385,15 @@ on-screen directions.</p></li>
 </h3>
 <p>Running models requires packages listed in <strong>Suggests</strong>.
 Discover what you need:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">md</span> <span class="op">&lt;-</span> <span class="fu">writeAlizer</span><span class="fu">::</span><span class="fu"><a href="../reference/model_deps.html">model_deps</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">md</span><span class="op">$</span><span class="va">required</span>   <span class="co"># packages already available</span></span>
 <span><span class="va">md</span><span class="op">$</span><span class="va">missing</span>    <span class="co"># packages you may want to install for full functionality</span></span></code></pre></div>
 <p><code><a href="../reference/model_deps.html">model_deps()</a></code> prints a helpful message. If any packages
 are missing, it includes a copy-paste command like:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>Missing required packages<span class="sc">:</span> glmnet, ranger</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>Install them manually, e.g.<span class="sc">:</span></span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"glmnet"</span>, <span class="st">"ranger"</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>Missing required packages<span class="sc">:</span> glmnet, ranger</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>Install them manually, e.g.<span class="sc">:</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"glmnet"</span>, <span class="st">"ranger"</span>))</span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -398,7 +402,7 @@ are missing, it includes a copy-paste command like:</p>
 </h2>
 <p>This minimal example shows how to import a small sample dataset that
 ships with the package and run a model.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load a small ReaderBench sample shipped with the package</span></span>
 <span><span class="va">rb_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_rb.csv"</span>, package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span><span class="va">rb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="va">rb_path</span><span class="op">)</span></span>
@@ -418,7 +422,7 @@ ships with the package and run a model.</p>
 running analyses on your data. <code>writeAlizer</code> expects CSV
 outputs from ReaderBench, Coh-Metrix, and/or GAMET as inputs. Use the
 matching import helper for each format:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ReaderBench CSV   </span></span>
 <span><span class="va">rb_path</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_rb.csv"</span>,    package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
 <span><span class="va">rb</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="va">rb_path</span><span class="op">)</span></span>
@@ -481,7 +485,7 @@ built‑in model families:</p>
 <div class="section level3">
 <h3 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ReaderBench -&gt; holistic quality</span></span>
 <span><span class="va">rb_quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_quality.html">predict_quality</a></span><span class="op">(</span><span class="st">"rb_mod3all"</span>, <span class="va">rb</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rb_quality</span><span class="op">)</span></span>
@@ -695,7 +699,7 @@ multi-paragraph compositions. <span class="citation">(Matta et al.,
 </h2>
 <p>The package downloads and caches model artifacts the first time you
 use a model.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># See where model artifacts are cached</span></span>
 <span><span class="fu">writeAlizer</span><span class="fu">::</span><span class="fu"><a href="../reference/wa_cache_dir.html">wa_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>

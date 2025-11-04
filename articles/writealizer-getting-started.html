@@ -78,8 +78,14 @@ Coh‑Metrix, GAMET), and running predictive models with
 </h2>
 <p>The <strong>writeAlizer</strong> package downloads predictive models
 for writing quality and written-expression CBM scores and applies these
-models to your data. More details on model development can be found in
-the <strong>writeAlizer</strong> <a href="https://github.com/shmercer/writeAlizer/wiki" class="external-link">wiki</a>.</p>
+models to your data. Predicted writing quality scores can be generated
+from ReaderBench or Coh-Metrix output files. Predicted written
+expression CBM scores, total words written (TWW), words spelled
+correctly (WSC), correct word sequences (CWS), and correct minus
+incorrect word sequences (CIWS), can be generated from GAMET output
+files.</p>
+<p>More details on model development can be found in the
+<strong>writeAlizer</strong> <a href="https://github.com/shmercer/writeAlizer/wiki" class="external-link">wiki</a>.</p>
 <hr>
 <div class="section level3">
 <h3 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
@@ -476,7 +482,8 @@ built‑in model families:</p>
 <code>coh_mod3all</code>
 </li>
 <li>
-<strong>GAMET</strong> (CWS/CIWS): <code>gamet_cws1</code>
+<strong>GAMET</strong> (TWW/WSC/CWS/CIWS):
+<code>gamet_cws1</code>
 </li>
 <li>
 <strong>Offline demo</strong>: <code>example</code>
@@ -494,7 +501,7 @@ built‑in model families:</p>
 <span><span class="va">coh_quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_quality.html">predict_quality</a></span><span class="op">(</span><span class="st">"coh_mod3all"</span>, <span class="va">coh</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">coh_quality</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># GAMET -&gt; CWS and CIWS (two prediction columns)</span></span>
+<span><span class="co"># GAMET -&gt; TWW, WSC, CWS, and CIWS</span></span>
 <span><span class="va">gamet_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_quality.html">predict_quality</a></span><span class="op">(</span><span class="st">"gamet_cws1"</span>, <span class="va">gam</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gamet_scores</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Return value.</strong> A <code>data.frame</code> with
@@ -670,7 +677,8 @@ multi-paragraph compositions. <span class="citation">(Matta et al.,
 <td>GAMET → <code><a href="../reference/import_gamet.html">import_gamet()</a></code>
 </td>
 <td>
-<strong>CWS</strong> and <strong>CIWS</strong>
+<strong>TWW</strong>, <strong>WSC</strong>, <strong>CWS</strong>,
+and <strong>CIWS</strong>
 </td>
 <td>
 <code>ID</code>, <code>pred_cws</code>, <code>pred_ciws</code>

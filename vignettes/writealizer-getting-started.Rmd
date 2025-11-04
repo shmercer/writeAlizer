@@ -24,7 +24,8 @@ knitr::opts_chunk$set(
 > A practical walkthrough of the key functions in **writeAlizer**: importing analysis outputs (ReaderBench, Coh‑Metrix, GAMET), and running predictive models with `predict_quality()`.
 
 ## Background
-The **writeAlizer** package downloads predictive models for writing quality and written-expression CBM scores and applies these models to your data.
+The **writeAlizer** package downloads predictive models for writing quality and written-expression CBM scores and applies these models to your data. Predicted writing quality scores can be generated from ReaderBench or Coh-Metrix output files. Predicted written expression CBM scores, total words written (TWW), words spelled correctly (WSC), correct word sequences (CWS), and correct minus incorrect word sequences (CIWS), can be generated from GAMET output files.
+
 More details on model development can be found in the **writeAlizer** [wiki](https://github.com/shmercer/writeAlizer/wiki).
 
 ---
@@ -310,7 +311,7 @@ Use `predict_quality(model, data)` to run one of the built‑in model families:
 
 - **ReaderBench**: `rb_mod1`, `rb_mod2`, `rb_mod3narr`, `rb_mod3exp`, `rb_mod3per`, `rb_mod3all`
 - **Coh‑Metrix**: `coh_mod1`, `coh_mod2`, `coh_mod3narr`, `coh_mod3exp`, `coh_mod3per`, `coh_mod3all`
-- **GAMET** (CWS/CIWS): `gamet_cws1`
+- **GAMET** (TWW/WSC/CWS/CIWS): `gamet_cws1`
 - **Offline demo**: `example`
 
 ### Examples
@@ -324,7 +325,7 @@ head(rb_quality)
 coh_quality <- predict_quality("coh_mod3all", coh)
 head(coh_quality)
 
-# GAMET -> CWS and CIWS (two prediction columns)
+# GAMET -> TWW, WSC, CWS, and CIWS
 gamet_scores <- predict_quality("gamet_cws1", gam)
 head(gamet_scores)
 ```
@@ -350,7 +351,7 @@ Use this table to pick a model and keep track of published uses. Fill the **Refe
 | `coh_mod3exp`    | Coh‑Metrix → `import_coh()`  | Expository genre quality               | `ID`, `pred_coh_mod3exp`, `score_mean`| — |
 | `coh_mod3per`    | Coh‑Metrix → `import_coh()`  | Persuasive genre quality               | `ID`, `pred_coh_mod3per`, `score_mean`| — |
 | `coh_mod3all`    | Coh‑Metrix → `import_coh()`  | Holistic (all‑genre) quality           | `ID`, `pred_coh_mod3all`, `score_mean`| *Recommended Coh-Metrix model for use |
-| `gamet_cws1`     | GAMET → `import_gamet()`     | **CWS** and **CIWS**                   | `ID`, `pred_cws`, `pred_ciws`         | [@Matta2025; @Mercer2021] |
+| `gamet_cws1`     | GAMET → `import_gamet()`     | **TWW**, **WSC**, **CWS**, and **CIWS** | `ID`, `pred_cws`, `pred_ciws`         | [@Matta2025; @Mercer2021] |
 | `example`        | Any (demo)                   | Minimal demo score(s)                  | `ID`, `pred_example`, `score_mean?`   | Offline, CRAN‑safe mock; seeded via `wa_seed_example_models("example")`|
 
 ---

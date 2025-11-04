@@ -94,7 +94,8 @@ preprocess <- function(model, data) {
 #' @description Run the specified model(s) on preprocessed data and return predictions.
 #' Apply scoring models to ReaderBench, Coh-Metrix, and/or GAMET files. Holistic
 #' writing quality can be generated from ReaderBench (model = 'rb_mod3all') or
-#' Coh-Metrix files (model = 'coh_mod3all'). Also, Correct Word Sequences and
+#' Coh-Metrix files (model = 'coh_mod3all'). Also, Total Words Written,
+#' Words Spelled Correctly, Correct Word Sequences, and
 #' Correct Minus Incorrect Word Sequences can be generated from a GAMET file
 #' (model = 'gamet_cws1').
 #' @importFrom utils write.table
@@ -107,8 +108,9 @@ preprocess <- function(model, data) {
 #' 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
 #' 'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per',
 #' or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
-#' and 'gamet_cws1' to generate Correct Word Sequences (CWS)
-#' and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.
+#' and 'gamet_cws1' to generate Total Words Written (TWW), Words Spelled Correctly (WSC),
+#' Correct Word Sequences (CWS) and Correct Minus Incorrect Word Sequences (CIWS) scores
+#' from a GAMET file.
 #' @param data Data frame returned by \code{\link{import_gamet}},
 #'   \code{\link{import_coh}}, or \code{\link{import_rb}}.
 #' @return A \code{data.frame} with \code{ID} and one column per sub-model prediction.
@@ -167,8 +169,8 @@ preprocess <- function(model, data) {
 #'   ### Example 3: GAMET output file (CWS and CIWS)
 #'   file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
 #'   gam_file <- import_gamet(file_path3)
-#'   gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
-#'   head(gamet_CWS_CIWS)
+#'   gamet_we-cbm <- predict_quality("gamet_cws1", gam_file)
+#'   head(gamet_we-cbm)
 #' } else {
 #'   # Skipped because writeAlizer.offline = TRUE (e.g., on CRAN)
 #' }
@@ -315,6 +317,22 @@ predict_quality <- function(model, data) {
     model_for_mean <- sub("_v2$", "", requested_model)
     out[[paste0("pred_", model_for_mean, "_mean")]] <- rowMeans(out[pred_cols], na.rm = TRUE)
   }
+
+  # 7) GAMET enhancements: add pred_TWW_gamet and pred_WSC_gamet; order outputs
+     if (identical(canonical_model, "gamet_cws1")) {
+        wc  <- suppressWarnings(as.numeric(data[["word_count"]]))
+        mis <- suppressWarnings(as.numeric(data[["misspelling"]]))
+
+        # Add new derived predictions
+        out[["pred_TWW_gamet"]] <- wc
+        out[["pred_WSC_gamet"]] <- wc - mis
+
+        # Reorder columns: ID, pred_TWW_gamet, pred_WSC_gamet, pred_CWS_mod1a, pred_CIWS_mod1a
+        order_cols <- c("ID", "pred_TWW_gamet", "pred_WSC_gamet",
+                        "pred_CWS_mod1a", "pred_CIWS_mod1a")
+        rest <- setdiff(names(out), order_cols)
+        out <- out[c(order_cols, rest)]
+      }
 
   out
 }

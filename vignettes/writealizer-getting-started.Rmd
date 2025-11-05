@@ -191,6 +191,10 @@ echo %JAVA_HOME%
 
 ![Figure 5. Coh-Metrix Processing Window.](CohMetrix2.png)
 
+5. `Coh-Metrix` will prompt you to enter a filename for the output file. Make sure it is located outside of the working folder to be processed. If you receive an error message like the one below, click `Continue` and try again. If the error is persistent, click on `Quit` and restart Coh-Metrix.
+
+![Figure 6. Coh-Metrix Processing Window.](CohMetrix3.png)
+
 ---
 
 ### Processing Files in GAMET
@@ -199,7 +203,7 @@ echo %JAVA_HOME%
 
 2. After loading, 'Select All' error indices and follow the on-screen directions.
 
-![Figure 6. GAMET Processing Window.](GAMET1.png)
+![Figure 7. GAMET Processing Window.](GAMET1.png)
 
 3. If some `.txt` files do not process, double check [file encoding](#encoding).
 
@@ -351,7 +355,7 @@ Use this table to pick a model and keep track of published uses. Fill the **Refe
 | `coh_mod3exp`    | Coh‑Metrix → `import_coh()`  | Expository genre quality               | `ID`, `pred_coh_mod3exp`, `score_mean`| — |
 | `coh_mod3per`    | Coh‑Metrix → `import_coh()`  | Persuasive genre quality               | `ID`, `pred_coh_mod3per`, `score_mean`| — |
 | `coh_mod3all`    | Coh‑Metrix → `import_coh()`  | Holistic (all‑genre) quality           | `ID`, `pred_coh_mod3all`, `score_mean`| *Recommended Coh-Metrix model for use |
-| `gamet_cws1`     | GAMET → `import_gamet()`     | **TWW**, **WSC**, **CWS**, and **CIWS** | `ID`, `pred_cws`, `pred_ciws`         | [@Matta2025; @Mercer2021] |
+| `gamet_cws1`     | GAMET → `import_gamet()`     | `TWW`, `WSC`, `CWS`, and `CIWS`        | `ID`, `pred_cws`, `pred_ciws`         | [@Matta2025; @Mercer2021] |
 | `example`        | Any (demo)                   | Minimal demo score(s)                  | `ID`, `pred_example`, `score_mean?`   | Offline, CRAN‑safe mock; seeded via `wa_seed_example_models("example")`|
 
 ---

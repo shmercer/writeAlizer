@@ -33,7 +33,7 @@ More details on model development can be found in the **writeAlizer** [wiki](htt
 ### Prerequisites
 writeAlizer accepts the following output files as inputs:
 
-1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Windows Binaries](https://osf.io/wyq4t)
+1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Download for Windows](https://osf.io/wyq4t)
  
 2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format). [Request a Copy of Coh-Metrix](https://soletlab.asu.edu/coh-metrix/)
  
@@ -104,7 +104,7 @@ writeLines(txt_utf8, "example_utf8.txt", useBytes = TRUE)
 
 ### Processing Files in ReaderBench
 
-1. Download the [Windows binary](https://osf.io/wyq4t) or [build from source](https://github.com/readerbench/readerbench-java)
+1. Download for [Windows](https://osf.io/wyq4t) or [build from source](https://github.com/readerbench/readerbench-java)
 
 2. ReaderBench requires Java to run. The Java SE Runtime Environment can be downloaded [here](https://www.oracle.com/ca-en/java/technologies/javase/javase8u211-later-archive-downloads.html). After Java is installed the Java path must be set in Windows. To check if the Java path is set, open `Command Prompt` (cmd.exe), and run the following command:
 
@@ -124,13 +124,16 @@ If no Java version is returned, follow the [instructions below for setting the J
 
 ![Figure 1. ReaderBench startup log in Windows Command Prompt.](ReaderBench1.png)
 
+
 4. Click on Textual Complexity -> Run Textual Complexity Indices
 
 ![Figure 2. ReaderBench Textual Complexity Window.](ReaderBench2.png)
 
+
 5. Specify the path to the folder containing your writing sample .txt files.
 
 ![Figure 3. ReaderBench Run Indices Window.](ReaderBench3.png)
+
 
 6. The output .csv will appear in that same folder after processing is complete.
 
@@ -187,9 +190,11 @@ echo %JAVA_HOME%
 
 ![Figure 4. Main Coh-Metrix Window.](CohMetrix1.png)
 
+
 4. Select the folder containing your `.txt` files to be processed and click on `Run`.
 
 ![Figure 5. Coh-Metrix Processing Window.](CohMetrix2.png)
+
 
 5. `Coh-Metrix` will prompt you to enter a filename for the output file. Make sure it is located outside of the working folder to be processed. If you receive an error message like the one below, click `Continue` and try again. If the error is persistent, click on `Quit` and restart Coh-Metrix.
 
@@ -204,6 +209,7 @@ echo %JAVA_HOME%
 2. After loading, 'Select All' error indices and follow the on-screen directions.
 
 ![Figure 7. GAMET Processing Window.](GAMET1.png)
+
 
 3. If some `.txt` files do not process, double check [file encoding](#encoding).
 

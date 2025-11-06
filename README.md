@@ -9,7 +9,7 @@
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/shmercer/writeAlizer/blob/master/LICENSE.md)
 <!-- badges: end -->
 
-This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below). In addition, this repository hosts documentation as an electronic supplement to published research articles in the [repository wiki](https://github.com/shmercer/writeAlizer/wiki).
+This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below).
 
 The writeAlizer R package (a) imports [ReaderBench](https://github.com/readerbench/readerbench-java), [Coh-Metrix](https://soletlab.asu.edu/coh-metrix/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores from the ReaderBench or Coh-Metrix files, and generates Total Words Written, Words Spelled Correctly, Correct Word Sequences, and Correct Minus Incorrect Word Sequences scores from GAMET files.
 
@@ -116,17 +116,17 @@ wa_cache_clear()
 
 ## Documentation
 
-Information on the various scoring models available and how they were developed is in this repository's [wiki](https://github.com/shmercer/writeAlizer/wiki):
+Information on the various scoring models available and how they were developed is available [here](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html).
 
-1. [Description of the general process used to develop scoring algorithms](https://github.com/shmercer/writeAlizer/wiki/Scoring-Model-Development).
+1. [Description of the general process used to develop scoring algorithms](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#scoring-model-development).
 2. Description of the following specific scoring models (models recommended for use in research are indicated by *), including information on the relative importance of metrics and weighting of algorithms:
-   * [Coh-Metrix Model 1](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-1)
-   * [Coh-Metrix Model 2](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-2)
-   * [Coh-Metrix Model 3*](https://github.com/shmercer/writeAlizer/wiki/CohMetrix-Model-3)
-   * [ReaderBench Model 1](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-1)
-   * [ReaderBench Model 2](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-2)
-   * [ReaderBench Model 3*](https://github.com/shmercer/writeAlizer/wiki/ReaderBench-Model-3)
-   * [Automated Written Expression CBM Model 1](https://github.com/shmercer/writeAlizer/wiki/aWE-CBM-Model-1)
+   * [Coh-Metrix Model 1](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-1)
+   * [Coh-Metrix Model 2](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-2)
+   * [Coh-Metrix Model 3*](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-3)
+   * [ReaderBench Model 1](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-1)
+   * [ReaderBench Model 2](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-2)
+   * [ReaderBench Model 3*](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-3)
+   * [Automated Written Expression CBM Model 1](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#awecbm-model-1)
 
 ## Package Author and Maintainer
 

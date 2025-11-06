@@ -4,6 +4,7 @@ author: "Sterett H. Mercer (sterett.mercer@ubc.ca)"
 output:
   rmarkdown::html_vignette:
     toc: true
+    toc_depth: 4
 bibliography: references.bib
 csl: apa.csl
 vignette: >
@@ -349,13 +350,13 @@ Use this table to pick a model and keep track of published uses. Fill the **Refe
 
 | Model key        | Data source / import | Target(s) predicted                  | Output columns (typical)                       | Notes/References (published uses) |
 |---|---|---|---|---|
-| `rb_mod1`        | ReaderBench → `import_rb()` | Holistic writing quality               | `ID`, `pred_rb_mod1`, `score_mean`    | [@Keller-Margulis2022; @Matta2022; @Mercer2022] |
+| `rb_mod1`        | ReaderBench → `import_rb()` | Holistic writing quality               | `ID`, `pred_rb_mod1`, `score_mean`    | [@Keller-Margulis2021; @Matta2022; @Mercer2022] |
 | `rb_mod2`        | ReaderBench → `import_rb()` | Holistic writing quality               | `ID`, `pred_rb_mod2`, `score_mean`    | This is a simplified version of rb_mod1 that handles errors on multi-paragraph compositions. [@Matta2023] |
 | `rb_mod3narr`    | ReaderBench → `import_rb()` | Narrative genre quality                | `ID`, `pred_rb_mod3narr`, `score_mean`| — |
 | `rb_mod3exp`     | ReaderBench → `import_rb()` | Expository genre quality               | `ID`, `pred_rb_mod3exp`, `score_mean` | — |
 | `rb_mod3per`     | ReaderBench → `import_rb()` | Persuasive genre quality               | `ID`, `pred_rb_mod3per`, `score_mean` | — |
 | `rb_mod3all`     | ReaderBench → `import_rb()` | Holistic (all‑genre) quality           | `ID`, `pred_rb_mod3all`, `score_mean` | *Recommended ReaderBench model for use |
-| `coh_mod1`       | Coh‑Metrix → `import_coh()`  | Holistic writing quality               | `ID`, `pred_coh_mod1`, `score_mean`   | [@Keller-Margulis2022; @Matta2022] |
+| `coh_mod1`       | Coh‑Metrix → `import_coh()`  | Holistic writing quality               | `ID`, `pred_coh_mod1`, `score_mean`   | [@Keller-Margulis2021; @Matta2022] |
 | `coh_mod2`       | Coh‑Metrix → `import_coh()`  | Holistic writing quality               | `ID`, `pred_coh_mod2`, `score_mean`   | This is a simplified version of coh_mod1 |
 | `coh_mod3narr`   | Coh‑Metrix → `import_coh()`  | Narrative genre quality                | `ID`, `pred_coh_mod3narr`, `score_mean`| — |
 | `coh_mod3exp`    | Coh‑Metrix → `import_coh()`  | Expository genre quality               | `ID`, `pred_coh_mod3exp`, `score_mean`| — |

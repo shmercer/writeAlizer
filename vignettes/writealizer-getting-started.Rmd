@@ -25,9 +25,8 @@ knitr::opts_chunk$set(
 > A practical walkthrough of the key functions in **writeAlizer**: importing analysis outputs (ReaderBench, Coh‑Metrix, GAMET), and running predictive models with `predict_quality()`.
 
 ## Background
-The **writeAlizer** package downloads predictive models for writing quality and written-expression CBM scores and applies these models to your data. Predicted writing quality scores can be generated from ReaderBench or Coh-Metrix output files. Predicted written expression CBM scores, total words written (TWW), words spelled correctly (WSC), correct word sequences (CWS), and correct minus incorrect word sequences (CIWS), can be generated from GAMET output files.
+The **writeAlizer** package downloads predictive models for writing quality and written-expression CBM scores and applies these models to your data. Predicted writing quality scores can be generated from ReaderBench or Coh-Metrix output files. Predicted written expression CBM scores, total words written (TWW), words spelled correctly (WSC), correct word sequences (CWS), and correct minus incorrect word sequences (CIWS), can be generated from GAMET output files. More details on model development can be found [here](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html).
 
-More details on model development can be found [here](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html).
 ---
 
 ### Prerequisites

@@ -100,8 +100,8 @@ if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
   ### Example 3: GAMET output file (CWS and CIWS)
   file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
   gam_file <- import_gamet(file_path3)
-  gamet_we-cbm <- predict_quality("gamet_cws1", gam_file)
-  head(gamet_we-cbm)
+  gamet_wecbm <- predict_quality("gamet_cws1", gam_file)
+  head(gamet_wecbm)
 } else {
   # Skipped because writeAlizer.offline = TRUE (e.g., on CRAN)
 }
@@ -181,6 +181,9 @@ if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
 #> * Cache: /home/runner/.cache/R/writeAlizer
 #>   (Artifacts are downloaded only the first time you use a model.)
 #>   Tip: clear the cache with wa_cache_clear() if needed.
-#> Error: object 'gamet_we' not found
+#>   ID pred_TWW_gamet pred_WSC_gamet pred_CWS_mod1a pred_CIWS_mod1a
+#> 1  7            135            129       125.8289        107.8254
+#> 2  8            171            168       157.8647        141.8125
+#> 3  9            191            189       168.2293        149.5521
 # }
 ```

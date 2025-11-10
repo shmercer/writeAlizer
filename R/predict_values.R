@@ -169,8 +169,8 @@ preprocess <- function(model, data) {
 #'   ### Example 3: GAMET output file (CWS and CIWS)
 #'   file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
 #'   gam_file <- import_gamet(file_path3)
-#'   gamet_we-cbm <- predict_quality("gamet_cws1", gam_file)
-#'   head(gamet_we-cbm)
+#'   gamet_wecbm <- predict_quality("gamet_cws1", gam_file)
+#'   head(gamet_wecbm)
 #' } else {
 #'   # Skipped because writeAlizer.offline = TRUE (e.g., on CRAN)
 #' }

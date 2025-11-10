@@ -4,7 +4,7 @@ testthat::test_that("import_gamet: ID normalization, NaN→NA, numeric-like conv
   # Build a tiny GAMET-like CSV
   tmp <- withr::local_tempfile(fileext = ".csv")
   gam <- data.frame(
-    filename      = c("C:/any/path/sub/file001.csv", "/whatever/dir/file002.csv"),
+    filename      = c("C:/any/path/sub/file001.txt", "/whatever/dir/file002.txt"),
     error_count   = c("2", "NaN"),            # numeric-like + "NaN"
     word_count    = c(100, 0),                # second row 0 to hit NA guard
     grammar       = c("3", "5"),
@@ -61,7 +61,7 @@ testthat::test_that("import_coh: TextID→ID, numeric-like coercion, stable sort
 testthat::test_that("import_merge_gamet_rb: merges on ID as character and preserves per_*", {
   # Create GAMET file
   gm <- data.frame(
-    filename      = c("1.csv", "2.csv"),
+    filename      = c("1.txt", "2.txt"),
     error_count   = c(0, 1),
     word_count    = c(10, 10),
     grammar       = c(1, 2),

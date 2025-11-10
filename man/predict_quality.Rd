@@ -13,8 +13,9 @@ Options are:
 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
 'coh_mod1', 'coh_mod2', 'coh_mod3narr', 'coh_mod3exp', 'coh_mod3per',
 or 'coh_mod3all' for Coh-Metrix files to generate holistic quality,
-and 'gamet_cws1' to generate Correct Word Sequences (CWS)
-and Correct Minus Incorrect Word Sequences (CIWS) scores from a GAMET file.}
+and 'gamet_cws1' to generate Total Words Written (TWW), Words Spelled Correctly (WSC),
+Correct Word Sequences (CWS) and Correct Minus Incorrect Word Sequences (CIWS) scores
+from a GAMET file.}
 
 \item{data}{Data frame returned by \code{\link{import_gamet}},
 \code{\link{import_coh}}, or \code{\link{import_rb}}.}
@@ -29,7 +30,8 @@ A \code{data.frame} with \code{ID} and one column per sub-model prediction.
 Run the specified model(s) on preprocessed data and return predictions.
 Apply scoring models to ReaderBench, Coh-Metrix, and/or GAMET files. Holistic
 writing quality can be generated from ReaderBench (model = 'rb_mod3all') or
-Coh-Metrix files (model = 'coh_mod3all'). Also, Correct Word Sequences and
+Coh-Metrix files (model = 'coh_mod3all'). Also, Total Words Written,
+Words Spelled Correctly, Correct Word Sequences, and
 Correct Minus Incorrect Word Sequences can be generated from a GAMET file
 (model = 'gamet_cws1').
 }
@@ -85,8 +87,8 @@ if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
   ### Example 3: GAMET output file (CWS and CIWS)
   file_path3 <- system.file("extdata", "sample_gamet.csv", package = "writeAlizer")
   gam_file <- import_gamet(file_path3)
-  gamet_CWS_CIWS <- predict_quality("gamet_cws1", gam_file)
-  head(gamet_CWS_CIWS)
+  gamet_we-cbm <- predict_quality("gamet_cws1", gam_file)
+  head(gamet_we-cbm)
 } else {
   # Skipped because writeAlizer.offline = TRUE (e.g., on CRAN)
 }

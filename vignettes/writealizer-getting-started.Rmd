@@ -38,7 +38,7 @@ writeAlizer accepts the following output files as inputs:
  
 3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format). [Download for Windows and Mac](https://www.linguisticanalysistools.org/gamet.html)
 
-The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
+The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column (Coh-Metrix and GAMET), the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
 
 ---
 

@@ -61,6 +61,7 @@ There are also additional functions to help with (3) installation of package dep
 Useful links:
 \itemize{
   \item \url{https://github.com/shmercer/writeAlizer/}
+  \item \url{https://shmercer.github.io/writeAlizer/}
   \item Report bugs at \url{https://github.com/shmercer/writeAlizer/issues}
 }
 

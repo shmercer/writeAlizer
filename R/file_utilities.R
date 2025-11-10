@@ -54,7 +54,6 @@
 }
 
 # Internal: validate required columns and IDs
-# Internal: validate required columns and IDs
 .wa_validate_import <- function(df, required, context = "import") {
   # Try to coerce to a data frame if possible (tibble, list of equal-length vectors, etc.)
   if (!is.data.frame(df)) {
@@ -98,6 +97,46 @@
 
 # --------------------------------------------------------------------------
 
+#' @title Extract the filename stem before ".txt"
+#' @description
+#' Removes any directory path and optional `.txt` extension from
+#' filenames or file paths. This function standardizes text identifiers
+#' across Coh-Metrix, GAMET, and other text analysis outputs that may
+#' include full paths or extensions in their ID fields.
+#'
+#' @param x A character vector (or coercible) containing file paths or
+#' filenames. Elements may or may not include a `.txt` suffix or any
+#' directory path.
+#'
+#' @return A character vector where each element is reduced to the
+#' final path component, with any trailing `.txt` (case-insensitive)
+#' removed. `NA` values are preserved as `NA_character_`.
+#'
+#' @details
+#' The function handles both forward (`/`) and backward (`\\`) slashes
+#' in file paths. If a value has no path and/or no `.txt` suffix, it is
+#' returned unchanged (aside from coercion to character).
+#'
+#' @examples
+#' keep_stem_before_txt(c(
+#'   "C:/data/3401.txt",
+#'   "E:\\\\samples\\\\1002.TXT",
+#'   "plain_id",
+#'   NA
+#' ))
+#' #> [1] "3401" "1002" "plain_id" NA
+#'
+#' @export
+keep_stem_before_txt <- function(x) {
+  original_na <- is.na(x)
+  out <- as.character(x)
+  not_na <- !original_na
+  # Strip directory path, then remove .txt (case-insensitive)
+  out[not_na] <- sub("\\.txt$", "", sub("^.*[\\\\/]", "", out[not_na]), ignore.case = TRUE)
+  out[original_na] <- NA_character_
+  out
+}
+
 #' Import a GAMET output file into R.
 #'
 #' @importFrom utils read.csv
@@ -124,8 +163,8 @@
 import_gamet <- function(path) {
   dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
 
-  # normalize ID
-  dat1$filename <- basename(tools::file_path_sans_ext(dat1$filename))
+  # normalize ID from the 'filename' column (works with or without path/.txt)
+  dat1$filename <- keep_stem_before_txt(dat1$filename)
   names(dat1)[names(dat1) == "filename"] <- "ID"
   dat1$ID <- as.character(dat1$ID)
 
@@ -141,7 +180,7 @@ import_gamet <- function(path) {
                    "duplication", "typographical", "whitespace")]
 
   # guard against division by zero
-  dat4$per_gram  <- ifelse(dat4$word_count == 0, NA_real_, dat4$grammar    / dat4$word_count)
+  dat4$per_gram  <- ifelse(dat4$word_count == 0, NA_real_, dat4$grammar     / dat4$word_count)
   dat4$per_spell <- ifelse(dat4$word_count == 0, NA_real_, dat4$misspelling / dat4$word_count)
 
   # validate IDs
@@ -176,8 +215,8 @@ import_gamet <- function(path) {
 import_coh <- function(path) {
   dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
 
-  # normalize ID
-  dat1$TextID <- basename(tools::file_path_sans_ext(dat1$TextID))
+  # normalize ID from the 'TextID' column (works with or without path/.txt)
+  dat1$TextID <- keep_stem_before_txt(dat1$TextID)
   names(dat1)[names(dat1) == "TextID"] <- "ID"
   dat1$ID <- as.character(dat1$ID)
 
@@ -188,7 +227,7 @@ import_coh <- function(path) {
   # sort by ID
   dat1 <- dat1[order(dat1$ID), ]
 
-  #validate IDs
+  # validate IDs
   dat1 <- .wa_validate_import(dat1, required = c("ID"), context = "import_coh")
 
   dat1

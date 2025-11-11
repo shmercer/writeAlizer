@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   scoring-model-development: scoring-model-development.html
   writealizer-getting-started: writealizer-getting-started.html
-last_built: 2025-11-10T23:25Z
+last_built: 2025-11-11T01:03Z
 urls:
   reference: https://shmercer.github.io/writeAlizer/reference
   article: https://shmercer.github.io/writeAlizer/articles

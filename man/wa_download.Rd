@@ -36,13 +36,18 @@ so it benefits from the same behavior:
   does not match.
 }
 \examples{
-# Offline-friendly example using a local source (no network):
+# Offline-friendly example using a local source (no network) — CRAN-safe
+if (requireNamespace("withr", quietly = TRUE)) {
+  withr::local_options(writeAlizer.mock_dir = NULL, writeAlizer.offline = FALSE)
+}
+
 src <- tempfile(fileext = ".bin")
 writeBin(as.raw(1:10), src)
-dest <- wa_download(
-  "example.bin",
-  url = paste0("file:///", normalizePath(src, winslash = "/"))
-)
+url <- paste0("file:///", normalizePath(src, winslash = "/"))
+
+# Deterministic and quiet: checksum + cache reuse
+sha <- digest::digest(src, algo = "sha256", file = TRUE)
+dest <- wa_download("example.bin", url = url, sha256 = sha, quiet = TRUE)
 file.exists(dest)
 
 # Using a mock directory to avoid network access:

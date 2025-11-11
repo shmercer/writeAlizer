@@ -153,13 +153,13 @@ preprocess <- function(model, data) {
 #' \donttest{
 #' if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
 #'   rb <- import_rb(system.file("extdata", "sample_rb.csv", package = "writeAlizer"))
-#'   head(predict_quality("rb_mod3all", rb))
+#'   print(head(predict_quality("rb_mod3all", rb)))
 #'
 #'   coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
-#'   head(predict_quality("coh_mod3all", coh))
+#'   print(head(predict_quality("coh_mod3all", coh)))
 #'
 #'   gam <- import_gamet(system.file("extdata", "sample_gamet.csv", package = "writeAlizer"))
-#'   head(predict_quality("gamet_cws1", gam))
+#'   print(head(predict_quality("gamet_cws1", gam)))
 #' }
 #' }
 #' @export

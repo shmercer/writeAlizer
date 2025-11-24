@@ -19,13 +19,12 @@ below.
 
 ### Predictive Algorithms and R Packages Used
 
-The [`caret`](https://cran.r-project.org/web/packages/caret/index.html)
-and
-[`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html)
+The [`caret`](https://CRAN.R-project.org/package=caret) and
+[`caretEnsemble`](https://CRAN.R-project.org/package=caretEnsemble)
 packages were used as wrappers for the following predictive algorithms:
 
 - Random forest regression (package
-  [`randomForest`](https://cran.r-project.org/web/packages/randomForest/index.html))
+  [`randomForest`](https://CRAN.R-project.org/package=randomForest))
 
 - Cubist regression (package
   [`Cubist`](https://cran.r-project.org/package=Cubist))
@@ -119,15 +118,15 @@ optimal values found in Step 3, with bootstrapped (1000 samples)
 resampling-based cross-validation so that an ensemble model (weighting
 each algorithm) could be built based on the resamples. This step was
 done with the
-[`caretList()`](https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/caretList)
+[`caretList()`](https://zachmayer.github.io/caretEnsemble/reference/caretList.html)
 function of the `caretEnsemble` package. This process is illustrated in
 more detail in the `caretEnsemble` vignette:
-<https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html>
+<https://zachmayer.github.io/caretEnsemble/articles/caretEnsemble-intro.html>
 
 #### 5. Estimate an Ensemble Model to Combine the Algorithms
 
 The
-[`caretEnsemble()`](https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/caretEnsemble)
+[`caretEnsemble()`](https://zachmayer.github.io/caretEnsemble/reference/caretEnsemble.html)
 function was used to determine the optimal linear weighting of the
 algorithms that minimized RMSE (i.e., discrepancy between actual writing
 quality scores and predicted quality scores) in the resamples from Step
@@ -135,7 +134,7 @@ quality scores and predicted quality scores) in the resamples from Step
 ensemble models.
 
 The
-[`varImp()`](https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/varImp)
+[`varImp()`](https://topepo.github.io/caret/variable-importance.html)
 function of `caretEnsemble` was used to generate estimates of relative
 predictor importance for the overall ensemble model and for each
 individual algorithm.
@@ -143,7 +142,7 @@ individual algorithm.
 #### 6. Generate Predicted Quality Scores from each Ensemble
 
 The
-[`predict()`](https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/predict.caretList)
+[`predict()`](https://zachmayer.github.io/caretEnsemble/reference/predict.caretList.html)
 function of `caretEnsemble` was used to generate/store predicted quality
 scores for the ensemble models.
 

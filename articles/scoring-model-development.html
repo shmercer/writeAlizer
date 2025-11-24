@@ -88,12 +88,12 @@ below.</p>
 <div class="section level3">
 <h3 id="predictive-algorithms-and-r-packages-used">Predictive Algorithms and R Packages Used<a class="anchor" aria-label="anchor" href="#predictive-algorithms-and-r-packages-used"></a>
 </h3>
-<p>The <a href="https://cran.r-project.org/web/packages/caret/index.html" class="external-link"><code>caret</code></a>
-and <a href="https://cran.r-project.org/web/packages/caretEnsemble/index.html" class="external-link"><code>caretEnsemble</code></a>
+<p>The <a href="https://CRAN.R-project.org/package=caret" class="external-link"><code>caret</code></a>
+and <a href="https://CRAN.R-project.org/package=caretEnsemble" class="external-link"><code>caretEnsemble</code></a>
 packages were used as wrappers for the following predictive
 algorithms:</p>
 <ul>
-<li><p>Random forest regression (package <a href="https://cran.r-project.org/web/packages/randomForest/index.html" class="external-link"><code>randomForest</code></a>)</p></li>
+<li><p>Random forest regression (package <a href="https://CRAN.R-project.org/package=randomForest" class="external-link"><code>randomForest</code></a>)</p></li>
 <li><p>Cubist regression (package <a href="https://cran.r-project.org/package=Cubist" class="external-link"><code>Cubist</code></a>)</p></li>
 <li><p>Support vector machines with a radial kernel (package <a href="https://cran.r-project.org/package=kernlab" class="external-link"><code>kernlab</code></a>)</p></li>
 <li><p>Bagged multivariate adaptive regression splines (package <a href="https://cran.r-project.org/package=earth" class="external-link"><code>earth</code></a>)</p></li>
@@ -174,21 +174,21 @@ available in each package’s documentation.</p>
 the optimal values found in Step 3, with bootstrapped (1000 samples)
 resampling-based cross-validation so that an ensemble model (weighting
 each algorithm) could be built based on the resamples. This step was
-done with the <a href="https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/caretList" class="external-link"><code>caretList()</code></a>
+done with the <a href="https://zachmayer.github.io/caretEnsemble/reference/caretList.html" class="external-link"><code>caretList()</code></a>
 function of the <code>caretEnsemble</code> package. This process is
 illustrated in more detail in the <code>caretEnsemble</code> vignette:
-<a href="https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html" class="external-link uri">https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html</a></p>
+<a href="https://zachmayer.github.io/caretEnsemble/articles/caretEnsemble-intro.html" class="external-link uri">https://zachmayer.github.io/caretEnsemble/articles/caretEnsemble-intro.html</a></p>
 </div>
 <div class="section level4">
 <h4 id="estimate-an-ensemble-model-to-combine-the-algorithms">5. Estimate an Ensemble Model to Combine the Algorithms<a class="anchor" aria-label="anchor" href="#estimate-an-ensemble-model-to-combine-the-algorithms"></a>
 </h4>
-<p>The <a href="https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/caretEnsemble" class="external-link"><code>caretEnsemble()</code></a>
+<p>The <a href="https://zachmayer.github.io/caretEnsemble/reference/caretEnsemble.html" class="external-link"><code>caretEnsemble()</code></a>
 function was used to determine the optimal linear weighting of the
 algorithms that minimized RMSE (i.e., discrepancy between actual writing
 quality scores and predicted quality scores) in the resamples from Step
 4. Algorithms with near zero or negative weights were removed from the
 ensemble models.</p>
-<p>The <a href="https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/varImp" class="external-link"><code>varImp()</code></a>
+<p>The <a href="https://topepo.github.io/caret/variable-importance.html" class="external-link"><code>varImp()</code></a>
 function of <code>caretEnsemble</code> was used to generate estimates of
 relative predictor importance for the overall ensemble model and for
 each individual algorithm.</p>
@@ -196,7 +196,7 @@ each individual algorithm.</p>
 <div class="section level4">
 <h4 id="generate-predicted-quality-scores-from-each-ensemble">6. Generate Predicted Quality Scores from each Ensemble<a class="anchor" aria-label="anchor" href="#generate-predicted-quality-scores-from-each-ensemble"></a>
 </h4>
-<p>The <a href="https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/predict.caretList" class="external-link"><code>predict()</code></a>
+<p>The <a href="https://zachmayer.github.io/caretEnsemble/reference/predict.caretList.html" class="external-link"><code>predict()</code></a>
 function of <code>caretEnsemble</code> was used to generate/store
 predicted quality scores for the ensemble models.</p>
 </div>

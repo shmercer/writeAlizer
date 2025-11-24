@@ -1,6 +1,6 @@
 # Changelog
 
-## writeAlizer 1.7.2 (2025-11-27)
+## writeAlizer 1.7.2 (2025-11-24)
 
 ### new features
 

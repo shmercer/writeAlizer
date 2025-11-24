@@ -1,4 +1,4 @@
-# writeAlizer 1.7.2 (2025-11-27)
+# writeAlizer 1.7.2 (2025-11-24)
 
 ## new features
 - Added `keep_stem_before_txt()` function to process Coh-Metrix and GAMET filenames that appear as paths

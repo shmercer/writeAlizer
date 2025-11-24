@@ -22,9 +22,9 @@ vignette: >
 The general process used to generate all scoring models is presented below.
 
 ## Predictive Algorithms and R Packages Used
-The [`caret`](https://cran.r-project.org/web/packages/caret/index.html) and [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) packages were used as wrappers for the following predictive algorithms:
+The [`caret`](https://CRAN.R-project.org/package=caret) and [`caretEnsemble`](https://CRAN.R-project.org/package=caretEnsemble) packages were used as wrappers for the following predictive algorithms:
 
-* Random forest regression (package [`randomForest`](https://cran.r-project.org/web/packages/randomForest/index.html))
+* Random forest regression (package [`randomForest`](https://CRAN.R-project.org/package=randomForest))
 
 * Cubist regression (package [`Cubist`](https://cran.r-project.org/package=Cubist))
 
@@ -81,17 +81,17 @@ The following tuning hyperparameters were optimized based on resampling (repeate
 
 ### 4. Final/Optimal Model for each Algorithm
 
-A model for each algorithm was fit with the hyperparameters set to the optimal values found in Step 3, with bootstrapped (1000 samples) resampling-based cross-validation so that an ensemble model (weighting each algorithm) could be built based on the resamples. This step was done with the [`caretList()`](https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/caretList) function of the `caretEnsemble` package. This process is illustrated in more detail in the `caretEnsemble` vignette: <https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html>
+A model for each algorithm was fit with the hyperparameters set to the optimal values found in Step 3, with bootstrapped (1000 samples) resampling-based cross-validation so that an ensemble model (weighting each algorithm) could be built based on the resamples. This step was done with the [`caretList()`](https://zachmayer.github.io/caretEnsemble/reference/caretList.html) function of the `caretEnsemble` package. This process is illustrated in more detail in the `caretEnsemble` vignette: <https://zachmayer.github.io/caretEnsemble/articles/caretEnsemble-intro.html>
 
 ### 5. Estimate an Ensemble Model to Combine the Algorithms
 
-The [`caretEnsemble()`](https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/caretEnsemble) function was used to determine the optimal linear weighting of the algorithms that minimized RMSE (i.e., discrepancy between actual writing quality scores and predicted quality scores) in the resamples from Step 4. Algorithms with near zero or negative weights were removed from the ensemble models. 
+The [`caretEnsemble()`](https://zachmayer.github.io/caretEnsemble/reference/caretEnsemble.html) function was used to determine the optimal linear weighting of the algorithms that minimized RMSE (i.e., discrepancy between actual writing quality scores and predicted quality scores) in the resamples from Step 4. Algorithms with near zero or negative weights were removed from the ensemble models. 
 
-The [`varImp()`](https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/varImp) function of `caretEnsemble` was used to generate estimates of relative predictor importance for the overall ensemble model and for each individual algorithm.
+The [`varImp()`](https://topepo.github.io/caret/variable-importance.html) function of `caretEnsemble` was used to generate estimates of relative predictor importance for the overall ensemble model and for each individual algorithm.
 
 ### 6. Generate Predicted Quality Scores from each Ensemble
 
-The [`predict()`](https://www.rdocumentation.org/packages/caretEnsemble/versions/2.0.1/topics/predict.caretList) function of `caretEnsemble` was used to generate/store predicted quality scores for the ensemble models.
+The [`predict()`](https://zachmayer.github.io/caretEnsemble/reference/predict.caretList.html) function of `caretEnsemble` was used to generate/store predicted quality scores for the ensemble models.
 
 ### 7. Average Scores to get Final Predicted Quality Scores
 

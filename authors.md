@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/shmercer/writeAlizer/blob/master/inst/CITATION)
+[`inst/CITATION`](https://github.com/shmercer/writeAlizer/blob/v1.7.2/inst/CITATION)
 
 Mercer, S. H. (2025). writeAlizer: Generate predicted writing quality
 scores (Version 1.7.2) \[R package; Computer software\]. Comprehensive R

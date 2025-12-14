@@ -2,6 +2,8 @@
 
 ## writeAlizer 1.7.2 (2025-11-24)
 
+CRAN release: 2025-11-24
+
 ### new features
 
 - Added

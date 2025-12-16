@@ -28,5 +28,5 @@ Character scalar path.
 wa_cache_dir()
 #> [1] "/home/runner/.cache/R/writeAlizer"
 
-#> Cleared cache: /tmp/Rtmp6KYcqM/wa_cache_demo
+#> Cleared cache: /tmp/Rtmp7ZT8iQ/wa_cache_demo
 ```

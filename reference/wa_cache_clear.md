@@ -36,5 +36,5 @@ Invisibly returns `TRUE` if the cache was cleared (or already absent),
 
 ``` r
 # Safe demo: redirect cache to tempdir(), create a file, then clear it
-#> Cleared cache: /tmp/Rtmp6KYcqM/wa_cache_demo2
+#> Cleared cache: /tmp/Rtmp7ZT8iQ/wa_cache_demo2
 ```

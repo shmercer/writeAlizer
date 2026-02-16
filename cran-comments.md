@@ -1,4 +1,4 @@
-# writeAlizer 1.7.2
+# writeAlizer 1.7.3
 
 ## R CMD check results
 
@@ -18,11 +18,7 @@ No reverse dependencies for this package.
 
 ## Changes in this version
 
-* new features
-  * Added `keep_stem_before_txt()` function to process Coh-Metrix and GAMET filenames that appear as paths
-  * integrated `keep_stem_before_txt()` into `import_coh()` `import_gamet()` and `import_merge_gamet_rb()` functions
-
-* improved documentation
-  * Added new vignette that details scoring model development
-  * Added a `pkgdown()` site to host documentation on GitHub
+### CRAN policy
+- Wrapped one example in `\\dontrun{}` instead of `\\donttest{}` to prevent blackswan CRAN check 
+  notes when running tests wrapped in `\\donttest{}`. The example downloads files from an external API
 

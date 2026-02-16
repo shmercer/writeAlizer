@@ -1,7 +1,7 @@
 # writeAlizer 1.7.3 (2026-2-16)
 
 ## CRAN policy
-- Wrapped two examples in `\\dontrun{}` instead of `\\donttest{}` to prevent blackswan CRAN check 
+- Wrapped one example in `\\dontrun{}` instead of `\\donttest{}` to prevent blackswan CRAN check 
   notes when running tests wrapped in `\\donttest{}`
 
 # writeAlizer 1.7.2 (2025-11-24)

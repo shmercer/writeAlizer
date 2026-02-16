@@ -88,8 +88,8 @@ if (requireNamespace("withr", quietly = TRUE)) {
 #> 2  8          1.5
 #> 3  9          1.5
 
-# Longer, networked demos (skipped on CRAN)
-# \donttest{
+# Longer, networked demos
+if (FALSE) { # \dontrun{
 if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
   rb <- import_rb(system.file("extdata", "sample_rb.csv", package = "writeAlizer"))
   print(head(predict_quality("rb_mod3all", rb)))
@@ -100,93 +100,5 @@ if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
   gam <- import_gamet(system.file("extdata", "sample_gamet.csv", package = "writeAlizer"))
   print(head(predict_quality("gamet_cws1", gam)))
 }
-#> ℹ Downloaded model artifact:
-#> * File: rb_exp_vars_v2.rds
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: rb_narr_vars_v2.rds
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: rb_per_vars_v2.rds
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> Warning: These variables have zero variances: RB.SenAllit, RB.AvgDepsBl_csubj, RB.AvgDepsBl_iobj
-#> Warning: These variables have zero variances: RB.AvgConnBl_complex_subordinators, RB.SenAllit, RB.AvgDepsBl_csubj, RB.AvgDepsBl_iobj, RB.AvgDepsSen_iobj
-#> Warning: These variables have zero variances: RB.AvgConnBl_complex_subordinators, RB.SenAllit, RB.AvgDepsBl_csubj, RB.AvgDepsSen_csubj, RB.AvgDepsBl_iobj
-#> ℹ Downloaded model artifact:
-#> * File: rb_mod3exp_v2.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: rb_mod3narr_v2.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: rb_mod3per_v2.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#>   ID pred_rb_mod3exp pred_rb_mod3narr pred_rb_mod3per pred_rb_mod3all_mean
-#> 1  7      -1.4434553      -1.69349246      -0.9573641          -1.36477065
-#> 2  8       0.0796015      -0.03163491      -0.2293523          -0.06046189
-#> 3  9       1.4068790       1.80142661       1.3995404           1.53594866
-#> ℹ Downloaded model artifact:
-#> * File: coh_exp_vars.rds
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: coh_narr_vars.rds
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: coh_per_vars.rds
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> Warning: These variables have zero variances: WRDPRP1p
-#> Warning: These variables have zero variances: WRDPRP1p
-#> Warning: These variables have zero variances: WRDPRP1p
-#> ℹ Downloaded model artifact:
-#> * File: coh_mod3exp.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: coh_mod3narr.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: coh_mod3per.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#>   ID pred_coh_mod3exp pred_coh_mod3narr pred_coh_mod3per pred_coh_mod3all_mean
-#> 1  7       -2.5052929         -3.496357       -2.9239837            -2.9752112
-#> 2  8        0.5765171          1.436159        0.6002912             0.8709891
-#> 3  9        1.6753017          2.488845        3.3214388             2.4951951
-#> ℹ Downloaded model artifact:
-#> * File: CWS_mod1a.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#> ℹ Downloaded model artifact:
-#> * File: CIWS_mod1a.rda
-#> * Cache: /home/runner/.cache/R/writeAlizer
-#>   (Artifacts are downloaded only the first time you use a model.)
-#>   Tip: clear the cache with wa_cache_clear() if needed.
-#>   ID pred_TWW_gamet pred_WSC_gamet pred_CWS_mod1a pred_CIWS_mod1a
-#> 1  7            135            129       125.8289        107.8254
-#> 2  8            171            168       157.8647        141.8125
-#> 3  9            191            189       168.2293        149.5521
-# }
+} # }
 ```

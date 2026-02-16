@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/shmercer/writeAlizer/",
   "issueTracker": "https://github.com/shmercer/writeAlizer/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.2 (2025-10-31 ucrt)",
+  "runtimePlatform": "R version 4.5.2 (2025-10-31)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -309,11 +309,11 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "938.184KB",
+  "fileSize": "926.61KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
-      "datePublished": "2025",
+      "datePublished": "2026",
       "author": [
         {
           "@type": "Person",
@@ -324,7 +324,7 @@
       "name": "writeAlizer: Generate predicted writing quality scores",
       "identifier": "10.32614/CRAN.package.writeAlizer",
       "url": "https://doi.org/10.32614/CRAN.package.writeAlizer",
-      "description": "R package version 1.7.2",
+      "description": "R package version 1.7.3",
       "@id": "https://doi.org/10.32614/CRAN.package.writeAlizer",
       "sameAs": "https://doi.org/10.32614/CRAN.package.writeAlizer"
     }
@@ -332,5 +332,6 @@
   "releaseNotes": "https://github.com/shmercer/writeAlizer/blob/main/NEWS.md",
   "readme": "https://github.com/shmercer/writeAlizer/blob/master/README.md",
   "contIntegration": ["https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/shmercer/writeAlizer"],
-  "developmentStatus": "https://www.repostatus.org/#active"
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": ["r", "r-package", "rstats", "writing-assessment", "writing-tools", "coh-metrix", "curriculum-based-measurement", "readerbench", "automated-essay-scoring", "caret", "educational-measurement", "educational-technology", "machine-learning", "natural-language-processing", "predictive-modeling", "text-analysis", "writing-analytics", "gamet"]
 }

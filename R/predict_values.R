@@ -149,8 +149,8 @@ preprocess <- function(model, data) {
 #'   head(out)
 #' }
 #'
-#' # Longer, networked demos (skipped on CRAN)
-#' \donttest{
+#' # Longer, networked demos
+#' \dontrun{
 #' if (!isTRUE(getOption("writeAlizer.offline", FALSE))) {
 #'   rb <- import_rb(system.file("extdata", "sample_rb.csv", package = "writeAlizer"))
 #'   print(head(predict_quality("rb_mod3all", rb)))

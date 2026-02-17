@@ -2,6 +2,8 @@
 
 ## writeAlizer 1.7.3 (2026-2-16)
 
+CRAN release: 2026-02-17
+
 ### CRAN policy
 
 - Wrapped one example in `\\dontrun{}` instead of `\\donttest{}` to

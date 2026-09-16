@@ -45,5 +45,5 @@ local({
   writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
   wa_cache_clear(ask = FALSE)
 })
-#> Cleared cache: /tmp/RtmphU7dQi/wa-cache-1a12c50586d
+#> Cleared cache: /tmp/RtmpdwzlJX/wa-cache-18374f0d538f
 ```

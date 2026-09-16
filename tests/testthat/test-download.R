@@ -47,8 +47,7 @@ testthat::test_that("deprecated download() wrapper still works (no warning noise
 testthat::test_that(".wa_ensure_file() uses mock_dir and copies deterministically", {
   testthat::skip_on_cran()
 
-  cache_dir <- tools::R_user_dir("writeAlizer", "cache")
-  unlink(cache_dir, recursive = TRUE, force = TRUE)
+  withr::local_envvar(R_USER_CACHE_DIR = withr::local_tempdir())
 
   withr::local_options(writeAlizer.mock_dir = withr::local_tempdir())
   mock_dir <- getOption("writeAlizer.mock_dir")
@@ -71,8 +70,7 @@ testthat::test_that(".wa_ensure_file() uses mock_dir and copies deterministicall
 testthat::test_that(".wa_ensure_file() respects offline mode", {
   testthat::skip_on_cran()
 
-  cache_dir <- tools::R_user_dir("writeAlizer", "cache")
-  unlink(cache_dir, recursive = TRUE, force = TRUE)
+  withr::local_envvar(R_USER_CACHE_DIR = withr::local_tempdir())
 
   withr::local_options(writeAlizer.offline = TRUE,
                        writeAlizer.mock_dir = NULL)
@@ -89,8 +87,7 @@ testthat::test_that(".wa_ensure_file() respects offline mode", {
 testthat::test_that(".wa_ensure_file() errors when file:// source missing", {
   testthat::skip_on_cran()
 
-  cache_dir <- tools::R_user_dir("writeAlizer", "cache")
-  unlink(cache_dir, recursive = TRUE, force = TRUE)
+  withr::local_envvar(R_USER_CACHE_DIR = withr::local_tempdir())
 
   withr::local_options(writeAlizer.offline = FALSE,
                        writeAlizer.mock_dir = NULL)

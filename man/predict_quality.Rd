@@ -7,7 +7,8 @@
 predict_quality(model, data)
 }
 \arguments{
-\item{model}{A string telling which scoring model to use.
+\item{model}{A string telling which scoring model to use. ReaderBench Model 3
+  keys also accept a '_v2' suffix. The 'example' key is an offline demonstration.
 Options are:
 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
@@ -24,7 +25,10 @@ from a GAMET file.}
 A \code{data.frame} with \code{ID} and one column per sub-model prediction.
         If multiple sub-models are used and all predictions are numeric,
         an aggregate column named \code{pred_<model>_mean} is added
-        (except for "gamet_cws1").
+        (except for "gamet_cws1"). Missing component scores are omitted from
+        the mean; an entirely missing row yields NaN. GAMET returns
+        \code{pred_TWW_gamet}, \code{pred_WSC_gamet}, \code{pred_CWS_mod1a},
+        and \code{pred_CIWS_mod1a}. Predictions are not rounded or clipped.
 }
 \description{
 Run the specified model(s) on preprocessed data and return predictions.
@@ -36,36 +40,25 @@ Correct Minus Incorrect Word Sequences can be generated from a GAMET file
 (model = 'gamet_cws1').
 }
 \details{
-**Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
-are attempted and checks stay fast. The temporary files created for the example are
+Models 2 and 3 center and scale features using the data supplied in this call.
+Changing the scoring group can change a text's score. A single row or features
+with no variation can produce missing values. Model 1 and GAMET pass the input
+through to their saved models without this additional scaling.
+
+The 'example' model is for demonstrating the workflow only. Its preprocessing
+needs no downloads; prediction requires \code{wa_seed_example_models()} first. The temporary files created for the example are
 cleaned up at the end of the \code{\\examples{}}.
 }
 \examples{
-# Offline, CRAN-safe example using a tiny seeded model
-if (requireNamespace("withr", quietly = TRUE)) {
-  withr::local_options(writeAlizer.offline = TRUE)
-  tmp <- withr::local_tempdir()
-  withr::local_options(writeAlizer.mock_dir = tmp)
-
-  # Seed the example artifacts into the temp dir and point the loader there
-  writeAlizer::wa_seed_example_models("example", dir = tmp)
-
+local({
+  old <- options(writeAlizer.mock_dir = NULL, writeAlizer.offline = TRUE)
+  on.exit(options(old))
+  parent <- tempfile("wa-example-")
+  wa_seed_example_models(dir = parent)
+  on.exit(unlink(parent, recursive = TRUE), add = TRUE)
   coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
-  out <- predict_quality("example", coh)
-  head(out)
-} else {
-  # Fallback without 'withr' (still CRAN-safe)
-  old <- options(writeAlizer.offline = TRUE)
-  on.exit(options(old), add = TRUE)
-  ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
-  old2 <- options(writeAlizer.mock_dir = ex_dir)
-  on.exit(options(old2), add = TRUE)
-
-  coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
-  out <- predict_quality("example", coh)
-  head(out)
-}
+  head(predict_quality("example", coh))
+})
 
 # Longer, networked demos
 \dontrun{

@@ -231,7 +231,6 @@ test_that("preprocess rb_mod3all works offline via mocked varlists", {
 })
 
 test_that("predict_quality coerces 1-col df/matrix predictions to vectors", {
-  testthat::skip_if_offline()
   # Using the tiny example model seeded in tempdir to avoid downloads
   mock_old <- getOption("writeAlizer.mock_dir")
   ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())

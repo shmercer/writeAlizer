@@ -6,25 +6,30 @@
 #' location is used instead. This makes it easy to redirect the cache during tests
 #' or examples (e.g., to \code{tempdir()}).
 #'
+#' The override must be one non-missing character string. An empty string uses
+#' the default. Choose a dedicated directory: clearing the cache deletes all of
+#' its contents.
 #' @return Character scalar path.
 #' @seealso \code{\link{wa_cache_clear}}
 #' @examples
-#' # Inspect the cache directory (no side effects)
-#' wa_cache_dir()
-#'
-#' \dontshow{
-#' # Safe demo: redirect cache to a temp folder, create a file, then clear it
-#' old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
-#' tmp <- file.path(tempdir(), "wa_cache_demo"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
-#' options(writeAlizer.cache_dir = tmp)
-#' writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
-#' wa_cache_clear(ask = FALSE)
-#' }
+#' wa_cache_dir()  # Inspect the path without creating or deleting files
 #' @export
 wa_cache_dir <- function() {
-  override <- getOption("writeAlizer.cache_dir", NULL)
-  if (is.character(override) && nzchar(override)) return(override)
+  override <- .wa_path_option("writeAlizer.cache_dir")
+  if (!is.null(override)) return(override)
   tools::R_user_dir("writeAlizer", "cache")
+}
+
+# Empty options mean "use the default"; malformed options must not reach file I/O.
+.wa_path_option <- function(name) {
+  value <- getOption(name)
+  if (is.null(value)) return(NULL)
+  if (!is.character(value) || length(value) != 1L || is.na(value)) {
+    rlang::abort(paste0("Option `", name, "` must be a single path or NULL."),
+                 .subclass = "writeAlizer_input_error")
+  }
+  if (!nzchar(value)) return(NULL)
+  path.expand(value)
 }
 
 # --- internal test hooks (not exported) ---------------------------------------
@@ -57,7 +62,9 @@ wa_cache_dir <- function() {
 #'
 #' Deletes all files under \code{wa_cache_dir()}. If \code{ask = TRUE} \emph{and} in an
 #' interactive session, a short preview (item count, total size, and up to 10 sample
-#' paths) is printed before asking for confirmation.
+#' paths) is printed before asking for confirmation. In a non-interactive script,
+#' no prompt is shown, even if \code{ask = TRUE}. Use this only on a dedicated
+#' cache folder; all its contents are removed.
 #'
 #' @param ask Logical; if \code{TRUE} and interactive, ask for confirmation.
 #' @param preview Logical; if \code{TRUE} and \code{ask} is \code{TRUE}, show a brief
@@ -66,16 +73,21 @@ wa_cache_dir <- function() {
 #'   \code{FALSE} if the user declined or deletion failed.
 #' @seealso \code{\link{wa_cache_dir}}
 #' @examples
-#' # Safe demo: redirect cache to tempdir(), create a file, then clear it
-#' \dontshow{
-#' old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
-#' tmp <- file.path(tempdir(), "wa_cache_demo2"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
-#' options(writeAlizer.cache_dir = tmp)
-#' writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
-#' wa_cache_clear(ask = FALSE)
-#' }
+#' local({
+#'   old <- options(writeAlizer.cache_dir = tempfile("wa-cache-"))
+#'   on.exit(options(old))
+#'   dir.create(wa_cache_dir())
+#'   on.exit(unlink(wa_cache_dir(), recursive = TRUE), add = TRUE, after = FALSE)
+#'   writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
+#'   wa_cache_clear(ask = FALSE)
+#' })
 #' @export
 wa_cache_clear <- function(ask = interactive(), preview = TRUE) {
+  if (!is.logical(ask) || length(ask) != 1L || is.na(ask) ||
+      !is.logical(preview) || length(preview) != 1L || is.na(preview)) {
+    rlang::abort("`ask` and `preview` must each be TRUE or FALSE.",
+                 .subclass = "writeAlizer_input_error")
+  }
   path <- wa_cache_dir()
   if (!dir.exists(path)) {
     message("Cache directory does not exist: ", path)
@@ -87,7 +99,10 @@ wa_cache_clear <- function(ask = interactive(), preview = TRUE) {
     files <- list.files(path, all.files = TRUE, full.names = TRUE,
                         recursive = TRUE, include.dirs = TRUE, no.. = TRUE)
     n <- length(files)
-    sizes <- tryCatch(sum(file.info(files)$size, na.rm = TRUE), error = function(e) NA_real_)
+    sizes <- tryCatch({
+      info <- file.info(files)
+      sum(info$size[!info$isdir], na.rm = TRUE)
+    }, error = function(e) NA_real_)
     fmt_size <- function(b) {
       if (is.na(b)) return("unknown")
       units <- c("B","KB","MB","GB","TB")

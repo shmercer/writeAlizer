@@ -19,7 +19,7 @@ testthat::test_that("predict_quality() errors when trained fits are missing", {
   testthat::with_mocked_bindings(
     preprocess = function(model, data) list(data, data, data), # expect 3 splits
     .wa_load_fits_list = function(model) list(),               # but no fits present
-    .env = asNamespace("writeAlizer"),
+    .package = "writeAlizer",
     {
       testthat::expect_error(
         writeAlizer::predict_quality("rb_mod3all_v2", dat),
@@ -38,7 +38,7 @@ testthat::test_that("predict_quality() detects mismatch between expected submode
     preprocess = function(model, data) list(data),
     # Provide a non-empty fits list so we get to the mismatch branch
     .wa_load_fits_list = function(model) list(coh_mod3exp = 1, coh_mod3narr = 1, coh_mod3per = 1),
-    .env = asNamespace("writeAlizer"),
+    .package = "writeAlizer",
     {
       testthat::expect_error(
         writeAlizer::predict_quality("coh_mod3all", dat),
@@ -56,7 +56,7 @@ testthat::test_that("predict_quality() missing fits includes mock_dir hint when 
   testthat::with_mocked_bindings(
     preprocess = function(model, data) list(data, data, data),
     .wa_load_fits_list = function(model) list(),    # force missing fits
-    .env = asNamespace("writeAlizer"),
+    .package = "writeAlizer",
     {
       expect_error(
         writeAlizer::predict_quality("rb_mod3all_v2", dat),
@@ -75,7 +75,7 @@ testthat::test_that("predict_quality() errors clearly on unknown model key", {
     preprocess = function(model, data) list(data),
     # Prevent spurious errors from artifact loading before the switch() runs
     .wa_load_fits_list = function(model) list(),
-    .env = asNamespace("writeAlizer"),
+    .package = "writeAlizer",
     {
       testthat::expect_error(
         writeAlizer::predict_quality("not_a_real_model", dat),

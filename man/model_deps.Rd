@@ -21,26 +21,21 @@ required packages are installed. Otherwise, it lists the missing packages and
 prints a copy-paste \code{install.packages()} command.
 }
 \description{
-Discovers package dependencies for model fitting from the package
-`Suggests` field. This function **never installs** packages. It reports
+Reports optional packages from the package
+`Suggests` field, including model, documentation, and testing packages.
+This function **never installs** packages. It reports
 which packages are required and which are currently missing, and prints
 a ready-to-copy command you can run to install the missing ones manually.
 }
 \details{
-You can add or override discovered packages for testing or CI with
+You can add to the discovered packages for testing or CI with
 `options(writeAlizer.required_pkgs = c("pkgA", "pkgB (>= 1.2.3)"))`.
 Any version qualifiers you include are preserved in the `required` output,
-but stripped for the availability check in `missing`.
+but stripped for the availability check in `missing`. Installed versions are
+not compared against those qualifiers.
 }
 \examples{
 md <- model_deps()
 md$missing
-
-\dontshow{
-# Test hook: pretend a package is required but not installed
-old <- getOption("writeAlizer.required_pkgs"); on.exit(options(writeAlizer.required_pkgs = old), add = TRUE)
-options(writeAlizer.required_pkgs = c("thispkgdoesnotexist123", "another.fake (>= 1.0)"))
-md2 <- model_deps()
-}
 
 }

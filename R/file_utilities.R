@@ -6,7 +6,7 @@
 # Treats strings like "12", "-3.5", "1e-3" (with optional whitespace) as numeric-like
 .wa_num_like <- function(x) {
   is.character(x) &&
-    all(is.na(x) | grepl("^\\s*[-+]?\\d*\\.?\\d+(?:[eE][-+]?\\d+)?\\s*$", x, perl = TRUE))
+    all(is.na(x) | grepl("^\\s*[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?\\s*$", x, perl = TRUE))
 }
 
 # Convert numeric-like character columns to numeric, excluding specific columns (e.g., "ID")
@@ -19,13 +19,13 @@
   df
 }
 
-# Replace literal "NaN" strings with NA in character columns (exclude certain cols)
+# Treat blank measurements and literal "NaN" as missing (never alter IDs).
 .wa_naify_nan_chars <- function(df, exclude = character()) {
   cols <- setdiff(names(df), exclude)
   for (nm in cols) {
     if (is.character(df[[nm]])) {
       x <- df[[nm]]
-      x[x == "NaN"] <- NA
+      x[trimws(x) %in% c("", "NaN")] <- NA
       df[[nm]] <- x
     }
   }
@@ -53,6 +53,25 @@
   list(keep = keep, drop = drop)
 }
 
+.wa_require_columns <- function(df, required, context) {
+  missing <- setdiff(required, names(df))
+  if (length(missing) || anyDuplicated(names(df))) {
+    rlang::abort(paste0("Missing required column(s) or duplicate column names for ", context,
+                       ": ", paste(missing, collapse = ", ")),
+                 .subclass = "writeAlizer_input_error")
+  }
+}
+
+.wa_rename_id <- function(df, from, context) {
+  .wa_require_columns(df, from, context)
+  if ("ID" %in% names(df)) {
+    rlang::abort(paste0(context, " contains both '", from, "' and 'ID'; keep only the source ID column."),
+                 .subclass = "writeAlizer_input_error")
+  }
+  names(df)[names(df) == from] <- "ID"
+  df
+}
+
 # Internal: validate required columns and IDs
 .wa_validate_import <- function(df, required, context = "import") {
   # Try to coerce to a data frame if possible (tibble, list of equal-length vectors, etc.)
@@ -67,15 +86,7 @@
     )
   }
 
-  # Required columns present?
-  missing <- setdiff(required, names(df))
-  if (length(missing)) {
-    rlang::abort(
-      paste0("Missing required column(s) for ", context, ": ",
-             paste(missing, collapse = ", ")),
-      .subclass = "writeAlizer_input_error"
-    )
-  }
+  .wa_require_columns(df, required, context)
 
   # ID column must exist, be character, and unique
   if (!"ID" %in% names(df)) {
@@ -83,6 +94,10 @@
   }
   df[["ID"]] <- as.character(df[["ID"]])
 
+  if (anyNA(df$ID) || any(!nzchar(trimws(df$ID)))) {
+    rlang::abort(paste0("Missing or blank IDs in ", context, ". Each row needs a text identifier."),
+                 .subclass = "writeAlizer_input_error")
+  }
   dups <- df$ID[duplicated(df$ID)]
   if (length(dups)) {
     rlang::abort(
@@ -143,7 +158,9 @@ keep_stem_before_txt <- function(x) {
 #' @importFrom tools file_path_sans_ext
 #' @importFrom dplyr mutate
 #' @importFrom tidyselect where
-#' @param path A string giving the path and filename to import.
+#' @param path A string giving the path and filename to import. Keep the original
+#'   CSV column names. IDs must be nonblank and unique; leading zeros are preserved.
+#'   Rows are sorted by ID.
 #' @export
 #' @seealso \code{\link{predict_quality}}
 #' @return
@@ -161,23 +178,31 @@ keep_stem_before_txt <- function(x) {
 #' gamet_file  <- import_gamet(file_path)
 #' head(gamet_file)
 import_gamet <- function(path) {
-  dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
+  dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE, colClasses = "character", check.names = FALSE)
+  names(dat1) <- make.names(names(dat1))
 
-  # normalize ID from the 'filename' column (works with or without path/.txt)
-  dat1$filename <- keep_stem_before_txt(dat1$filename)
-  names(dat1)[names(dat1) == "filename"] <- "ID"
-  dat1$ID <- as.character(dat1$ID)
+  required <- c("filename", "error_count", "word_count", "grammar", "misspelling",
+                "duplication", "typographical", "whitespace")
+  .wa_require_columns(dat1, required, "import_gamet")
+  dat1 <- .wa_rename_id(dat1, "filename", "import_gamet")
+  dat1$ID <- keep_stem_before_txt(dat1$ID)
 
   # clean character "NaN" -> NA; auto-convert numeric-like chars (keep ID as character)
   dat1 <- .wa_naify_nan_chars(dat1, exclude = "ID")
   dat1 <- .wa_convert_numeric_like(dat1, exclude = "ID")
 
   # sort by ID (character-safe)
-  dat1 <- dat1[order(dat1$ID), ]
+  dat1 <- dat1[order(dat1$ID), , drop = FALSE]
 
   # select and derive
   dat4 <- dat1[, c("ID", "error_count", "word_count", "grammar", "misspelling",
                    "duplication", "typographical", "whitespace")]
+
+  features <- setdiff(names(dat4), "ID")
+  if (!all(vapply(dat4[features], is.numeric, logical(1)))) {
+    rlang::abort("GAMET feature columns must contain numbers or missing values.",
+                 .subclass = "writeAlizer_input_error")
+  }
 
   # guard against division by zero
   dat4$per_gram  <- ifelse(dat4$word_count == 0, NA_real_, dat4$grammar     / dat4$word_count)
@@ -195,7 +220,9 @@ import_gamet <- function(path) {
 #' @importFrom tools file_path_sans_ext
 #' @importFrom dplyr mutate
 #' @importFrom tidyselect where
-#' @param path A string giving the path and filename to import.
+#' @param path A string giving the path and filename to import. Keep the original
+#'   CSV column names. IDs must be nonblank and unique; leading zeros are preserved.
+#'   Rows are sorted by ID.
 #' @export
 #' @seealso \code{\link{predict_quality}}
 #' @return
@@ -213,19 +240,19 @@ import_gamet <- function(path) {
 #' coh_file  <- import_coh(file_path)
 #' head(coh_file)
 import_coh <- function(path) {
-  dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE)
+  dat1 <- utils::read.csv(path, header = TRUE, stringsAsFactors = FALSE, colClasses = "character", check.names = FALSE)
+  names(dat1) <- make.names(names(dat1))
 
   # normalize ID from the 'TextID' column (works with or without path/.txt)
-  dat1$TextID <- keep_stem_before_txt(dat1$TextID)
-  names(dat1)[names(dat1) == "TextID"] <- "ID"
-  dat1$ID <- as.character(dat1$ID)
+  dat1 <- .wa_rename_id(dat1, "TextID", "import_coh")
+  dat1$ID <- keep_stem_before_txt(dat1$ID)
 
   # clean character "NaN" -> NA; auto-convert numeric-like chars (keep ID as character)
   dat1 <- .wa_naify_nan_chars(dat1, exclude = "ID")
   dat1 <- .wa_convert_numeric_like(dat1, exclude = "ID")
 
   # sort by ID
-  dat1 <- dat1[order(dat1$ID), ]
+  dat1 <- dat1[order(dat1$ID), , drop = FALSE]
 
   # validate IDs
   dat1 <- .wa_validate_import(dat1, required = c("ID"), context = "import_coh")
@@ -244,7 +271,9 @@ import_coh <- function(path) {
 #' @importFrom utils read.table
 #' @importFrom dplyr mutate
 #' @importFrom tidyselect where
-#' @param path A string giving the path and filename to import.
+#' @param path A string giving the path and filename to import. Keep the original
+#'   CSV column names. IDs must be nonblank and unique; leading zeros are preserved.
+#'   Rows are sorted by ID.
 #' @export
 #' @seealso \code{\link{predict_quality}}
 #' @return
@@ -273,17 +302,20 @@ import_rb <- function(path) {
   if (identical(first_line, "SEP=,")) {
     dat_RB <- utils::read.table(
       text = txt, header = TRUE, sep = ",", skip = 1L,
-      stringsAsFactors = FALSE, check.names = TRUE
+      stringsAsFactors = FALSE, check.names = FALSE, colClasses = "character", comment.char = ""
     )
   } else {
     dat_RB <- utils::read.table(
       text = txt, header = TRUE, sep = ",",
-      stringsAsFactors = FALSE, check.names = TRUE
+      stringsAsFactors = FALSE, check.names = FALSE, colClasses = "character", comment.char = ""
     )
   }
 
-  # Replace "NaN" strings in character columns only
-  dat_RB <- .wa_naify_nan_chars(dat_RB)
+  names(dat_RB) <- make.names(names(dat_RB))
+  .wa_require_columns(dat_RB, character(), "import_rb")
+
+  # Replace missing measurements in feature columns only
+  dat_RB <- .wa_naify_nan_chars(dat_RB, exclude = c("File.name", "ID"))
 
   # Name-based selection using the packaged sample header, if available:
   # - keep: first 404 NAMES from sample_rb.csv (syntactic)
@@ -317,7 +349,7 @@ import_rb <- function(path) {
   #  2) Else if ID already present (some exports), keep as-is
   #  3) Else if File.name existed in the original, construct ID from it
   if ("File.name" %in% names(dat_RB2)) {
-    names(dat_RB2)[names(dat_RB2) == "File.name"] <- "ID"
+    dat_RB2 <- .wa_rename_id(dat_RB2, "File.name", "import_rb")
   } else if (!"ID" %in% names(dat_RB2) && "File.name" %in% names(dat_RB)) {
     dat_RB2$ID <- as.character(dat_RB[["File.name"]])
   }

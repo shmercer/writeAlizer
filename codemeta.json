@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/shmercer/writeAlizer/",
   "issueTracker": "https://github.com/shmercer/writeAlizer/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -176,7 +176,7 @@
       "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
-      "version": ">= 3.1.0",
+      "version": ">= 3.2.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -203,7 +203,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 2.10"
+      "version": ">= 4.0.0"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -324,7 +324,7 @@
       "name": "writeAlizer: Generate predicted writing quality scores",
       "identifier": "10.32614/CRAN.package.writeAlizer",
       "url": "https://doi.org/10.32614/CRAN.package.writeAlizer",
-      "description": "R package version 1.7.3",
+      "description": "R package version 1.7.4",
       "@id": "https://doi.org/10.32614/CRAN.package.writeAlizer",
       "sameAs": "https://doi.org/10.32614/CRAN.package.writeAlizer"
     }

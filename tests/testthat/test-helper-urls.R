@@ -1,11 +1,5 @@
-to_file_url <- function(path) {
-  stopifnot(file.exists(path))
-  # Normalize and encode
-  norm <- normalizePath(path, winslash = "/", mustWork = TRUE)
-  url_path <- utils::URLencode(norm)
-  if (.Platform$OS.type == "windows") {
-    paste0("file:///", url_path)  # 3 slashes then C:/...
-  } else {
-    paste0("file://", url_path)
-  }
-}
+test_that("file URL helper round-trips paths with spaces", {
+  path <- file.path(withr::local_tempdir(), "two words.txt")
+  writeLines("example", path)
+  expect_identical(normalizePath(.wa_from_file_url(to_file_url(path))), normalizePath(path))
+})

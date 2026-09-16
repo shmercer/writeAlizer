@@ -19,17 +19,19 @@ Invisibly returns \code{TRUE} if the cache was cleared (or already absent),
 \description{
 Deletes all files under \code{wa_cache_dir()}. If \code{ask = TRUE} \emph{and} in an
 interactive session, a short preview (item count, total size, and up to 10 sample
-paths) is printed before asking for confirmation.
+paths) is printed before asking for confirmation. In a non-interactive script,
+no prompt is shown, even if \code{ask = TRUE}. Use this only on a dedicated
+cache folder; all its contents are removed.
 }
 \examples{
-# Safe demo: redirect cache to tempdir(), create a file, then clear it
-\dontshow{
-old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
-tmp <- file.path(tempdir(), "wa_cache_demo2"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
-options(writeAlizer.cache_dir = tmp)
-writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
-wa_cache_clear(ask = FALSE)
-}
+local({
+  old <- options(writeAlizer.cache_dir = tempfile("wa-cache-"))
+  on.exit(options(old))
+  dir.create(wa_cache_dir())
+  on.exit(unlink(wa_cache_dir(), recursive = TRUE), add = TRUE, after = FALSE)
+  writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
+  wa_cache_clear(ask = FALSE)
+})
 }
 \seealso{
 \code{\link{wa_cache_dir}}

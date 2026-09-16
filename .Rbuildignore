@@ -12,3 +12,6 @@
 ^docs$
 ^pkgdown$
 ^codemeta\.json$
+
+^audit$
+^scripts$

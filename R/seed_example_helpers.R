@@ -10,7 +10,8 @@
 #' without downloads or network access.
 #'
 #' @details
-#' - Writes only under `tempdir()` and returns the created path.
+#' - Writes under the supplied `dir` (by default `tempdir()`) and returns the path.
+#' - The example predicts a constant 1.5; it is not a writing assessment.
 #' - Sets `options(writeAlizer.mock_dir = <path>)`; callers should
 #'   restore prior options when appropriate (see Examples).
 #'
@@ -21,20 +22,26 @@
 #' (Invisibly) the path to the created example model directory.
 #'
 #' @examples
-#' old <- getOption("writeAlizer.mock_dir")
-#' on.exit(options(writeAlizer.mock_dir = old), add = TRUE)
-#'
-#' ex <- wa_seed_example_models(dir = tempdir())
-#' # Use the package normally here; the loader will find `ex`
-#' # ...
-#' unlink(ex, recursive = TRUE, force = TRUE)
+#' local({
+#'   old <- options(writeAlizer.mock_dir = NULL)
+#'   on.exit(options(old))
+#'   parent <- tempfile("wa-example-")
+#'   ex <- wa_seed_example_models(dir = parent)
+#'   on.exit(unlink(parent, recursive = TRUE), add = TRUE)
+#'   predict_quality("example", data.frame(ID = c("text1", "text2")))
+#' })
 #'
 #' @export
 wa_seed_example_models <- function(model = c("example"), dir = tempdir()) {
   model <- match.arg(model)
+  if (!is.character(dir) || length(dir) != 1L || is.na(dir) || !nzchar(dir)) {
+    rlang::abort("`dir` must be a non-empty directory path.", .subclass = "writeAlizer_input_error")
+  }
 
   exdir <- file.path(dir, "writeAlizer_example")
-  if (!dir.exists(exdir)) dir.create(exdir, recursive = TRUE, showWarnings = FALSE)
+  if (!dir.exists(exdir) && !dir.create(exdir, recursive = TRUE, showWarnings = FALSE)) {
+    rlang::abort(paste0("Cannot create example directory: ", exdir), .subclass = "writeAlizer_input_error")
+  }
 
   # ultra-tiny intercept-only model; no external datasets
   df  <- data.frame(y = c(1, 2))

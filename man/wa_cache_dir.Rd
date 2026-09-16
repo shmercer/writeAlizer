@@ -16,18 +16,13 @@ If the option \code{writeAlizer.cache_dir} is set to a non-empty string, that
 location is used instead. This makes it easy to redirect the cache during tests
 or examples (e.g., to \code{tempdir()}).
 }
-\examples{
-# Inspect the cache directory (no side effects)
-wa_cache_dir()
-
-\dontshow{
-# Safe demo: redirect cache to a temp folder, create a file, then clear it
-old <- getOption("writeAlizer.cache_dir"); on.exit(options(writeAlizer.cache_dir = old), add = TRUE)
-tmp <- file.path(tempdir(), "wa_cache_demo"); dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
-options(writeAlizer.cache_dir = tmp)
-writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
-wa_cache_clear(ask = FALSE)
+\details{
+The override must be one non-missing character string. An empty string uses
+the default. Choose a dedicated directory: clearing the cache deletes all of
+its contents.
 }
+\examples{
+wa_cache_dir()  # Inspect the path without creating or deleting files
 }
 \seealso{
 \code{\link{wa_cache_clear}}

@@ -17,6 +17,9 @@ testthat::test_that("model_deps() returns list(required, missing) of character",
 })
 
 testthat::test_that("model_deps() respects writeAlizer.required_pkgs and preserves qualifiers", {
+  # Keep expectations independent of installed optional model packages.
+  testthat::local_mocked_bindings(packageDescription = function(...) "stats, utils",
+                                  .package = "utils")
   withr::local_options(writeAlizer.required_pkgs = c("thispkgdoesnotexist123", "anotherFakePkg (>= 1.0)"))
 
   no_op <- function(...) invisible(NULL)
@@ -28,7 +31,7 @@ testthat::test_that("model_deps() respects writeAlizer.required_pkgs and preserv
     cli_alert_danger  = no_op,
     cli_ul            = no_op,
     cli_code          = no_op,
-    .env = asNamespace("cli"),
+    .package = "cli",
     {
       md <- writeAlizer::model_deps()
     }
@@ -44,6 +47,9 @@ testthat::test_that("model_deps() respects writeAlizer.required_pkgs and preserv
 })
 
 testthat::test_that("model_deps() does not flag installed packages as missing", {
+  # Keep expectations independent of installed optional model packages.
+  testthat::local_mocked_bindings(packageDescription = function(...) "stats, utils",
+                                  .package = "utils")
   withr::local_options(writeAlizer.required_pkgs = "stats")
 
   out <- testthat::capture_output({
@@ -59,6 +65,9 @@ testthat::test_that("model_deps() does not flag installed packages as missing", 
 # ---- UPDATED: capture cli output via capture_output + capture_messages ----
 
 testthat::test_that("model_deps() is quick, emits cli alerts, and returns a named list", {
+  # Keep expectations independent of installed optional model packages.
+  testthat::local_mocked_bindings(packageDescription = function(...) "stats, utils",
+                                  .package = "utils")
   withr::local_options(writeAlizer.required_pkgs = c("stats", "utils"))
 
   out <- testthat::capture_output({
@@ -75,6 +84,9 @@ testthat::test_that("model_deps() is quick, emits cli alerts, and returns a name
 })
 
 testthat::test_that("model_deps() prints missing list and install command when something is missing", {
+  # Keep expectations independent of installed optional model packages.
+  testthat::local_mocked_bindings(packageDescription = function(...) "stats, utils",
+                                  .package = "utils")
   withr::local_options(
     writeAlizer.required_pkgs = c("thispkgdoesnotexist123", "anotherFakePkg", "stats")
   )
@@ -92,6 +104,9 @@ testthat::test_that("model_deps() prints missing list and install command when s
 })
 
 testthat::test_that("model_deps() preserves version qualifiers in `required` but strips them in `missing`", {
+  # Keep expectations independent of installed optional model packages.
+  testthat::local_mocked_bindings(packageDescription = function(...) "stats, utils",
+                                  .package = "utils")
   withr::local_options(writeAlizer.required_pkgs = c("fakePkgA (>= 9.9)", "fakePkgB"))
 
   out <- testthat::capture_output({
@@ -109,6 +124,9 @@ testthat::test_that("model_deps() preserves version qualifiers in `required` but
 
 # Optional coverage for deprecated alias (suppress warning)
 testthat::test_that("internal install_model_deps() forwards to model_deps()", {
+  # Keep expectations independent of installed optional model packages.
+  testthat::local_mocked_bindings(packageDescription = function(...) "stats, utils",
+                                  .package = "utils")
   withr::local_options(writeAlizer.required_pkgs = c("stats"))
 
   out <- testthat::capture_output({

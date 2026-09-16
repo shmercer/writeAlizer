@@ -1,3 +1,46 @@
+.wa_validate_prediction_data <- function(data) {
+  if (!is.data.frame(data) || !nrow(data)) {
+    rlang::abort("`data` must be a data.frame with at least one row.",
+                 .subclass = "writeAlizer_input_error")
+  }
+  .wa_validate_import(data, "ID", "prediction data")
+  invisible(TRUE)
+}
+
+.wa_prediction_names <- function(canonical_model, requested_model = canonical_model) {
+  switch(
+    canonical_model,
+    "rb_mod1"        = paste0("rb_mod1",  letters[1:6]),
+    "coh_mod1"       = paste0("coh_mod1", letters[1:6]),
+    "rb_mod2"        = paste0("rb_mod2",  letters[1:3]),
+    "coh_mod2"       = paste0("coh_mod2",  letters[1:3]),
+    "rb_mod3all_v2"  = c("rb_mod3exp_v2", "rb_mod3narr_v2", "rb_mod3per_v2"),
+    "rb_mod3narr_v2" = "rb_mod3narr_v2",
+    "rb_mod3exp_v2"  = "rb_mod3exp_v2",
+    "rb_mod3per_v2"  = "rb_mod3per_v2",
+    "coh_mod3all"    = c("coh_mod3exp",   "coh_mod3narr",   "coh_mod3per"),
+    "coh_mod3narr"   = "coh_mod3narr",
+    "coh_mod3exp"    = "coh_mod3exp",
+    "coh_mod3per"    = "coh_mod3per",
+    "gamet_cws1"     = c("CWS_mod1a", "CIWS_mod1a"),
+    "example"        = "example",
+    {
+      valid <- c(
+        "rb_mod1","rb_mod2","rb_mod3narr","rb_mod3exp","rb_mod3per","rb_mod3all",
+        "coh_mod1","coh_mod2","coh_mod3narr","coh_mod3exp","coh_mod3per","coh_mod3all",
+        "gamet_cws1","example"
+      )
+      rlang::abort(
+        sprintf(
+          "Unknown model key '%s' (canonicalized from '%s'). Valid options are: %s.\nSee ?predict_quality for details.",
+          canonical_model, requested_model, paste(valid, collapse = ", ")
+        ),
+        .subclass = "writeAlizer_model_unknown"
+      )
+    }
+  )
+}
+
 # This file includes functions to generate predicted writing quality scores
 # and written expression curriculum-based measurement scores (CWS and CIWS)
 # from Readerbench, CohMetrix, and/or GAMET files.
@@ -22,9 +65,13 @@
 #'   a list of length 1/3 with centered & scaled features plus the \code{ID} column.
 #' @export
 #' @details
-#' **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-#' directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
-#' are attempted and checks stay fast.
+#' Models 2 and 3 center and scale features using the data supplied in this call.
+#' Changing the scoring group can change a text's score. A single row or features
+#' with no variation can produce missing values. Model 1 and GAMET pass the input
+#' through to their saved models without this additional scaling.
+#'
+#' The 'example' model is for demonstrating the workflow only. Its preprocessing
+#' needs no downloads; prediction requires \code{wa_seed_example_models()} first.
 #' @examples
 #' # Minimal, offline example using the built-in 'example' model (no downloads)
 #' rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
@@ -34,7 +81,9 @@
 #' length(pp); lapply(pp, nrow)
 preprocess <- function(model, data) {
   # Map legacy keys (e.g., rb_mod3narr -> rb_mod3narr_v2) to the canonical key if available
-  key <- if (exists(".wa_canonical_model", mode = "function")) .wa_canonical_model(model) else model
+  key <- .wa_canonical_model(model)
+  .wa_prediction_names(key, model)
+  .wa_validate_prediction_data(data)
 
   # 'example' is a tiny, offline demo model — no varlists, one split
   if (identical(key, "example")) {
@@ -64,6 +113,16 @@ preprocess <- function(model, data) {
 
   # Helper to center/scale a slice and keep ID
   prep_slice <- function(vars) {
+    if (!is.character(vars) || !length(vars) || anyNA(vars) ||
+        any(!nzchar(vars)) || anyDuplicated(vars) || "ID" %in% vars) {
+      rlang::abort("A model variable list must contain unique feature names (excluding ID).",
+                   .subclass = "writeAlizer_registry_malformed")
+    }
+    .wa_require_columns(data, vars, "preprocess")
+    if (!all(vapply(data[vars], is.numeric, logical(1)))) {
+      rlang::abort("Model feature columns must be numeric. Check the imported CSV values.",
+                   .subclass = "writeAlizer_input_error")
+    }
     data_i <- dplyr::select(data, tidyselect::all_of(vars))
     pp     <- caret::preProcess(data_i, method = c("center", "scale"))
     data_s <- stats::predict(pp, data_i)
@@ -72,7 +131,7 @@ preprocess <- function(model, data) {
 
   # 3-part models
   if (model %in% c("rb_mod2", "coh_mod2", "rb_mod3all", "rb_mod3all_v2", "coh_mod3all")) {
-    if (length(varlists) < 3L) stop(sprintf("Expected 3 varlists for model '%s'", model), call. = FALSE)
+    if (length(varlists) != 3L) stop(sprintf("Expected 3 varlists for model '%s'", model), call. = FALSE)
     return(list(
       prep_slice(varlists[[1L]]),
       prep_slice(varlists[[2L]]),
@@ -84,10 +143,12 @@ preprocess <- function(model, data) {
   if (model %in% c("rb_mod3narr", "rb_mod3exp", "rb_mod3per",
                    "coh_mod3narr", "coh_mod3exp", "coh_mod3per",
                    "rb_mod3narr_v2", "rb_mod3exp_v2", "rb_mod3per_v2")) {
+    if (length(varlists) != 1L) {
+      rlang::abort("Expected 1 varlist for this model.", .subclass = "writeAlizer_registry_malformed")
+    }
     return(list(prep_slice(varlists[[1L]])))
   }
 
-  stop(sprintf("Unknown model key '%s'", model), call. = FALSE)
 }
 
 #' @title Predict writing quality
@@ -102,7 +163,8 @@ preprocess <- function(model, data) {
 #' @importFrom stats predict
 #' @importFrom dplyr select
 #' @importFrom rlang abort
-#' @param model A string telling which scoring model to use.
+#' @param model A string telling which scoring model to use. ReaderBench Model 3
+#'   keys also accept a '_v2' suffix. The 'example' key is an offline demonstration.
 #' Options are:
 #' 'rb_mod1', 'rb_mod2', 'rb_mod3narr', 'rb_mod3exp',
 #' 'rb_mod3per', or 'rb_mod3all', for ReaderBench files to generate holistic quality,
@@ -116,38 +178,30 @@ preprocess <- function(model, data) {
 #' @return A \code{data.frame} with \code{ID} and one column per sub-model prediction.
 #'         If multiple sub-models are used and all predictions are numeric,
 #'         an aggregate column named \code{pred_<model>_mean} is added
-#'         (except for "gamet_cws1").
+#'         (except for "gamet_cws1"). Missing component scores are omitted from
+#'         the mean; an entirely missing row yields NaN. GAMET returns
+#'         \code{pred_TWW_gamet}, \code{pred_WSC_gamet}, \code{pred_CWS_mod1a},
+#'         and \code{pred_CIWS_mod1a}. Predictions are not rounded or clipped.
 #' @seealso \code{\link{import_rb}}, \code{\link{import_coh}}, \code{\link{import_gamet}}
 #' @details
-#' **Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-#' directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
-#' are attempted and checks stay fast. The temporary files created for the example are
+#' Models 2 and 3 center and scale features using the data supplied in this call.
+#' Changing the scoring group can change a text's score. A single row or features
+#' with no variation can produce missing values. Model 1 and GAMET pass the input
+#' through to their saved models without this additional scaling.
+#'
+#' The 'example' model is for demonstrating the workflow only. Its preprocessing
+#' needs no downloads; prediction requires \code{wa_seed_example_models()} first. The temporary files created for the example are
 #' cleaned up at the end of the \code{\\examples{}}.
 #' @examples
-#' # Offline, CRAN-safe example using a tiny seeded model
-#' if (requireNamespace("withr", quietly = TRUE)) {
-#'   withr::local_options(writeAlizer.offline = TRUE)
-#'   tmp <- withr::local_tempdir()
-#'   withr::local_options(writeAlizer.mock_dir = tmp)
-#'
-#'   # Seed the example artifacts into the temp dir and point the loader there
-#'   writeAlizer::wa_seed_example_models("example", dir = tmp)
-#'
+#' local({
+#'   old <- options(writeAlizer.mock_dir = NULL, writeAlizer.offline = TRUE)
+#'   on.exit(options(old))
+#'   parent <- tempfile("wa-example-")
+#'   wa_seed_example_models(dir = parent)
+#'   on.exit(unlink(parent, recursive = TRUE), add = TRUE)
 #'   coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
-#'   out <- predict_quality("example", coh)
-#'   head(out)
-#' } else {
-#'   # Fallback without 'withr' (still CRAN-safe)
-#'   old <- options(writeAlizer.offline = TRUE)
-#'   on.exit(options(old), add = TRUE)
-#'   ex_dir <- writeAlizer::wa_seed_example_models("example", dir = tempdir())
-#'   old2 <- options(writeAlizer.mock_dir = ex_dir)
-#'   on.exit(options(old2), add = TRUE)
-#'
-#'   coh <- import_coh(system.file("extdata", "sample_coh.csv", package = "writeAlizer"))
-#'   out <- predict_quality("example", coh)
-#'   head(out)
-#' }
+#'   head(predict_quality("example", coh))
+#' })
 #'
 #' # Longer, networked demos
 #' \dontrun{
@@ -202,45 +256,20 @@ predict_quality <- function(model, data) {
 
   requested_model  <- model                       # for output naming
   canonical_model  <- .wa_canonical_model(model)  # for artifact/varlist loading
+  fit_names <- .wa_prediction_names(canonical_model, requested_model)
+  .wa_validate_prediction_data(data)
+  if (identical(canonical_model, "gamet_cws1")) {
+    .wa_require_columns(data, c("word_count", "misspelling"), "predict_quality")
+    if (!all(vapply(data[c("word_count", "misspelling")], is.numeric, logical(1)))) {
+      rlang::abort("GAMET word_count and misspelling must be numeric.", .subclass = "writeAlizer_input_error")
+    }
+  }
 
   # 1) Preprocess for the canonical model key
   data_pp <- preprocess(canonical_model, data)
 
   # 2) Load trained fits for the canonical model
   fits <- .wa_load_fits_list(canonical_model)
-
-  # 3) Expected object names by canonical key
-  fit_names <- switch(
-    canonical_model,
-    "rb_mod1"        = paste0("rb_mod1",  letters[1:6]),
-    "coh_mod1"       = paste0("coh_mod1", letters[1:6]),
-    "rb_mod2"        = paste0("rb_mod2",  letters[1:3]),
-    "coh_mod2"       = paste0("coh_mod2",  letters[1:3]),
-    "rb_mod3all_v2"  = c("rb_mod3exp_v2", "rb_mod3narr_v2", "rb_mod3per_v2"),
-    "rb_mod3narr_v2" = "rb_mod3narr_v2",
-    "rb_mod3exp_v2"  = "rb_mod3exp_v2",
-    "rb_mod3per_v2"  = "rb_mod3per_v2",
-    "coh_mod3all"    = c("coh_mod3exp",   "coh_mod3narr",   "coh_mod3per"),
-    "coh_mod3narr"   = "coh_mod3narr",
-    "coh_mod3exp"    = "coh_mod3exp",
-    "coh_mod3per"    = "coh_mod3per",
-    "gamet_cws1"     = c("CWS_mod1a", "CIWS_mod1a"),
-    "example"        = "example",
-    {
-      valid <- c(
-        "rb_mod1","rb_mod2","rb_mod3narr","rb_mod3exp","rb_mod3per","rb_mod3all",
-        "coh_mod1","coh_mod2","coh_mod3narr","coh_mod3exp","coh_mod3per","coh_mod3all",
-        "gamet_cws1","example"
-      )
-      rlang::abort(
-        sprintf(
-          "Unknown model key '%s' (canonicalized from '%s'). Valid options are: %s.\nSee ?predict_quality for details.",
-          canonical_model, requested_model, paste(valid, collapse = ", ")
-        ),
-        .subclass = "writeAlizer_model_unknown"
-      )
-    }
-  )
 
   if (length(fit_names) != length(data_pp)) {
     rlang::abort(
@@ -254,8 +283,8 @@ predict_quality <- function(model, data) {
 
   missing <- setdiff(fit_names, names(fits))
   if (length(missing)) {
-    mock_dir <- getOption("writeAlizer.mock_dir")
-    hint <- if (is.character(mock_dir) && nzchar(mock_dir)) {
+    mock_dir <- .wa_path_option("writeAlizer.mock_dir")
+    hint <- if (!is.null(mock_dir)) {
       sprintf(
         "\nNote: writeAlizer.mock_dir is set to '%s'. If you're running the offline demo, (re)seed with writeAlizer::wa_seed_example_models(\"example\") or clear the option.",
         mock_dir
@@ -283,12 +312,26 @@ predict_quality <- function(model, data) {
   names(preds) <- out_names
 
   for (i in seq_along(fit_names)) {
+    if (nrow(data_pp[[i]]) != nrow(data) ||
+        !identical(data_pp[[i]]$ID, data$ID)) {
+      rlang::abort("Preprocessing changed the number or order of text IDs.",
+                   .subclass = "writeAlizer_internal_mismatch")
+    }
     newx <- drop_id(data_pp[[i]])
     p <- predict(fits[[fit_names[[i]]]], newdata = newx)
 
     # --- Robust coercion so we always assign a simple numeric/character vector ---
-    if (is.data.frame(p)) p <- p[[1]]
-    if (is.matrix(p))     p <- p[, 1, drop = TRUE]
+    if (is.data.frame(p) || is.matrix(p)) {
+      if (ncol(p) != 1L) {
+        rlang::abort("A sub-model returned multiple prediction columns; expected one.",
+                     .subclass = "writeAlizer_prediction_error")
+      }
+      if (is.data.frame(p)) p <- p[[1L]] else p <- p[, 1L, drop = TRUE]
+    }
+    if (!is.atomic(p) || !is.null(dim(p)) || length(p) != nrow(data)) {
+      rlang::abort(sprintf("Sub-model '%s' must return one prediction per input row.", fit_names[[i]]),
+                   .subclass = "writeAlizer_prediction_error")
+    }
     preds[[out_names[[i]]]] <- p
   }
 

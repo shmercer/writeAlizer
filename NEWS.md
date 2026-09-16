@@ -1,3 +1,23 @@
+# writeAlizer 1.7.4 (2026-09-16)
+
+## Bug fixes
+
+- Preserved text IDs and missing numeric values during import, and added clearer errors for invalid IDs and duplicate headers.
+- Fixed local file downloads and improved cache validation to protect existing files when downloads fail.
+- Improved model loading, dependency checks, and validation of required variables and prediction results.
+
+## Improved documentation
+
+- Reorganized the getting-started guide and clarified score interpretation, model outputs, and setup instructions.
+- Improved website navigation and table layouts for smaller screens.
+- Updated the Matta, Keller-Margulis, and Mercer (2025) citation with published article details.
+
+## Tests and maintenance
+
+- Increased test coverage above 95% overall and in every R source file with executable code.
+- Improved test isolation and made examples restore settings after use.
+- Fixed the checksum maintenance script and updated minimum requirements to R 4.0.0 and testthat 3.2.0.
+
 # writeAlizer 1.7.3 (2026-2-16)
 
 ## CRAN policy

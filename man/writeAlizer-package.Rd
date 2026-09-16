@@ -11,18 +11,19 @@ Package-level documentation for writeAlizer.
 \details{
 Detailed documentation on writeAlizer is available in the
 \href{https://github.com/shmercer/writeAlizer}{GitHub README file}
-and \href{https://github.com/shmercer/writeAlizer/wiki}{wiki}.
+and \href{https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html}{getting-started guide}.
 
 The writeAlizer R package (a) imports \href{https://github.com/readerbench/readerbench-java}{ReaderBench},
 \href{https://soletlab.asu.edu/coh-metrix/}{Coh-Metrix}, and
 \href{https://www.linguisticanalysistools.org/gamet.html}{GAMET} output files into R, and
 (b) uses research-developed scoring models to generate predicted writing quality scores
-or Correct Word Sequences and Correct Minus Incorrect Word Sequences scores from those files.
+or Total Words Written, Words Spelled Correctly, Correct Word Sequences,
+and Correct Minus Incorrect Word Sequences scores from GAMET files.
 
 The writeAlizer package includes functions to do two types of tasks:
 (1) importing ReaderBench, Coh-Metrix, and/or GAMET output files into R; and
 (2) generating predicted quality scores using the imported output files.
-There are also additional functions to help with (3) installation of package dependencies and
+There are also additional functions to help with (3) identifying optional package dependencies and
 (4) cache management.
 }
 \section{1. Import output files}{
@@ -68,5 +69,10 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Sterett H. Mercer \email{sterett.mercer@ubc.ca} (\href{https://orcid.org/0000-0002-7940-4221}{ORCID})
+
+Authors:
+\itemize{
+  \item Sterett H. Mercer \email{sterett.mercer@ubc.ca} (\href{https://orcid.org/0000-0002-7940-4221}{ORCID})
+}
 
 }

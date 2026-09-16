@@ -29,9 +29,13 @@ Uses the artifact registry to load the correct variable lists and applies
 centering and scaling per sub-model, preserving the original behavior by model key.
 }
 \details{
-**Offline/examples:** Examples use a built-in 'example' model seeded in a temporary
-directory via \code{writeAlizer::wa_seed_example_models("example")}, so no downloads
-are attempted and checks stay fast.
+Models 2 and 3 center and scale features using the data supplied in this call.
+Changing the scoring group can change a text's score. A single row or features
+with no variation can produce missing values. Model 1 and GAMET pass the input
+through to their saved models without this additional scaling.
+
+The 'example' model is for demonstrating the workflow only. Its preprocessing
+needs no downloads; prediction requires \code{wa_seed_example_models()} first.
 }
 \examples{
 # Minimal, offline example using the built-in 'example' model (no downloads)

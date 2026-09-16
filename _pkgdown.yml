@@ -1,4 +1,31 @@
 url: https://shmercer.github.io/writeAlizer/
 template:
   bootstrap: 5
-
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get started
+      href: articles/writealizer-getting-started.html
+reference:
+  - title: Import your analysis files
+    contents:
+      - import_rb
+      - import_coh
+      - import_gamet
+      - import_merge_gamet_rb
+      - keep_stem_before_txt
+  - title: Generate and understand scores
+    contents:
+      - predict_quality
+      - preprocess
+      - writeAlizer-package
+  - title: Set up models and manage downloads
+    contents:
+      - model_deps
+      - wa_cache_dir
+      - wa_cache_clear
+      - wa_download
+      - wa_seed_example_models

@@ -7,7 +7,9 @@
 import_coh(path)
 }
 \arguments{
-\item{path}{A string giving the path and filename to import.}
+\item{path}{A string giving the path and filename to import. Keep the original
+CSV column names. IDs must be nonblank and unique; leading zeros are preserved.
+Rows are sorted by ID.}
 }
 \value{
 A base \code{data.frame} with one row per record and the following columns:

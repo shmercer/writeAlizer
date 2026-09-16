@@ -1,3 +1,2 @@
-# Ensure tests start online and without a mock dir by default.
-options(writeAlizer.offline = FALSE)
-options(writeAlizer.mock_dir = NULL)
+withr::local_options(writeAlizer.offline = FALSE, writeAlizer.mock_dir = NULL,
+                     .local_envir = teardown_env())

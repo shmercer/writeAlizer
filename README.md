@@ -1,4 +1,4 @@
-![writeAlizer Logo](https://www.dropbox.com/s/bxgse42uf44k6me/wA_logo.png?raw=1)
+<img src="https://www.dropbox.com/s/bxgse42uf44k6me/wA_logo.png?raw=1" alt="writeAlizer logo" width="240" height="105">
 
 # writeAlizer: An R Package to Generate Automated Writing Quality Scores
 
@@ -10,124 +10,101 @@
   [![Codecov test coverage](https://codecov.io/gh/shmercer/writeAlizer/graph/badge.svg)](https://app.codecov.io/gh/shmercer/writeAlizer)
 <!-- badges: end -->
 
-This repository hosts code for an [R package](https://cran.r-project.org/) to apply research-based writing scoring models (see references below).
+writeAlizer turns output from text analysis programs into research-based estimates of writing quality or written-expression curriculum-based measurement (CBM) scores. It imports your analysis files, downloads the scoring models the first time they are needed, and returns a table of scores matched to your text IDs.
 
-The writeAlizer R package (a) imports [ReaderBench](https://github.com/readerbench/readerbench-java), [Coh-Metrix](https://soletlab.asu.edu/coh-metrix/), and [GAMET](https://www.linguisticanalysistools.org/gamet.html) output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores from the ReaderBench or Coh-Metrix files, and generates Total Words Written, Words Spelled Correctly, Correct Word Sequences, and Correct Minus Incorrect Word Sequences scores from GAMET files.
+## Start here
 
-### Versions
-The version history of writeAlizer is available in the package [NEWS.md](https://github.com/shmercer/writeAlizer/blob/master/NEWS.md) file.
+Choose the row that matches the program you used to analyze your writing samples:
 
-## Getting Started
+| Your analysis file | What you can score | Model to start with |
+|---|---|---|
+| ReaderBench Java CSV | Overall writing quality | `rb_mod3all` |
+| Coh-Metrix 3.0 CSV | Overall writing quality | `coh_mod3all` |
+| GAMET 1.0 CSV | Word counts, spelling, and word sequences | `gamet_cws1` |
 
-For a step‑by‑step walkthrough of installing and using **writeAlizer**, see the online tutorial:
-<https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html>
+New to these programs? The [getting-started guide](https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html) walks through preparing your files and using each program, with screenshots. writeAlizer reads their CSV output; it does not analyze raw essays directly.
 
-Documentation of **writeAlizer** functions can be found here:
-<https://shmercer.github.io/writeAlizer/reference/index.html>
+### 1. Install and load writeAlizer
 
-### Prerequisites
-writeAlizer accepts the following output files as inputs:
- 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. [Source Code](https://github.com/readerbench/readerbench-java) [Download for Windows](https://osf.io/wyq4t)
- 2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format). [Request a Copy of Coh-Metrix](https://soletlab.asu.edu/coh-metrix/)
- 3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format). [Download for Windows and Mac](https://www.linguisticanalysistools.org/gamet.html)
+Run these commands in the R console:
 
-The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). `import_rb()` (ReaderBench) and `import_coh()` (Coh-Metrix) keep IDs as **character**. For ReaderBench CSVs, the original `File.name` column is renamed to `ID` and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.
-
-### Installing
-
-``` r
-# To install from CRAN:
-install.packages("writeAlizer")
-
-# for documentation of the file import and predict_quality() functions
-help("writeAlizer")
+```r
+install.packages("writeAlizer")  # Install once
+library(writeAlizer)            # Load at the start of each R session
 ```
+
+Some scoring models need additional R packages. This command lists any that are missing and prints an installation command you can copy:
+
+```r
+model_deps()
+```
+
+`model_deps()` reports all packages in the package's optional dependency list (`Suggests`), including documentation and testing tools. It does not install anything. Its `required` result lists those packages; `missing` lists the ones that are not installed. It checks availability, not version requirements.
+
+### 2. Try a sample file
+
+This example uses a small ReaderBench CSV included with writeAlizer, so you do not need to prepare your own data yet. **The first scoring run needs an internet connection** to download model files.
+
+```r
+rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer")
+rb <- import_rb(rb_path)
+quality <- predict_quality("rb_mod3all", rb)
+
+# Show each text's ID and overall predicted writing quality
+quality[c("ID", "pred_rb_mod3all_mean")]
+```
+
+For a demonstration without downloads, see the guide's [offline example](https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html#offline-example). That example demonstrates the workflow; its constant scores are not writing assessments.
+
+### 3. Score your own files
+
+Replace the example path below with the location of your CSV. Forward slashes work in R on Windows as well as macOS and Linux.
+
+```r
+rb <- import_rb("C:/Users/YourName/Documents/ReaderBench_output.csv")
+quality <- predict_quality("rb_mod3all", rb)
+write.csv(quality, "writing_scores.csv", row.names = FALSE)
+```
+
+For Coh-Metrix, use `import_coh()` with `"coh_mod3all"`. For GAMET, use `import_gamet()` with `"gamet_cws1"`. The [guide](https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html#importing-data) includes examples for all three.
+
+Keep the original column names from your analysis program. Each row must have a unique, nonblank text ID. Imports preserve IDs as text, including leading zeros, and sort rows by ID. Coh-Metrix and GAMET imports remove directory paths and a trailing `.txt` extension; ReaderBench keeps the `File.name` value as its ID.
+
+### Understanding your results
+
+- **ReaderBench and Coh-Metrix:** the recommended all-genre models return three genre-specific predictions and an overall mean (`pred_rb_mod3all_mean` or `pred_coh_mod3all_mean`). Single-genre models return one prediction without a mean column.
+- **GAMET:** results contain Total Words Written (TWW), Words Spelled Correctly (WSC), Correct Word Sequences (CWS), and Correct Minus Incorrect Word Sequences (CIWS). See the [output guide](https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html#predicting-writing-quality) for exact column names.
+- **IDs:** every result retains the text ID so you can match it to the original writing sample.
+
+For ReaderBench and Coh-Metrix Models 2 and 3, predictors are standardized using the group of texts you submit in that call. Changing that group can change a text's score. Use a consistent scoring group for comparisons; a single text or a feature with no variation can produce missing values. These are model-based estimates, not percentages or universal proficiency cutoffs. The [model-development guide](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html) explains the research behind them.
+
+## Model downloads and offline use
+
+Downloaded model files are saved in a cache: a folder writeAlizer reuses on later runs.
+
+```r
+wa_cache_dir()  # Show the cache location
+```
+
+After all files for a model have been downloaded, you can use that model offline. To prevent new internet downloads explicitly, set `options(writeAlizer.offline = TRUE)`; set it back to `FALSE` when you want downloads again.
+
+If you need to remove downloaded models, use `wa_cache_clear()`. In an interactive R session it shows a preview and asks before deleting. In a script it clears without prompting. The next scoring run will need to download those models again. If you set a custom cache location with `options(writeAlizer.cache_dir = "path/to/cache")`, use a dedicated folder: clearing the cache removes everything in it.
+
+## More help
+
+- [Getting started and troubleshooting](https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html)
+- [Function reference](https://shmercer.github.io/writeAlizer/reference/index.html), or `help("predict_quality")` in R
+- [Scoring model development and research](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html)
+- [Version history](https://github.com/shmercer/writeAlizer/blob/master/NEWS.md)
 
 ### Development version
 
-``` r
-# To install from GitHub
+Most users should install from CRAN as shown above. To try the development version from GitHub:
 
-#using the pak package
-#install.packages("pak")
+```r
+# install.packages("pak")  # If needed
 pak::pak("shmercer/writeAlizer")
-
-#or using devtools
-#install.packages("devtools")
-devtools::install_github("shmercer/writeAlizer")
-
 ```
-
-### Install model dependencies (Suggests)
-
-Some models rely on packages listed in `Suggests`. use `model_deps()` to discover what’s needed on your machine to run those models locally.
-
-```r
-# Discover optional model packages from writeAlizer's Suggests
-md <- writeAlizer::model_deps()
-
-md$required
-md$missing
-```
-`model_deps()` also prints a helpful message. If anything is missing, it includes a copy-paste command like:
-
-```r
-Missing required packages: glmnet, ranger
-Install them manually, e.g.:
-  install.packages(c("glmnet", "ranger"))
-```
-
-### Quickstart: generate predicted quality scores with the rb_mod3all / coh_mod3all models
-
-```r
-library(writeAlizer)
-
-## ReaderBench example
-rb_path <- system.file("extdata", "sample_rb.csv", package = "writeAlizer") #read path of included sample rb output file
-rb <- import_rb(rb_path) #import the rb file
-rb_pred <- predict_quality(model = "rb_mod3all", rb) #generate predicted values
-
-## Coh-Metrix example
-
-coh_path <- system.file("extdata", "sample_coh.csv", package = "writeAlizer") #read path of included sample Cooh-Metrix output file
-coh <- import_coh(coh_path) #import the file
-coh_pred <- predict_quality(model = "coh_mod3all", coh) #generate predicted values
-```
-
-### About predict_quality() output
-
-Some models are ensembles and will output multiple sub-predictions (e.g., genre-specific or component models). In those cases, predict_quality() adds a column named pred_model_mean, which is the mean of that model’s sub-predictions. For single-output models, you’ll just see the pred_model column.
-
-### Where model files are stored
-
-By default, writeAlizer caches downloaded model artifacts in a user cache directory.
-
-- `wa_cache_dir()` → returns the path to the package cache directory (character scalar).
-- `wa_cache_clear(ask = TRUE)` → clears cached files. When `ask = TRUE` (default), it
-  prompts before deleting; set `ask = FALSE` to clear without a prompt. Returns
-  (invisibly) `TRUE` when the cache was cleared, `FALSE` otherwise.
-
-```r
-# return the cache directory location
-wa_cache_dir()
-
-# list objects in the cache, with option to clear it
-wa_cache_clear()
-```
-
-## Documentation
-
-Information on the various scoring models available and how they were developed is available [here](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html).
-
-1. [Description of the general process used to develop scoring algorithms](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#scoring-model-development).
-2. Description of the following specific scoring models (models recommended for use in research are indicated by *), including information on the relative importance of metrics and weighting of algorithms:
-   * [Coh-Metrix Model 1](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-1)
-   * [Coh-Metrix Model 2](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-2)
-   * [Coh-Metrix Model 3*](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-3)
-   * [ReaderBench Model 1](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-1)
-   * [ReaderBench Model 2](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-2)
-   * [ReaderBench Model 3*](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-3)
-   * [Automated Written Expression CBM Model 1](https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#awecbm-model-1)
 
 ## Package Author and Maintainer
 
@@ -142,7 +119,7 @@ Also see the list of code [contributors](https://github.com/shmercer/writeAlizer
 
 ### Journal Articles
 
-Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (in press). Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs. *School Psychology.* https://doi.org/10.1037/spq0000691
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2025). Improving written-expression curriculum-based measurement feasibility with automated writing evaluation programs. *School Psychology, 40*(6), 707–717. https://doi.org/10.1037/spq0000691
 
 Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2023). Implications of bias in automated writing quality scores for fair and equitable assessment decisions. *School Psychology, 38*, 173–181. https://doi.org/10.1037/spq0000517
 

@@ -145,11 +145,7 @@ testthat::test_that(".wa_load_fits_list loads trained models by filename (coh_mo
   testthat::expect_equal(nrow(pr), 2L)
   testthat::expect_setequal(basename(pr$file), c(file_a, file_b))
 
-  # Call loader; in some CI/layouts upstream state may still interfere – skip rather than fail
   fits <- load_fits("coh_mod3all")
-  if (!is.list(fits) || length(fits) == 0L) {
-    testthat::skip("Loader returned no fits under current test environment; registry + mock_dir setup validated.")
-  }
 
   testthat::expect_length(fits, 2)
 

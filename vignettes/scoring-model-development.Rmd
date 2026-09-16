@@ -3,6 +3,7 @@ title: 'writeAlizer: Scoring Model Development'
 author: Sterett H. Mercer
 output:
   rmarkdown::html_vignette:
+    css: layout.css
     toc: true
     toc_depth: 2
 bibliography: references.bib
@@ -13,10 +14,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-> This vignette provides details on the scoring models included in writeAlizer. 
+> This reference describes how the scoring models were developed. For installation, importing files, and generating scores, start with the [getting-started guide](writealizer-getting-started.html).
+
+## How to use this reference
+
+Use the contents list to jump to your model. Each model section describes its training data, the algorithms combined in its predictions, and the features those algorithms used. An *ensemble* combines predictions from several algorithms. Weight tables describe that combination; feature-importance tables describe relative contributions, not causal effects.
+
+These are historical model-development summaries. writeAlizer loads saved models rather than retraining them. During scoring, Models 2 and 3 standardize predictors within the submitted group of texts, so changing that group can change scores. Training-time feature selection described below is distinct from this scoring step.
+
+The detailed tables are wide. On a small screen, scroll a table horizontally to see all algorithms.
 
 # Recommended Models for Use
-[ReaderBench-Model-3](#readerbench-model-3) and [Coh-Metrix-Model-3](#cohmetrix-model-3) are the best models for generated predicted writing quality scores, and [aWE-CBM-Model-1](#awecbm-model-1) is the best available model for generating automated written expression curriculum-based measurement scores.
+[ReaderBench-Model-3](#readerbench-model-3) and [Coh-Metrix-Model-3](#cohmetrix-model-3) are the recommended models for generating predicted writing quality scores, and [aWE-CBM-Model-1](#awecbm-model-1) is the best available model for generating automated written expression curriculum-based measurement scores.
 
 # Scoring Model Development {#scoring-model-development}
 The general process used to generate all scoring models is presented below.
@@ -53,7 +62,7 @@ The following flowchart provides an overview of the scoring model development wo
 Depending on the specific scoring model, ReaderBench, Coh-Metrix, and/or GAMET output files were imported into R using functions similar to the import_XXXX.R functions in writeAlizer (see <https://shmercer.github.io/writeAlizer/reference/index.html>)
 
 ### 2. Pre-Process Data
-Automated data pre-processing were done using the [`preProcess()`](https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/preProcess) function in `caret`:
+Automated data pre-processing was done using the [`preProcess()`](https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/preProcess) function in `caret`:
 
 * Predictors from the output file with near zero variance (defined based on defaults in the [`nearZeroVar()`](https://www.rdocumentation.org/packages/caret/versions/6.0-76/topics/nearZeroVar) function) were removed, and the remaining predictors were standardized.
 
@@ -85,7 +94,7 @@ A model for each algorithm was fit with the hyperparameters set to the optimal v
 
 ### 5. Estimate an Ensemble Model to Combine the Algorithms
 
-The [`caretEnsemble()`](https://zachmayer.github.io/caretEnsemble/reference/caretEnsemble.html) function was used to determine the optimal linear weighting of the algorithms that minimized RMSE (i.e., discrepancy between actual writing quality scores and predicted quality scores) in the resamples from Step 4. Algorithms with near zero or negative weights were removed from the ensemble models. 
+The [`caretEnsemble()`](https://zachmayer.github.io/caretEnsemble/reference/caretEnsemble.html) function was used to determine the optimal linear weighting of the algorithms that minimized RMSE (i.e., discrepancy between actual writing quality scores and predicted quality scores) in the resamples from Step 4. The tables below report the fitted algorithm weights, including small or negative coefficients where present.
 
 The [`varImp()`](https://topepo.github.io/caret/variable-importance.html) function of `caretEnsemble` was used to generate estimates of relative predictor importance for the overall ensemble model and for each individual algorithm.
 
@@ -137,7 +146,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric                   | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:-------------------------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -367,7 +376,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric                    | all   | gbm   | pls  | svm  | enet | rf   | mars  | cube  |
 |:--------------------------|:------|:------|:-----|:-----|:-----|:-----|:------|:------|
@@ -597,7 +606,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric                    | all  | gbm   | pls  | svm  | enet | rf   | mars  | cube  |
 |:--------------------------|:-----|:------|:-----|:-----|:-----|:-----|:------|:------|
@@ -827,7 +836,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, ...
 
@@ -1125,7 +1134,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, ...
 
@@ -1423,7 +1432,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, ...
 
@@ -1733,7 +1742,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric                                          | overall | pls  | rf    | mars  | svm  | cube  |
 |:------------------------------------------------|:--------|:-----|:------|:------|:-----|:------|
@@ -1839,7 +1848,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric                                          | overall | pls  | rf   | mars  | svm  | cube  |
 |:------------------------------------------------|:--------|:-----|:-----|:------|:-----|:------|
@@ -1950,7 +1959,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric                                          | overall | pls  | rf   | mars  | gbm   | svm  | cube  |
 |:------------------------------------------------|:--------|:-----|:-----|:------|:------|:-----|:------|
@@ -2074,7 +2083,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 |Metric                                           |overall|pls |rf  |mars |gbm  |svm |enet|cube|
 |-------------------------------------------------|-------|----|----|-----|-----|----|----|----|
@@ -2244,7 +2253,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 |Metric                                |overall|rf  |mars |gbm  |svm |enet |cube |
 |--------------------------------------|-------|----|-----|-----|----|-----|-----|
@@ -2405,7 +2414,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 |Metric                                            |overall|pls |mars |gbm  |svm |enet |cube|
 |--------------------------------------------------|-------|----|-----|-----|----|-----|----|
@@ -2587,7 +2596,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric    | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:----------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -2713,7 +2722,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric    | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:----------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -2839,7 +2848,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric    | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:----------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -2965,7 +2974,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, ...
 
@@ -3148,7 +3157,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, ...
 
@@ -3330,7 +3339,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, ...
 
@@ -3494,7 +3503,7 @@ are displayed.
 
 ## General Description
 
-Coh-Metrix Model 2 is a simplified version of [Model 1](#coh-metrix-model-1). Model 2 is recommended for use over Model 1.
+Coh-Metrix Model 2 is a simplified version of [Model 1](#cohmetrix-model-1). Model 2 is recommended for use over Model 1.
 
 Coh-Metrix Model 2 is an ensemble (formed by averaging predicted quality scores) of the three sub-models described below.
 
@@ -3525,7 +3534,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric    | overall | pls  | rf    | mars  | gbm   | svm  | cube  |
 |:----------|:--------|:-----|:------|:------|:------|:-----|:------|
@@ -3627,7 +3636,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric    | overall | mars  | gbm  | svm  | cube  |
 |:----------|:--------|:------|:-----|:-----|:------|
@@ -3729,7 +3738,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 | Metric    | overall | pls  | mars  | gbm   | svm  |
 |:----------|:--------|:-----|:------|:------|:-----|
@@ -3843,7 +3852,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 |Metric   |overall|pls |gbm  |mars |enet |cube |
 |---------|-------|----|-----|-----|-----|-----|
@@ -3954,7 +3963,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 |Metric   |overall|mars |pls |gbm  |cube |
 |---------|-------|-----|----|-----|-----|
@@ -4062,7 +4071,7 @@ The table below presents the linear weightings of each algorithm for the ensembl
 
 ### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution to the model).
+Each column sums to approximately 100, allowing for rounding (values describe relative contribution to the model).
 
 |Metric   |overall|pls |mars |gbm  |cube |
 |---------|-------|----|-----|-----|-----|
@@ -4160,9 +4169,9 @@ Each column sums to 100 (so values can be interpreted as % contribution to the m
 
 ## General Description
 
-Total Words Written(TWW) scores are generated directly from the GAMET word count score. Words Spelled Correctly (WSC) scores are generated by subtracting the GAMET misspelling score from the GAMET word count score.
+Total Words Written (TWW) scores are generated directly from the GAMET word count score. Words Spelled Correctly (WSC) scores are generated by subtracting the GAMET misspelling score from the GAMET word count score.
 
-Correct Word Sequences (CWS) and Correct Minus Incorrect Word Sequences (CIWS) scores are based on emsemble models originally trained to predict CBM scores on 7 min narrative writing samples ("I once had a magic pencil and ...") from students in the fall, winter, and spring of Grades 2-5 [@Mercer2019]. More details on the sample are available in [@Mercer2019].
+Correct Word Sequences (CWS) and Correct Minus Incorrect Word Sequences (CIWS) scores are based on ensemble models originally trained to predict CBM scores on 7 min narrative writing samples ("I once had a magic pencil and ...") from students in the fall, winter, and spring of Grades 2-5 [@Mercer2019]. More details on the sample are available in [@Mercer2019].
 
 The CWS and CIWS models are detailed below (from Mercer et al., 2021).
 

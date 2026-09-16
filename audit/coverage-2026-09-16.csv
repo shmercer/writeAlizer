@@ -1,0 +1,9 @@
+"file","percent","meets_95_percent"
+"R/artifact_registry.R",97.2332015810277,TRUE
+"R/cache.R",100,TRUE
+"R/download.R",100,TRUE
+"R/file_utilities.R",98.5507246376812,TRUE
+"R/model_deps.R",96.875,TRUE
+"R/predict_values.R",98.8826815642458,TRUE
+"R/seed_example_helpers.R",100,TRUE
+"Overall",98.2169390787518,TRUE

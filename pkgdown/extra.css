@@ -1,0 +1,23 @@
+/* Keep wide research tables and code usable without widening the whole page. */
+main table, .section table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+main pre, .section pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+main img, .section img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* The sidebar becomes a full-width section below the article on small screens. */
+@media (max-width: 767.98px) {
+  .row > aside {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+  }
+}

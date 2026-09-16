@@ -7,10 +7,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>writeAlizer: Scoring Model Development • writeAlizer</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="writeAlizer: Scoring Model Development">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="writeAlizer: Scoring Model Development">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">writeAlizer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,6 +30,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/writealizer-getting-started.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -62,21 +64,38 @@
 Mercer</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/shmercer/writeAlizer/blob/v1.7.3/vignettes/scoring-model-development.Rmd" class="external-link"><code>vignettes/scoring-model-development.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/shmercer/writeAlizer/blob/master/vignettes/scoring-model-development.Rmd" class="external-link"><code>vignettes/scoring-model-development.Rmd</code></a></small>
       <div class="d-none name"><code>scoring-model-development.Rmd</code></div>
     </div>
 
     
     
 <blockquote>
-<p>This vignette provides details on the scoring models included in
-writeAlizer.</p>
+<p>This reference describes how the scoring models were developed. For
+installation, importing files, and generating scores, start with the <a href="writealizer-getting-started.html">getting-started guide</a>.</p>
 </blockquote>
+<div class="section level3">
+<h3 id="how-to-use-this-reference">How to use this reference<a class="anchor" aria-label="anchor" href="#how-to-use-this-reference"></a>
+</h3>
+<p>Use the contents list to jump to your model. Each model section
+describes its training data, the algorithms combined in its predictions,
+and the features those algorithms used. An <em>ensemble</em> combines
+predictions from several algorithms. Weight tables describe that
+combination; feature-importance tables describe relative contributions,
+not causal effects.</p>
+<p>These are historical model-development summaries. writeAlizer loads
+saved models rather than retraining them. During scoring, Models 2 and 3
+standardize predictors within the submitted group of texts, so changing
+that group can change scores. Training-time feature selection described
+below is distinct from this scoring step.</p>
+<p>The detailed tables are wide. On a small screen, scroll a table
+horizontally to see all algorithms.</p>
+</div>
 <div class="section level2">
 <h2 id="recommended-models-for-use">Recommended Models for Use<a class="anchor" aria-label="anchor" href="#recommended-models-for-use"></a>
 </h2>
-<p><a href="#readerbench-model-3">ReaderBench-Model-3</a> and <a href="#cohmetrix-model-3">Coh-Metrix-Model-3</a> are the best models for
-generated predicted writing quality scores, and <a href="#awecbm-model-1">aWE-CBM-Model-1</a> is the best available model
+<p><a href="#readerbench-model-3">ReaderBench-Model-3</a> and <a href="#cohmetrix-model-3">Coh-Metrix-Model-3</a> are the recommended
+models for generating predicted writing quality scores, and <a href="#awecbm-model-1">aWE-CBM-Model-1</a> is the best available model
 for generating automated written expression curriculum-based measurement
 scores.</p>
 </div>
@@ -130,7 +149,7 @@ to the import_XXXX.R functions in writeAlizer (see <a href="https://shmercer.git
 <div class="section level4">
 <h4 id="pre-process-data">2. Pre-Process Data<a class="anchor" aria-label="anchor" href="#pre-process-data"></a>
 </h4>
-<p>Automated data pre-processing were done using the <a href="https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/preProcess" class="external-link"><code>preProcess()</code></a>
+<p>Automated data pre-processing was done using the <a href="https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/preProcess" class="external-link"><code>preProcess()</code></a>
 function in <code>caret</code>:</p>
 <ul>
 <li><p>Predictors from the output file with near zero variance (defined
@@ -186,8 +205,8 @@ illustrated in more detail in the <code>caretEnsemble</code> vignette:
 function was used to determine the optimal linear weighting of the
 algorithms that minimized RMSE (i.e., discrepancy between actual writing
 quality scores and predicted quality scores) in the resamples from Step
-4. Algorithms with near zero or negative weights were removed from the
-ensemble models.</p>
+4. The tables below report the fitted algorithm weights, including small
+or negative coefficients where present.</p>
 <p>The <a href="https://topepo.github.io/caret/variable-importance.html" class="external-link"><code>varImp()</code></a>
 function of <code>caretEnsemble</code> was used to generate estimates of
 relative predictor importance for the overall ensemble model and for
@@ -281,8 +300,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <colgroup>
 <col width="32%">
@@ -2572,8 +2591,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-1">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-1"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="34%">
@@ -4863,8 +4882,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-2">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-2"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="34%">
@@ -7155,8 +7174,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-3">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-3"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <p>PC1 = scores on 1st principal component extracted, …</p>
 <p>Note: Importance is unavailable for support vector machines when
 PCA-based pre-processing is used (so all values for svm are 0).</p>
@@ -9424,8 +9443,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-4">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-4"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <p>PC1 = scores on 1st principal component extracted, …</p>
 <p>Note: Importance is unavailable for support vector machines when
 PCA-based pre-processing is used (so all values for svm are 0).</p>
@@ -11685,8 +11704,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-5">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-5"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <p>PC1 = scores on 1st principal component extracted, …</p>
 <p>Note: Importance is unavailable for support vector machines when
 PCA-based pre-processing is used (so all values for svm are 0).</p>
@@ -13942,8 +13961,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-6">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-6"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="53%">
@@ -14714,8 +14733,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-7">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-7"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="54%">
@@ -15524,8 +15543,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-8">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-8"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="50%">
@@ -16433,8 +16452,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-9">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-9"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="56%">
@@ -18052,8 +18071,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-10">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-10"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="52%">
@@ -19447,8 +19466,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-11">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-11"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="59%">
@@ -20928,8 +20947,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-12">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-12"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <colgroup>
 <col width="17%">
@@ -22077,8 +22096,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-13">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-13"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <colgroup>
 <col width="17%">
@@ -23226,8 +23245,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-14">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-14"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <colgroup>
 <col width="17%">
@@ -24375,8 +24394,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-15">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-15"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <p>PC1 = scores on 1st principal component extracted, …</p>
 <p>Note: Importance is unavailable for support vector machines when
 PCA-based pre-processing is used (so all values for svm are 0).</p>
@@ -26230,8 +26249,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-16">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-16"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <p>PC1 = scores on 1st principal component extracted, …</p>
 <p>Note: Importance is unavailable for support vector machines when
 PCA-based pre-processing is used (so all values for svm are 0).</p>
@@ -28074,8 +28093,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-17">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-17"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <p>PC1 = scores on 1st principal component extracted, …</p>
 <p>Note: Importance is unavailable for support vector machines when
 PCA-based pre-processing is used (so all values for svm are 0).</p>
@@ -29863,7 +29882,7 @@ components are displayed.</p>
 <div class="section level3">
 <h3 id="general-description-4">General Description<a class="anchor" aria-label="anchor" href="#general-description-4"></a>
 </h3>
-<p>Coh-Metrix Model 2 is a simplified version of <a href="#coh-metrix-model-1">Model 1</a>. Model 2 is recommended for use
+<p>Coh-Metrix Model 2 is a simplified version of <a href="#cohmetrix-model-1">Model 1</a>. Model 2 is recommended for use
 over Model 1.</p>
 <p>Coh-Metrix Model 2 is an ensemble (formed by averaging predicted
 quality scores) of the three sub-models described below.</p>
@@ -29916,8 +29935,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-18">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-18"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Metric</th>
@@ -30727,8 +30746,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-19">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-19"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Metric</th>
@@ -31385,8 +31404,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-20">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-20"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Metric</th>
@@ -32049,8 +32068,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-21">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-21"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <thead><tr class="header">
 <th>Metric</th>
@@ -32865,8 +32884,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-22">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-22"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <thead><tr class="header">
 <th>Metric</th>
@@ -33571,8 +33590,8 @@ the ensemble model.</p>
 <div class="section level4">
 <h4 id="metric-importance-in-each-algorithm-and-ensemble-23">Metric Importance in Each Algorithm and Ensemble<a class="anchor" aria-label="anchor" href="#metric-importance-in-each-algorithm-and-ensemble-23"></a>
 </h4>
-<p>Each column sums to 100 (so values can be interpreted as %
-contribution to the model).</p>
+<p>Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).</p>
 <table class="table">
 <thead><tr class="header">
 <th>Metric</th>
@@ -34291,12 +34310,12 @@ contribution to the model).</p>
 <div class="section level3">
 <h3 id="general-description-6">General Description<a class="anchor" aria-label="anchor" href="#general-description-6"></a>
 </h3>
-<p>Total Words Written(TWW) scores are generated directly from the GAMET
-word count score. Words Spelled Correctly (WSC) scores are generated by
-subtracting the GAMET misspelling score from the GAMET word count
-score.</p>
+<p>Total Words Written (TWW) scores are generated directly from the
+GAMET word count score. Words Spelled Correctly (WSC) scores are
+generated by subtracting the GAMET misspelling score from the GAMET word
+count score.</p>
 <p>Correct Word Sequences (CWS) and Correct Minus Incorrect Word
-Sequences (CIWS) scores are based on emsemble models originally trained
+Sequences (CIWS) scores are based on ensemble models originally trained
 to predict CBM scores on 7 min narrative writing samples (“I once had a
 magic pencil and …”) from students in the fall, winter, and spring of
 Grades 2-5 <span class="citation">(Mercer et al., 2019)</span>. More
@@ -34526,7 +34545,7 @@ measurement. <em>Learning Disability Quarterly</em>, <em>42</em>,
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -17,6 +17,12 @@ wa_cache_dir()
 
 Character scalar path.
 
+## Details
+
+The override must be one non-missing character string. An empty string
+uses the default. Choose a dedicated directory: clearing the cache
+deletes all of its contents.
+
 ## See also
 
 [`wa_cache_clear`](https://shmercer.github.io/writeAlizer/reference/wa_cache_clear.md)
@@ -24,9 +30,6 @@ Character scalar path.
 ## Examples
 
 ``` r
-# Inspect the cache directory (no side effects)
-wa_cache_dir()
+wa_cache_dir()  # Inspect the path without creating or deleting files
 #> [1] "/home/runner/.cache/R/writeAlizer"
-
-#> Cleared cache: /tmp/RtmpYT5Kcv/wa_cache_demo
 ```

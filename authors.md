@@ -8,17 +8,17 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/shmercer/writeAlizer/blob/v1.7.3/inst/CITATION)
+[`inst/CITATION`](https://github.com/shmercer/writeAlizer/blob/master/inst/CITATION)
 
 Mercer, S. H. (2026). writeAlizer: Generate predicted writing quality
-scores (Version 1.7.3) \[R package; Computer software\]. Comprehensive R
+scores (Version 1.7.4) \[R package; Computer software\]. Comprehensive R
 Archive Network. https://doi.org/10.32614/CRAN.package.writeAlizer
 
     @Manual{,
       title = {writeAlizer: Generate predicted writing quality scores},
       author = {Sterett H. Mercer},
       year = {2026},
-      note = {R package version 1.7.3},
+      note = {R package version 1.7.4},
       doi = {10.32614/CRAN.package.writeAlizer},
       url = {https://doi.org/10.32614/CRAN.package.writeAlizer},
       organization = {Comprehensive R Archive Network},

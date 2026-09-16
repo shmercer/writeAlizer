@@ -4,7 +4,9 @@ Deletes all files under
 [`wa_cache_dir()`](https://shmercer.github.io/writeAlizer/reference/wa_cache_dir.md).
 If `ask = TRUE` *and* in an interactive session, a short preview (item
 count, total size, and up to 10 sample paths) is printed before asking
-for confirmation.
+for confirmation. In a non-interactive script, no prompt is shown, even
+if `ask = TRUE`. Use this only on a dedicated cache folder; all its
+contents are removed.
 
 ## Usage
 
@@ -35,6 +37,13 @@ Invisibly returns `TRUE` if the cache was cleared (or already absent),
 ## Examples
 
 ``` r
-# Safe demo: redirect cache to tempdir(), create a file, then clear it
-#> Cleared cache: /tmp/RtmpYT5Kcv/wa_cache_demo2
+local({
+  old <- options(writeAlizer.cache_dir = tempfile("wa-cache-"))
+  on.exit(options(old))
+  dir.create(wa_cache_dir())
+  on.exit(unlink(wa_cache_dir(), recursive = TRUE), add = TRUE, after = FALSE)
+  writeLines("demo", file.path(wa_cache_dir(), "demo.txt"))
+  wa_cache_clear(ask = FALSE)
+})
+#> Cleared cache: /tmp/RtmphU7dQi/wa-cache-1a12c50586d
 ```

@@ -7,10 +7,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Generate Predicted Writing Quality Scores • writeAlizer</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Generate Predicted Writing Quality Scores">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Generate Predicted Writing Quality Scores">
 <meta name="description" content="Imports variables from ReaderBench (Dascalu et al., 2018)&lt;doi:10.1007/978-3-319-66610-5_48&gt;, Coh-Metrix (McNamara et al., 2014)&lt;doi:10.1017/CBO9780511894664&gt;, and/or GAMET (Crossley et al., 2019) &lt;doi:10.17239/jowr-2019.11.02.01&gt; output files; downloads predictive scoring models described in Mercer &amp; Cannon (2022)&lt;doi:10.31244/jero.2022.01.03&gt; and Mercer et al.(2021)&lt;doi:10.1177/0829573520987753&gt;; and generates predicted writing quality and curriculum-based measurement (McMaster &amp; Espin, 2007)&lt;doi:10.1177/00224669070410020301&gt; scores.">
 <meta property="og:description" content="Imports variables from ReaderBench (Dascalu et al., 2018)&lt;doi:10.1007/978-3-319-66610-5_48&gt;, Coh-Metrix (McNamara et al., 2014)&lt;doi:10.1017/CBO9780511894664&gt;, and/or GAMET (Crossley et al., 2019) &lt;doi:10.17239/jowr-2019.11.02.01&gt; output files; downloads predictive scoring models described in Mercer &amp; Cannon (2022)&lt;doi:10.31244/jero.2022.01.03&gt; and Mercer et al.(2021)&lt;doi:10.1177/0829573520987753&gt;; and generates predicted writing quality and curriculum-based measurement (McMaster &amp; Espin, 2007)&lt;doi:10.1177/00224669070410020301&gt; scores.">
 </head>
@@ -22,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">writeAlizer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +32,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/writealizer-getting-started.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -53,130 +55,124 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="float">
-<img src="https://www.dropbox.com/s/bxgse42uf44k6me/wA_logo.png?raw=1" alt="writeAlizer Logo"><div class="figcaption">writeAlizer Logo</div>
-</div>
+  <main id="main" class="col-md-9"><p><img src="https://www.dropbox.com/s/bxgse42uf44k6me/wA_logo.png?raw=1" alt="writeAlizer logo" width="240" height="105"></p>
 <div class="section level1">
 <div class="page-header"><h1 id="writealizer-an-r-package-to-generate-automated-writing-quality-scores">writeAlizer: An R Package to Generate Automated Writing Quality Scores<a class="anchor" aria-label="anchor" href="#writealizer-an-r-package-to-generate-automated-writing-quality-scores"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>This repository hosts code for an <a href="https://cran.r-project.org/" class="external-link">R package</a> to apply research-based writing scoring models (see references below).</p>
-<p>The writeAlizer R package (a) imports <a href="https://github.com/readerbench/readerbench-java" class="external-link">ReaderBench</a>, <a href="https://soletlab.asu.edu/coh-metrix/" class="external-link">Coh-Metrix</a>, and <a href="https://www.linguisticanalysistools.org/gamet.html" class="external-link">GAMET</a> output files into R, (b) downloads existing predictive scoring models to the local machine, and (c) uses the predictive scoring models to generate predicted writing quality scores from the ReaderBench or Coh-Metrix files, and generates Total Words Written, Words Spelled Correctly, Correct Word Sequences, and Correct Minus Incorrect Word Sequences scores from GAMET files.</p>
+<p>writeAlizer turns output from text analysis programs into research-based estimates of writing quality or written-expression curriculum-based measurement (CBM) scores. It imports your analysis files, downloads the scoring models the first time they are needed, and returns a table of scores matched to your text IDs.</p>
+<div class="section level2">
+<h2 id="start-here">Start here<a class="anchor" aria-label="anchor" href="#start-here"></a>
+</h2>
+<p>Choose the row that matches the program you used to analyze your writing samples:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th>Your analysis file</th>
+<th>What you can score</th>
+<th>Model to start with</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>ReaderBench Java CSV</td>
+<td>Overall writing quality</td>
+<td><code>rb_mod3all</code></td>
+</tr>
+<tr>
+<td>Coh-Metrix 3.0 CSV</td>
+<td>Overall writing quality</td>
+<td><code>coh_mod3all</code></td>
+</tr>
+<tr>
+<td>GAMET 1.0 CSV</td>
+<td>Word counts, spelling, and word sequences</td>
+<td><code>gamet_cws1</code></td>
+</tr>
+</tbody>
+</table>
+<p>New to these programs? The <a href="https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html">getting-started guide</a> walks through preparing your files and using each program, with screenshots. writeAlizer reads their CSV output; it does not analyze raw essays directly.</p>
 <div class="section level3">
-<h3 id="versions">Versions<a class="anchor" aria-label="anchor" href="#versions"></a>
+<h3 id="id_1-install-and-load-writealizer">1. Install and load writeAlizer<a class="anchor" aria-label="anchor" href="#id_1-install-and-load-writealizer"></a>
 </h3>
-<p>The version history of writeAlizer is available in the package <a href="https://github.com/shmercer/writeAlizer/blob/master/NEWS.md" class="external-link">NEWS.md</a> file.</p>
+<p>Run these commands in the R console:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"writeAlizer"</span><span class="op">)</span>  <span class="co"># Install once</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shmercer/writeAlizer/" class="external-link">writeAlizer</a></span><span class="op">)</span>            <span class="co"># Load at the start of each R session</span></span></code></pre></div>
+<p>Some scoring models need additional R packages. This command lists any that are missing and prints an installation command you can copy:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/model_deps.html">model_deps</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="reference/model_deps.html">model_deps()</a></code> reports all packages in the package’s optional dependency list (<code>Suggests</code>), including documentation and testing tools. It does not install anything. Its <code>required</code> result lists those packages; <code>missing</code> lists the ones that are not installed. It checks availability, not version requirements.</p>
+</div>
+<div class="section level3">
+<h3 id="id_2-try-a-sample-file">2. Try a sample file<a class="anchor" aria-label="anchor" href="#id_2-try-a-sample-file"></a>
+</h3>
+<p>This example uses a small ReaderBench CSV included with writeAlizer, so you do not need to prepare your own data yet. <strong>The first scoring run needs an internet connection</strong> to download model files.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rb_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_rb.csv"</span>, package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span></span>
+<span><span class="va">rb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="va">rb_path</span><span class="op">)</span></span>
+<span><span class="va">quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predict_quality.html">predict_quality</a></span><span class="op">(</span><span class="st">"rb_mod3all"</span>, <span class="va">rb</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Show each text's ID and overall predicted writing quality</span></span>
+<span><span class="va">quality</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="st">"pred_rb_mod3all_mean"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<p>For a demonstration without downloads, see the guide’s <a href="https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html#offline-example">offline example</a>. That example demonstrates the workflow; its constant scores are not writing assessments.</p>
+</div>
+<div class="section level3">
+<h3 id="id_3-score-your-own-files">3. Score your own files<a class="anchor" aria-label="anchor" href="#id_3-score-your-own-files"></a>
+</h3>
+<p>Replace the example path below with the location of your CSV. Forward slashes work in R on Windows as well as macOS and Linux.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="st">"C:/Users/YourName/Documents/ReaderBench_output.csv"</span><span class="op">)</span></span>
+<span><span class="va">quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predict_quality.html">predict_quality</a></span><span class="op">(</span><span class="st">"rb_mod3all"</span>, <span class="va">rb</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">quality</span>, <span class="st">"writing_scores.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>For Coh-Metrix, use <code><a href="reference/import_coh.html">import_coh()</a></code> with <code>"coh_mod3all"</code>. For GAMET, use <code><a href="reference/import_gamet.html">import_gamet()</a></code> with <code>"gamet_cws1"</code>. The <a href="https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html#importing-data">guide</a> includes examples for all three.</p>
+<p>Keep the original column names from your analysis program. Each row must have a unique, nonblank text ID. Imports preserve IDs as text, including leading zeros, and sort rows by ID. Coh-Metrix and GAMET imports remove directory paths and a trailing <code>.txt</code> extension; ReaderBench keeps the <code>File.name</code> value as its ID.</p>
+</div>
+<div class="section level3">
+<h3 id="understanding-your-results">Understanding your results<a class="anchor" aria-label="anchor" href="#understanding-your-results"></a>
+</h3>
+<ul>
+<li>
+<strong>ReaderBench and Coh-Metrix:</strong> the recommended all-genre models return three genre-specific predictions and an overall mean (<code>pred_rb_mod3all_mean</code> or <code>pred_coh_mod3all_mean</code>). Single-genre models return one prediction without a mean column.</li>
+<li>
+<strong>GAMET:</strong> results contain Total Words Written (TWW), Words Spelled Correctly (WSC), Correct Word Sequences (CWS), and Correct Minus Incorrect Word Sequences (CIWS). See the <a href="https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html#predicting-writing-quality">output guide</a> for exact column names.</li>
+<li>
+<strong>IDs:</strong> every result retains the text ID so you can match it to the original writing sample.</li>
+</ul>
+<p>For ReaderBench and Coh-Metrix Models 2 and 3, predictors are standardized using the group of texts you submit in that call. Changing that group can change a text’s score. Use a consistent scoring group for comparisons; a single text or a feature with no variation can produce missing values. These are model-based estimates, not percentages or universal proficiency cutoffs. The <a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html">model-development guide</a> explains the research behind them.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h2 id="model-downloads-and-offline-use">Model downloads and offline use<a class="anchor" aria-label="anchor" href="#model-downloads-and-offline-use"></a>
 </h2>
-<p>For a step‑by‑step walkthrough of installing and using <strong>writeAlizer</strong>, see the online tutorial: <a href="https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html" class="uri">https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html</a></p>
-<p>Documentation of <strong>writeAlizer</strong> functions can be found here: <a href="https://shmercer.github.io/writeAlizer/reference/index.html" class="uri">https://shmercer.github.io/writeAlizer/reference/index.html</a></p>
-<div class="section level3">
-<h3 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
-</h3>
-<p>writeAlizer accepts the following output files as inputs: 1. ReaderBench: writeAlizer supports output files (.csv format) generated from the Java version of ReaderBench. <a href="https://github.com/readerbench/readerbench-java" class="external-link">Source Code</a> <a href="https://osf.io/wyq4t" class="external-link">Download for Windows</a> 2. Coh-Metrix: writeAlizer supports output files from Coh-Metrix version 3.0 (.csv format). <a href="https://soletlab.asu.edu/coh-metrix/" class="external-link">Request a Copy of Coh-Metrix</a> 3. GAMET: writeAlizer supports output files from GAMET version 1.0 (.csv format). <a href="https://www.linguisticanalysistools.org/gamet.html" class="external-link">Download for Windows and Mac</a></p>
-<p>The writeAlizer scoring models assume that column names in the output files have been unchanged (exactly the same as generated from the program). For programs that list file paths in the first column, the writeAlizer file import functions will parse the file names from the file paths and store the file names as an identification variable (ID). <code><a href="reference/import_rb.html">import_rb()</a></code> (ReaderBench) and <code><a href="reference/import_coh.html">import_coh()</a></code> (Coh-Metrix) keep IDs as <strong>character</strong>. For ReaderBench CSVs, the original <code>File.name</code> column is renamed to <code>ID</code> and stored as character. Numeric IDs are fine too, but they are not coerced to numeric to avoid losing leading zeros or other formatting.</p>
+<p>Downloaded model files are saved in a cache: a folder writeAlizer reuses on later runs.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/wa_cache_dir.html">wa_cache_dir</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Show the cache location</span></span></code></pre></div>
+<p>After all files for a model have been downloaded, you can use that model offline. To prevent new internet downloads explicitly, set <code>options(writeAlizer.offline = TRUE)</code>; set it back to <code>FALSE</code> when you want downloads again.</p>
+<p>If you need to remove downloaded models, use <code><a href="reference/wa_cache_clear.html">wa_cache_clear()</a></code>. In an interactive R session it shows a preview and asks before deleting. In a script it clears without prompting. The next scoring run will need to download those models again. If you set a custom cache location with <code>options(writeAlizer.cache_dir = "path/to/cache")</code>, use a dedicated folder: clearing the cache removes everything in it.</p>
 </div>
-<div class="section level3">
-<h3 id="installing">Installing<a class="anchor" aria-label="anchor" href="#installing"></a>
-</h3>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># To install from CRAN:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"writeAlizer"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># for documentation of the file import and predict_quality() functions</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/help.html" class="external-link">help</a></span><span class="op">(</span><span class="st">"writeAlizer"</span><span class="op">)</span></span></code></pre></div>
-</div>
+<div class="section level2">
+<h2 id="more-help">More help<a class="anchor" aria-label="anchor" href="#more-help"></a>
+</h2>
+<ul>
+<li><a href="https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.html">Getting started and troubleshooting</a></li>
+<li>
+<a href="https://shmercer.github.io/writeAlizer/reference/index.html">Function reference</a>, or <code><a href="reference/predict_quality.html">help("predict_quality")</a></code> in R</li>
+<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html">Scoring model development and research</a></li>
+<li><a href="https://github.com/shmercer/writeAlizer/blob/master/NEWS.md" class="external-link">Version history</a></li>
+</ul>
 <div class="section level3">
 <h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># To install from GitHub</span></span>
-<span></span>
-<span><span class="co">#using the pak package</span></span>
-<span><span class="co">#install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"shmercer/writeAlizer"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#or using devtools</span></span>
-<span><span class="co">#install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"shmercer/writeAlizer"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="install-model-dependencies-suggests">Install model dependencies (Suggests)<a class="anchor" aria-label="anchor" href="#install-model-dependencies-suggests"></a>
-</h3>
-<p>Some models rely on packages listed in <code>Suggests</code>. use <code><a href="reference/model_deps.html">model_deps()</a></code> to discover what’s needed on your machine to run those models locally.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Discover optional model packages from writeAlizer's Suggests</span></span>
-<span><span class="va">md</span> <span class="op">&lt;-</span> <span class="fu">writeAlizer</span><span class="fu">::</span><span class="fu"><a href="reference/model_deps.html">model_deps</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">md</span><span class="op">$</span><span class="va">required</span></span>
-<span><span class="va">md</span><span class="op">$</span><span class="va">missing</span></span></code></pre></div>
-<p><code><a href="reference/model_deps.html">model_deps()</a></code> also prints a helpful message. If anything is missing, it includes a copy-paste command like:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>Missing required packages<span class="sc">:</span> glmnet, ranger</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>Install them manually, e.g.<span class="sc">:</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"glmnet"</span>, <span class="st">"ranger"</span>))</span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="quickstart-generate-predicted-quality-scores-with-the-rb_mod3all--coh_mod3all-models">Quickstart: generate predicted quality scores with the rb_mod3all / coh_mod3all models<a class="anchor" aria-label="anchor" href="#quickstart-generate-predicted-quality-scores-with-the-rb_mod3all--coh_mod3all-models"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/shmercer/writeAlizer/" class="external-link">writeAlizer</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## ReaderBench example</span></span>
-<span><span class="va">rb_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_rb.csv"</span>, package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span> <span class="co">#read path of included sample rb output file</span></span>
-<span><span class="va">rb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_rb.html">import_rb</a></span><span class="op">(</span><span class="va">rb_path</span><span class="op">)</span> <span class="co">#import the rb file</span></span>
-<span><span class="va">rb_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predict_quality.html">predict_quality</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"rb_mod3all"</span>, <span class="va">rb</span><span class="op">)</span> <span class="co">#generate predicted values</span></span>
-<span></span>
-<span><span class="co">## Coh-Metrix example</span></span>
-<span></span>
-<span><span class="va">coh_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sample_coh.csv"</span>, package <span class="op">=</span> <span class="st">"writeAlizer"</span><span class="op">)</span> <span class="co">#read path of included sample Cooh-Metrix output file</span></span>
-<span><span class="va">coh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_coh.html">import_coh</a></span><span class="op">(</span><span class="va">coh_path</span><span class="op">)</span> <span class="co">#import the file</span></span>
-<span><span class="va">coh_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predict_quality.html">predict_quality</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"coh_mod3all"</span>, <span class="va">coh</span><span class="op">)</span> <span class="co">#generate predicted values</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="about-predict_quality-output">About predict_quality() output<a class="anchor" aria-label="anchor" href="#about-predict_quality-output"></a>
-</h3>
-<p>Some models are ensembles and will output multiple sub-predictions (e.g., genre-specific or component models). In those cases, predict_quality() adds a column named pred_model_mean, which is the mean of that model’s sub-predictions. For single-output models, you’ll just see the pred_model column.</p>
-</div>
-<div class="section level3">
-<h3 id="where-model-files-are-stored">Where model files are stored<a class="anchor" aria-label="anchor" href="#where-model-files-are-stored"></a>
-</h3>
-<p>By default, writeAlizer caches downloaded model artifacts in a user cache directory.</p>
-<ul>
-<li>
-<code><a href="reference/wa_cache_dir.html">wa_cache_dir()</a></code> → returns the path to the package cache directory (character scalar).</li>
-<li>
-<code>wa_cache_clear(ask = TRUE)</code> → clears cached files. When <code>ask = TRUE</code> (default), it prompts before deleting; set <code>ask = FALSE</code> to clear without a prompt. Returns (invisibly) <code>TRUE</code> when the cache was cleared, <code>FALSE</code> otherwise.</li>
-</ul>
+<p>Most users should install from CRAN as shown above. To try the development version from GitHub:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># return the cache directory location</span></span>
-<span><span class="fu"><a href="reference/wa_cache_dir.html">wa_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># list objects in the cache, with option to clear it</span></span>
-<span><span class="fu"><a href="reference/wa_cache_clear.html">wa_cache_clear</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")  # If needed</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"shmercer/writeAlizer"</span><span class="op">)</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
-</h2>
-<p>Information on the various scoring models available and how they were developed is available <a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html">here</a>.</p>
-<ol style="list-style-type: decimal">
-<li>
-<a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#scoring-model-development">Description of the general process used to develop scoring algorithms</a>.</li>
-<li>Description of the following specific scoring models (models recommended for use in research are indicated by *), including information on the relative importance of metrics and weighting of algorithms:
-<ul>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-1">Coh-Metrix Model 1</a></li>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-2">Coh-Metrix Model 2</a></li>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#cohmetrix-model-3">Coh-Metrix Model 3*</a></li>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-1">ReaderBench Model 1</a></li>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-2">ReaderBench Model 2</a></li>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#readerbench-model-3">ReaderBench Model 3*</a></li>
-<li><a href="https://shmercer.github.io/writeAlizer/articles/scoring-model-development.html#awecbm-model-1">Automated Written Expression CBM Model 1</a></li>
-</ul>
-</li>
-</ol>
 </div>
 <div class="section level2">
 <h2 id="package-author-and-maintainer">Package Author and Maintainer<a class="anchor" aria-label="anchor" href="#package-author-and-maintainer"></a>
@@ -197,7 +193,7 @@ Google Scholar: <a href="https://scholar.google.ca/citations?user=YJg4svsAAAAJ&a
 <div class="section level3">
 <h3 id="journal-articles">Journal Articles<a class="anchor" aria-label="anchor" href="#journal-articles"></a>
 </h3>
-<p>Matta, M., Keller-Margulis, M. A., &amp; Mercer, S. H. (in press). Improving written-expression curriculum-based measurement feasibility with automated text evaluation programs. <em>School Psychology.</em> <a href="https://doi.org/10.1037/spq0000691" class="external-link uri">https://doi.org/10.1037/spq0000691</a></p>
+<p>Matta, M., Keller-Margulis, M. A., &amp; Mercer, S. H. (2025). Improving written-expression curriculum-based measurement feasibility with automated writing evaluation programs. <em>School Psychology, 40</em>(6), 707–717. <a href="https://doi.org/10.1037/spq0000691" class="external-link uri">https://doi.org/10.1037/spq0000691</a></p>
 <p>Matta, M., Mercer, S. H., &amp; Keller-Margulis, M. A. (2023). Implications of bias in automated writing quality scores for fair and equitable assessment decisions. <em>School Psychology, 38</em>, 173–181. <a href="https://doi.org/10.1037/spq0000517" class="external-link uri">https://doi.org/10.1037/spq0000517</a></p>
 <p>Matta, M., Mercer, S. H., &amp; Keller-Margulis, M. A. (2022). Evaluating validity and bias for hand-calculated and automated written expression curriculum-based measurement scores. <em>Assessment in Education: Principles, Policy &amp; Practice, 29</em>, 200-218. <a href="https://doi.org/10.1080/0969594X.2022.2043240" class="external-link uri">https://doi.org/10.1080/0969594X.2022.2043240</a></p>
 <p>Mercer, S. H., &amp; Cannon, J. E. (2022). Validity of automated learning progress assessment in English written expression for students with learning difficulties. <em>Journal for Educational Research Online, 14</em>, 39-60. <a href="https://doi.org/10.31244/jero.2022.01.03" class="external-link uri">https://doi.org/10.31244/jero.2022.01.03</a></p>
@@ -289,7 +285,7 @@ Google Scholar: <a href="https://scholar.google.ca/citations?user=YJg4svsAAAAJ&a
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

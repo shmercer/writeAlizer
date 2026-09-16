@@ -1,10 +1,10 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   scoring-model-development: scoring-model-development.html
   writealizer-getting-started: writealizer-getting-started.html
-last_built: 2026-02-17T15:55Z
+last_built: 2026-09-16T20:54Z
 urls:
   reference: https://shmercer.github.io/writeAlizer/reference
   article: https://shmercer.github.io/writeAlizer/articles

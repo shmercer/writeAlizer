@@ -31,18 +31,23 @@ wa_seed_example_models(model = c("example"), dir = tempdir())
 Creates an ultra-tiny model artifact used in examples and points the
 package loader to it via a temporary option.
 
-\- Writes only under \`tempdir()\` and returns the created path. - Sets
-\`options(writeAlizer.mock_dir = \<path\>)\`; callers should restore
-prior options when appropriate (see Examples).
+\- Writes under the supplied \`dir\` (by default \`tempdir()\`) and
+returns the path. - The example predicts a constant 1.5; it is not a
+writing assessment. - Sets \`options(writeAlizer.mock_dir = \<path\>)\`;
+callers should restore prior options when appropriate (see Examples).
 
 ## Examples
 
 ``` r
-old <- getOption("writeAlizer.mock_dir")
-on.exit(options(writeAlizer.mock_dir = old), add = TRUE)
-
-ex <- wa_seed_example_models(dir = tempdir())
-# Use the package normally here; the loader will find `ex`
-# ...
-unlink(ex, recursive = TRUE, force = TRUE)
+local({
+  old <- options(writeAlizer.mock_dir = NULL)
+  on.exit(options(old))
+  parent <- tempfile("wa-example-")
+  ex <- wa_seed_example_models(dir = parent)
+  on.exit(unlink(parent, recursive = TRUE), add = TRUE)
+  predict_quality("example", data.frame(ID = c("text1", "text2")))
+})
+#>      ID pred_example
+#> 1 text1          1.5
+#> 2 text2          1.5
 ```

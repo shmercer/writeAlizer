@@ -16,7 +16,9 @@ import_rb(path)
 
 - path:
 
-  A string giving the path and filename to import.
+  A string giving the path and filename to import. Keep the original CSV
+  column names. IDs must be nonblank and unique; leading zeros are
+  preserved. Rows are sorted by ID.
 
 ## Value
 

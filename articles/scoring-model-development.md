@@ -1,13 +1,33 @@
 # writeAlizer: Scoring Model Development
 
-> This vignette provides details on the scoring models included in
-> writeAlizer.
+> This reference describes how the scoring models were developed. For
+> installation, importing files, and generating scores, start with the
+> [getting-started
+> guide](https://shmercer.github.io/writeAlizer/articles/writealizer-getting-started.md).
+
+### How to use this reference
+
+Use the contents list to jump to your model. Each model section
+describes its training data, the algorithms combined in its predictions,
+and the features those algorithms used. An *ensemble* combines
+predictions from several algorithms. Weight tables describe that
+combination; feature-importance tables describe relative contributions,
+not causal effects.
+
+These are historical model-development summaries. writeAlizer loads
+saved models rather than retraining them. During scoring, Models 2 and 3
+standardize predictors within the submitted group of texts, so changing
+that group can change scores. Training-time feature selection described
+below is distinct from this scoring step.
+
+The detailed tables are wide. On a small screen, scroll a table
+horizontally to see all algorithms.
 
 ## Recommended Models for Use
 
 [ReaderBench-Model-3](#readerbench-model-3) and
-[Coh-Metrix-Model-3](#cohmetrix-model-3) are the best models for
-generated predicted writing quality scores, and
+[Coh-Metrix-Model-3](#cohmetrix-model-3) are the recommended models for
+generating predicted writing quality scores, and
 [aWE-CBM-Model-1](#awecbm-model-1) is the best available model for
 generating automated written expression curriculum-based measurement
 scores.
@@ -72,7 +92,7 @@ import_XXXX.R functions in writeAlizer (see
 
 #### 2. Pre-Process Data
 
-Automated data pre-processing were done using the
+Automated data pre-processing was done using the
 [`preProcess()`](https://www.rdocumentation.org/packages/caret/versions/6.0-86/topics/preProcess)
 function in `caret`:
 
@@ -130,8 +150,8 @@ The
 function was used to determine the optimal linear weighting of the
 algorithms that minimized RMSE (i.e., discrepancy between actual writing
 quality scores and predicted quality scores) in the resamples from Step
-4. Algorithms with near zero or negative weights were removed from the
-ensemble models.
+4. The tables below report the fitted algorithm weights, including small
+or negative coefficients where present.
 
 The
 [`varImp()`](https://topepo.github.io/caret/variable-importance.html)
@@ -200,8 +220,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric                   | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:-------------------------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -428,8 +448,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric                    | all   | gbm   | pls  | svm  | enet | rf   | mars  | cube  |
 |:--------------------------|:------|:------|:-----|:-----|:-----|:-----|:------|:------|
@@ -656,8 +676,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric                    | all  | gbm   | pls  | svm  | enet | rf   | mars  | cube  |
 |:--------------------------|:-----|:------|:-----|:-----|:-----|:-----|:------|:------|
@@ -885,8 +905,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, …
 
@@ -1183,8 +1203,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, …
 
@@ -1481,8 +1501,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, …
 
@@ -1798,90 +1818,90 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
-| Metric                                          | overall | pls  | rf    | mars  | svm  | cube  |
-|:------------------------------------------------|:--------|:-----|:------|:------|:-----|:------|
-| WdEnt                                           | 20.53   | 4.67 | 10.12 | 73.84 | 5.16 | 18.67 |
-| AvgDepsSen_dep                                  | 4.65    | 1.23 | 0.88  | 16.82 | 0.88 | 5.25  |
-| Content.words                                   | 4.59    | 4.32 | 4.77  | 0     | 4.68 | 7.87  |
-| Words                                           | 3.72    | 4.44 | 4.67  | 0     | 4.67 | 4.17  |
-| LxcDiv                                          | 3.1     | 4.08 | 3.29  | 0     | 4.06 | 3.4   |
-| AvgAOASen_Shock                                 | 2.77    | 1.45 | 1.16  | 9.34  | 1.39 | 1.7   |
-| TCorefChainDoc                                  | 2.62    | 2.98 | 0.81  | 0     | 2.06 | 5.86  |
-| AvgChainSpan                                    | 2.59    | 3.27 | 3.83  | 0     | 3.1  | 2.47  |
-| WdDiffWdStem                                    | 2.46    | 2.73 | 3.07  | 0     | 2.24 | 3.7   |
-| SynSoph                                         | 2.12    | 1.71 | 0.92  | 0     | 1.82 | 5.09  |
-| AvgDepsSen_punct                                | 2.03    | 2.48 | 1.68  | 0     | 1.74 | 3.55  |
-| TActCorefChainWd                                | 1.93    | 1.6  | 1.91  | 0     | 1.47 | 4.01  |
-| WdDiffLemmaStem                                 | 1.66    | 1.52 | 0.72  | 0     | 2.44 | 2.93  |
-| RdbltyFlesch                                    | 1.55    | 0.77 | 1.22  | 0     | 1.09 | 4.01  |
-| WdLettStdDev                                    | 1.44    | 2.35 | 1.51  | 0     | 2.13 | 0.93  |
-| AvgAOESen_InverseAverage                        | 1.37    | 1.44 | 1.22  | 0     | 1.09 | 2.62  |
-| Sentences                                       | 1.3     | 2.84 | 1.77  | 0     | 1.82 | 0     |
-| AvgWdLen                                        | 1.27    | 2.65 | 1.57  | 0     | 2.02 | 0     |
-| LexChainMaxSp                                   | 1.26    | 2.89 | 1.19  | 0     | 2.02 | 0     |
-| AvgAOADoc_Shock                                 | 1.26    | 2.36 | 1.89  | 0     | 1.68 | 0.31  |
-| AvgAOADoc_Kuperman                              | 1.25    | 0.72 | 1.01  | 0     | 1.3  | 2.78  |
-| WdSylCnt                                        | 1.15    | 1.57 | 1.83  | 0     | 1.51 | 0.77  |
-| CharEnt                                         | 1.14    | 2.65 | 0.96  | 0     | 1.85 | 0     |
-| LexChainAvgSpan                                 | 1.12    | 2.18 | 1.5   | 0     | 1.86 | 0     |
-| AvgDepsSen_advcl                                | 1.07    | 0.93 | 0.85  | 0     | 1.35 | 1.85  |
-| AvgAOASen_Kuperman                              | 1.04    | 1.23 | 1.48  | 0     | 1.46 | 0.93  |
-| AvgCorefChain                                   | 1       | 1.86 | 0.85  | 0     | 0.9  | 1.08  |
-| WdAvgDpthHypernymTree                           | 1       | 1.14 | 0.87  | 0     | 0.97 | 1.7   |
-| SenStdDevWd                                     | 0.98    | 1.96 | 1.43  | 0     | 1.49 | 0     |
-| TCorefChainBigSpan                              | 0.95    | 2.16 | 1.44  | 0     | 1.13 | 0     |
-| AvgAOADoc_Bristol                               | 0.94    | 1.75 | 1.03  | 0     | 1.1  | 0.62  |
-| LxcSoph                                         | 0.92    | 1.64 | 1.2   | 0     | 0.85 | 0.77  |
-| AvgAdverbSen                                    | 0.88    | 0.89 | 1.38  | 0     | 1.46 | 0.62  |
-| RdbltyDaleChall                                 | 0.87    | 1.75 | 1.63  | 0     | 1    | 0     |
-| AvgSenAdjCoh_LDA                                | 0.82    | 1.97 | 0.64  | 0     | 1.33 | 0     |
-| AvgRhythmUnits                                  | 0.82    | 1.12 | 1.13  | 0     | 1.15 | 0.62  |
-| FrqRhythmId                                     | 0.8     | 1.69 | 1.07  | 0     | 1.18 | 0     |
-| AvgAOADoc_Bird                                  | 0.78    | 0.95 | 0.3   | 0     | 1.43 | 0.93  |
-| AvgVoice                                        | 0.78    | 2.01 | 0.76  | 0     | 0.99 | 0     |
-| AvgAOADoc_Cortese                               | 0.77    | 0.69 | 1.3   | 0     | 1.57 | 0.31  |
-| WdPathCntHypernymTree                           | 0.71    | 1.45 | 0.84  | 0     | 1.17 | 0     |
-| AvgConnSen_simple_subordinators                 | 0.7     | 0.51 | 2.49  | 0     | 0.82 | 0     |
-| AvgAOASen_Bristol                               | 0.68    | 0.66 | 0.71  | 0     | 1.29 | 0.62  |
-| AvgRhythmUnitStreesSyll                         | 0.63    | 0.08 | 0.91  | 0     | 0.81 | 1.23  |
-| AvgInferenceDistChain                           | 0.62    | 1.39 | 0.34  | 0     | 1.2  | 0     |
-| AggPronSen_indefinite                           | 0.62    | 0.45 | 0.63  | 0     | 1.31 | 0.62  |
-| AvgAOASen_Bird                                  | 0.6     | 1.13 | 0.37  | 0     | 1.37 | 0     |
-| AvgDepsSen_compound                             | 0.6     | 0.72 | 0.5   | 0     | 0.48 | 1.08  |
-| WdPolysemyCnt                                   | 0.58    | 0    | 1.09  | 0     | 1.9  | 0     |
-| AvgDepsSen_ccomp                                | 0.57    | 0.09 | 1.32  | 0     | 0.9  | 0.62  |
-| AvgAOASen_Cortese                               | 0.55    | 1.15 | 0.3   | 0     | 1.17 | 0     |
-| AvgDepsSen_cop                                  | 0.54    | 0.24 | 0.58  | 0     | 0.97 | 0.77  |
-| AvgPronounSen                                   | 0.54    | 0.12 | 0.93  | 0     | 0.48 | 1.08  |
-| AvgNmdEntSen                                    | 0.52    | 0.24 | 1.12  | 0     | 1.33 | 0     |
-| AvgNounSen                                      | 0.52    | 0.24 | 0.15  | 0     | 0.18 | 1.7   |
-| AvgDepsSen_nmod                                 | 0.48    | 0.7  | 0.69  | 0     | 1    | 0     |
-| AvgDepsSen_aux                                  | 0.48    | 0.24 | 0.92  | 0     | 1.31 | 0     |
-| AvgConnSen_addition                             | 0.48    | 1.1  | 0.6   | 0     | 0.66 | 0     |
-| AvgDepsSen_dobj                                 | 0.48    | 0.23 | 1.51  | 0     | 0.16 | 0.62  |
-| AvgAOEDoc_InverseLinearRegressionSlope          | 0.44    | 0.4  | 0.8   | 0     | 0.68 | 0.31  |
-| AvgDepsSen_mark                                 | 0.41    | 0.43 | 0.95  | 0     | 0.73 | 0     |
-| AvgConnSen_temporal_connectors                  | 0.41    | 0.32 | 0.64  | 0     | 1.11 | 0     |
-| AvgDepsSen_det                                  | 0.4     | 0.18 | 0.4   | 0     | 0.72 | 0.62  |
-| AvgConnSen_semi_coordinators                    | 0.38    | 0.8  | 0.15  | 0     | 0.16 | 0.62  |
-| AvgConnSen_order                                | 0.36    | 0.31 | 1.74  | 0     | 0.03 | 0     |
-| AggPronSen_third_person                         | 0.36    | 0.57 | 0.91  | 0     | 0.41 | 0     |
-| LangRhythmDiameter                              | 0.35    | 0.57 | 0.79  | 0     | 0.08 | 0.31  |
-| SenAsson                                        | 0.35    | 0.8  | 0.83  | 0     | 0.16 | 0     |
-| AvgAOEDoc_IndexAboveThreshold.0.3.              | 0.33    | 0.03 | 0.43  | 0     | 0.87 | 0.31  |
-| AvgDepsSen_amod                                 | 0.29    | 0.33 | 0.98  | 0     | 0.27 | 0     |
-| AvgAdjectiveSen                                 | 0.28    | 0.1  | 1.28  | 0     | 0.21 | 0     |
-| AvgConnSen_oppositions                          | 0.27    | 0.54 | 0.82  | 0     | 0.07 | 0     |
-| AvgDepsSen_xcomp                                | 0.24    | 0.01 | 0.13  | 0     | 1.04 | 0     |
-| AvgAOEDoc_IndexPolynomialFitAboveThreshold.0.3. | 0.21    | 0.12 | 0.1   | 0     | 0.78 | 0     |
-| LangRhythmId                                    | 0.19    | 0.47 | 0.45  | 0     | 0.05 | 0     |
-| AvgDepsSen_neg                                  | 0.18    | 0.03 | 1.05  | 0     | 0    | 0     |
-| AvgDepsSen_mwe                                  | 0.17    | 0.38 | 0.47  | 0     | 0.04 | 0     |
-| LangRhythmCoeff                                 | 0.16    | 0    | 0.22  | 0     | 0.61 | 0     |
-| AvgDepsSen_acl                                  | 0.06    | 0.25 | 0     | 0     | 0.02 | 0     |
+| Metric | overall | pls | rf | mars | svm | cube |
+|:---|:---|:---|:---|:---|:---|:---|
+| WdEnt | 20.53 | 4.67 | 10.12 | 73.84 | 5.16 | 18.67 |
+| AvgDepsSen_dep | 4.65 | 1.23 | 0.88 | 16.82 | 0.88 | 5.25 |
+| Content.words | 4.59 | 4.32 | 4.77 | 0 | 4.68 | 7.87 |
+| Words | 3.72 | 4.44 | 4.67 | 0 | 4.67 | 4.17 |
+| LxcDiv | 3.1 | 4.08 | 3.29 | 0 | 4.06 | 3.4 |
+| AvgAOASen_Shock | 2.77 | 1.45 | 1.16 | 9.34 | 1.39 | 1.7 |
+| TCorefChainDoc | 2.62 | 2.98 | 0.81 | 0 | 2.06 | 5.86 |
+| AvgChainSpan | 2.59 | 3.27 | 3.83 | 0 | 3.1 | 2.47 |
+| WdDiffWdStem | 2.46 | 2.73 | 3.07 | 0 | 2.24 | 3.7 |
+| SynSoph | 2.12 | 1.71 | 0.92 | 0 | 1.82 | 5.09 |
+| AvgDepsSen_punct | 2.03 | 2.48 | 1.68 | 0 | 1.74 | 3.55 |
+| TActCorefChainWd | 1.93 | 1.6 | 1.91 | 0 | 1.47 | 4.01 |
+| WdDiffLemmaStem | 1.66 | 1.52 | 0.72 | 0 | 2.44 | 2.93 |
+| RdbltyFlesch | 1.55 | 0.77 | 1.22 | 0 | 1.09 | 4.01 |
+| WdLettStdDev | 1.44 | 2.35 | 1.51 | 0 | 2.13 | 0.93 |
+| AvgAOESen_InverseAverage | 1.37 | 1.44 | 1.22 | 0 | 1.09 | 2.62 |
+| Sentences | 1.3 | 2.84 | 1.77 | 0 | 1.82 | 0 |
+| AvgWdLen | 1.27 | 2.65 | 1.57 | 0 | 2.02 | 0 |
+| LexChainMaxSp | 1.26 | 2.89 | 1.19 | 0 | 2.02 | 0 |
+| AvgAOADoc_Shock | 1.26 | 2.36 | 1.89 | 0 | 1.68 | 0.31 |
+| AvgAOADoc_Kuperman | 1.25 | 0.72 | 1.01 | 0 | 1.3 | 2.78 |
+| WdSylCnt | 1.15 | 1.57 | 1.83 | 0 | 1.51 | 0.77 |
+| CharEnt | 1.14 | 2.65 | 0.96 | 0 | 1.85 | 0 |
+| LexChainAvgSpan | 1.12 | 2.18 | 1.5 | 0 | 1.86 | 0 |
+| AvgDepsSen_advcl | 1.07 | 0.93 | 0.85 | 0 | 1.35 | 1.85 |
+| AvgAOASen_Kuperman | 1.04 | 1.23 | 1.48 | 0 | 1.46 | 0.93 |
+| AvgCorefChain | 1 | 1.86 | 0.85 | 0 | 0.9 | 1.08 |
+| WdAvgDpthHypernymTree | 1 | 1.14 | 0.87 | 0 | 0.97 | 1.7 |
+| SenStdDevWd | 0.98 | 1.96 | 1.43 | 0 | 1.49 | 0 |
+| TCorefChainBigSpan | 0.95 | 2.16 | 1.44 | 0 | 1.13 | 0 |
+| AvgAOADoc_Bristol | 0.94 | 1.75 | 1.03 | 0 | 1.1 | 0.62 |
+| LxcSoph | 0.92 | 1.64 | 1.2 | 0 | 0.85 | 0.77 |
+| AvgAdverbSen | 0.88 | 0.89 | 1.38 | 0 | 1.46 | 0.62 |
+| RdbltyDaleChall | 0.87 | 1.75 | 1.63 | 0 | 1 | 0 |
+| AvgSenAdjCoh_LDA | 0.82 | 1.97 | 0.64 | 0 | 1.33 | 0 |
+| AvgRhythmUnits | 0.82 | 1.12 | 1.13 | 0 | 1.15 | 0.62 |
+| FrqRhythmId | 0.8 | 1.69 | 1.07 | 0 | 1.18 | 0 |
+| AvgAOADoc_Bird | 0.78 | 0.95 | 0.3 | 0 | 1.43 | 0.93 |
+| AvgVoice | 0.78 | 2.01 | 0.76 | 0 | 0.99 | 0 |
+| AvgAOADoc_Cortese | 0.77 | 0.69 | 1.3 | 0 | 1.57 | 0.31 |
+| WdPathCntHypernymTree | 0.71 | 1.45 | 0.84 | 0 | 1.17 | 0 |
+| AvgConnSen_simple_subordinators | 0.7 | 0.51 | 2.49 | 0 | 0.82 | 0 |
+| AvgAOASen_Bristol | 0.68 | 0.66 | 0.71 | 0 | 1.29 | 0.62 |
+| AvgRhythmUnitStreesSyll | 0.63 | 0.08 | 0.91 | 0 | 0.81 | 1.23 |
+| AvgInferenceDistChain | 0.62 | 1.39 | 0.34 | 0 | 1.2 | 0 |
+| AggPronSen_indefinite | 0.62 | 0.45 | 0.63 | 0 | 1.31 | 0.62 |
+| AvgAOASen_Bird | 0.6 | 1.13 | 0.37 | 0 | 1.37 | 0 |
+| AvgDepsSen_compound | 0.6 | 0.72 | 0.5 | 0 | 0.48 | 1.08 |
+| WdPolysemyCnt | 0.58 | 0 | 1.09 | 0 | 1.9 | 0 |
+| AvgDepsSen_ccomp | 0.57 | 0.09 | 1.32 | 0 | 0.9 | 0.62 |
+| AvgAOASen_Cortese | 0.55 | 1.15 | 0.3 | 0 | 1.17 | 0 |
+| AvgDepsSen_cop | 0.54 | 0.24 | 0.58 | 0 | 0.97 | 0.77 |
+| AvgPronounSen | 0.54 | 0.12 | 0.93 | 0 | 0.48 | 1.08 |
+| AvgNmdEntSen | 0.52 | 0.24 | 1.12 | 0 | 1.33 | 0 |
+| AvgNounSen | 0.52 | 0.24 | 0.15 | 0 | 0.18 | 1.7 |
+| AvgDepsSen_nmod | 0.48 | 0.7 | 0.69 | 0 | 1 | 0 |
+| AvgDepsSen_aux | 0.48 | 0.24 | 0.92 | 0 | 1.31 | 0 |
+| AvgConnSen_addition | 0.48 | 1.1 | 0.6 | 0 | 0.66 | 0 |
+| AvgDepsSen_dobj | 0.48 | 0.23 | 1.51 | 0 | 0.16 | 0.62 |
+| AvgAOEDoc_InverseLinearRegressionSlope | 0.44 | 0.4 | 0.8 | 0 | 0.68 | 0.31 |
+| AvgDepsSen_mark | 0.41 | 0.43 | 0.95 | 0 | 0.73 | 0 |
+| AvgConnSen_temporal_connectors | 0.41 | 0.32 | 0.64 | 0 | 1.11 | 0 |
+| AvgDepsSen_det | 0.4 | 0.18 | 0.4 | 0 | 0.72 | 0.62 |
+| AvgConnSen_semi_coordinators | 0.38 | 0.8 | 0.15 | 0 | 0.16 | 0.62 |
+| AvgConnSen_order | 0.36 | 0.31 | 1.74 | 0 | 0.03 | 0 |
+| AggPronSen_third_person | 0.36 | 0.57 | 0.91 | 0 | 0.41 | 0 |
+| LangRhythmDiameter | 0.35 | 0.57 | 0.79 | 0 | 0.08 | 0.31 |
+| SenAsson | 0.35 | 0.8 | 0.83 | 0 | 0.16 | 0 |
+| AvgAOEDoc_IndexAboveThreshold.0.3. | 0.33 | 0.03 | 0.43 | 0 | 0.87 | 0.31 |
+| AvgDepsSen_amod | 0.29 | 0.33 | 0.98 | 0 | 0.27 | 0 |
+| AvgAdjectiveSen | 0.28 | 0.1 | 1.28 | 0 | 0.21 | 0 |
+| AvgConnSen_oppositions | 0.27 | 0.54 | 0.82 | 0 | 0.07 | 0 |
+| AvgDepsSen_xcomp | 0.24 | 0.01 | 0.13 | 0 | 1.04 | 0 |
+| AvgAOEDoc_IndexPolynomialFitAboveThreshold.0.3. | 0.21 | 0.12 | 0.1 | 0 | 0.78 | 0 |
+| LangRhythmId | 0.19 | 0.47 | 0.45 | 0 | 0.05 | 0 |
+| AvgDepsSen_neg | 0.18 | 0.03 | 1.05 | 0 | 0 | 0 |
+| AvgDepsSen_mwe | 0.17 | 0.38 | 0.47 | 0 | 0.04 | 0 |
+| LangRhythmCoeff | 0.16 | 0 | 0.22 | 0 | 0.61 | 0 |
+| AvgDepsSen_acl | 0.06 | 0.25 | 0 | 0 | 0.02 | 0 |
 
 ### ReaderBench Model 2b
 
@@ -1903,94 +1923,94 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
-| Metric                                          | overall | pls  | rf   | mars  | svm  | cube  |
-|:------------------------------------------------|:--------|:-----|:-----|:------|:-----|:------|
-| Content.words                                   | 11.94   | 5.23 | 4.51 | 41.33 | 4.49 | 15.7  |
-| WdEnt                                           | 8.27    | 5.15 | 5.03 | 19.27 | 4.44 | 21.01 |
-| SynSoph                                         | 4.17    | 1.03 | 2.06 | 14.97 | 1.69 | 0     |
-| LxcDiv                                          | 3.24    | 4.93 | 3.5  | 0     | 3.86 | 5.8   |
-| AvgDepsSen_det                                  | 3.18    | 0.25 | 1.12 | 12.65 | 0.94 | 3.38  |
-| TCorefChainDoc                                  | 2.63    | 4    | 2.76 | 0     | 2.45 | 6.76  |
-| AvgChainSpan                                    | 2.28    | 3.64 | 2.57 | 0     | 2.88 | 1.45  |
-| LexChainMaxSp                                   | 2.25    | 3.56 | 2.72 | 0     | 1.98 | 0     |
-| TActCorefChainWd                                | 2.22    | 0.83 | 0.71 | 7.46  | 0.78 | 6.76  |
-| Sentences                                       | 2.18    | 3.8  | 2.48 | 0     | 2.25 | 0     |
-| AvgNounSen                                      | 2.07    | 0.89 | 1.54 | 4.33  | 0.64 | 6.52  |
-| CharEnt                                         | 1.7     | 3.41 | 1.66 | 0     | 2.16 | 0.97  |
-| RdbltyFlesch                                    | 1.36    | 0.46 | 1.91 | 0     | 1.18 | 5.56  |
-| WdLettStdDev                                    | 1.31    | 2.58 | 1.31 | 0     | 2    | 0     |
-| AvgSenAdjCoh_LeackockChodorow                   | 1.3     | 2.75 | 1.24 | 0     | 1.87 | 0     |
-| FrqRhythmId                                     | 1.28    | 2.48 | 1.39 | 0     | 1.13 | 0     |
-| AvgDepsSen_aux                                  | 1.25    | 0.94 | 1.69 | 0     | 0.97 | 3.38  |
-| AvgWdLen                                        | 1.24    | 2.36 | 1.26 | 0     | 2.04 | 0     |
-| AvgAOADoc_Bristol                               | 1.21    | 1.59 | 1.61 | 0     | 0.88 | 0     |
-| AvgDepsSen_compound                             | 1.2     | 1.17 | 1.78 | 0     | 0.48 | 0     |
-| AvgVoice                                        | 1.2     | 2.75 | 1.13 | 0     | 1.19 | 0     |
-| AvgAOADoc_Shock                                 | 1.16    | 2.54 | 1.13 | 0     | 1.17 | 0     |
-| TCorefChainBigSpan                              | 1.13    | 2.24 | 1.22 | 0     | 0.78 | 0     |
-| AvgConnSen_addition                             | 1.07    | 1.31 | 1.29 | 0     | 1.31 | 1.69  |
-| WdDiffWdStem                                    | 1.04    | 2.05 | 1.06 | 0     | 1.35 | 0     |
-| AvgConnSen_logical_connectors                   | 1.03    | 1.49 | 1.11 | 0     | 1.27 | 2.17  |
-| AvgCorefChain                                   | 1.01    | 2.38 | 0.9  | 0     | 1.32 | 0     |
-| AggPronSen_third_person                         | 0.98    | 1.18 | 1.23 | 0     | 0.56 | 1.93  |
-| AvgDepsSen_punct                                | 0.98    | 1.89 | 1.01 | 0     | 1.48 | 0     |
-| AvgDepsSen_dep                                  | 0.95    | 1.01 | 1.31 | 0     | 1.07 | 0     |
-| AvgRhythmUnitStreesSyll                         | 0.95    | 0.44 | 1.46 | 0     | 0.9  | 1.21  |
-| AvgDepsSen_dobj                                 | 0.95    | 1.12 | 1.04 | 0     | 1.07 | 3.38  |
-| AvgAdjectiveSen                                 | 0.91    | 0.44 | 1.47 | 0     | 0.9  | 0     |
-| SenStdDevWd                                     | 0.9     | 2.04 | 0.69 | 0     | 1.52 | 1.21  |
-| LexChainAvgSpan                                 | 0.87    | 1.85 | 0.77 | 0     | 1.88 | 0     |
-| WdPathCntHypernymTree                           | 0.86    | 1.46 | 0.94 | 0     | 1.38 | 0     |
-| AvgAOESen_InverseAverage                        | 0.85    | 0.71 | 1.27 | 0     | 0.81 | 0     |
-| AvgDepsSen_mark                                 | 0.83    | 0.22 | 1.4  | 0     | 1.06 | 0     |
-| WdPolysemyCnt                                   | 0.83    | 0.32 | 1.43 | 0     | 0.39 | 0     |
-| AvgConnSen_reason_and_purpose                   | 0.82    | 0.35 | 1.3  | 0     | 0.7  | 0.97  |
-| LangRhythmCoeff                                 | 0.8     | 1.15 | 1    | 0     | 0.92 | 0     |
-| AvgConnSen_simple_subordinators                 | 0.78    | 0.11 | 1.3  | 0     | 1.47 | 0     |
-| AvgDepsSen_xcomp                                | 0.76    | 0.11 | 1.25 | 0     | 1.6  | 0     |
-| AvgAOASen_Bird                                  | 0.76    | 0.33 | 1.19 | 0     | 0.62 | 0.97  |
-| AvgDepsSen_ccomp                                | 0.75    | 0.16 | 1.29 | 0     | 0.79 | 0     |
-| RdbltyDaleChall                                 | 0.75    | 2.41 | 0.41 | 0     | 1.07 | 0     |
-| AvgAOEDoc_InflectionPointPolynomial             | 0.73    | 0.7  | 1.06 | 0     | 0.65 | 0     |
-| AvgAOESen_IndexAboveThreshold.0.3.              | 0.7     | 0.47 | 1.01 | 0     | 1.43 | 0     |
-| AvgAOESen_IndexPolynomialFitAboveThreshold.0.3. | 0.7     | 0.55 | 1.01 | 0     | 1.13 | 0     |
-| AggPronSen_indefinite                           | 0.7     | 0.09 | 1.07 | 0     | 1.64 | 1.21  |
-| AvgDepsSen_cop                                  | 0.7     | 0.09 | 1.16 | 0     | 1.49 | 0     |
-| AvgNmdEntSen                                    | 0.68    | 0.45 | 1.02 | 0     | 1.07 | 0     |
-| AvgConnSen_contrasts                            | 0.68    | 0.32 | 1.03 | 0     | 0.59 | 1.21  |
-| AvgConnSen_oppositions                          | 0.68    | 0.07 | 1.18 | 0     | 0.94 | 0     |
-| AvgDepsSen_advcl                                | 0.67    | 0.03 | 1.13 | 0     | 1.31 | 0     |
-| AvgAdverbSen                                    | 0.67    | 0.43 | 1.01 | 0     | 1.08 | 0     |
-| AvgAOEDoc_IndexPolynomialFitAboveThreshold.0.3. | 0.66    | 0    | 1.14 | 0     | 1.18 | 0     |
-| AvgDepsSen_nmod                                 | 0.66    | 0.74 | 0.76 | 0     | 1.35 | 1.21  |
-| AvgAOADoc_Bird                                  | 0.65    | 0.95 | 0.77 | 0     | 1.11 | 0     |
-| AvgDepsSen_amod                                 | 0.65    | 0.53 | 0.69 | 0     | 0.9  | 3.86  |
-| AvgConnSen_semi_coordinators                    | 0.64    | 0.24 | 1.04 | 0     | 0.78 | 0     |
-| WdMaxDpthHypernymTree                           | 0.62    | 1.46 | 0.46 | 0     | 1.61 | 0     |
-| AvgAOASen_Shock                                 | 0.62    | 1.13 | 0.62 | 0     | 1.34 | 0     |
-| AvgAOASen_Kuperman                              | 0.6     | 0.15 | 1.01 | 0     | 0.45 | 0.48  |
-| AvgConnSen_temporal_connectors                  | 0.58    | 0.27 | 0.99 | 0     | 0.01 | 0     |
-| AvgAOASen_Bristol                               | 0.57    | 0.38 | 0.87 | 0     | 0.67 | 0     |
-| LangRhythmDiameter                              | 0.56    | 0.65 | 0.81 | 0     | 0.06 | 0     |
-| AvgConnSen_order                                | 0.52    | 0.29 | 0.7  | 0     | 1    | 1.21  |
-| AvgAOEDoc_IndexAboveThreshold.0.3.              | 0.5     | 0.01 | 0.79 | 0     | 1.65 | 0     |
-| AvgRhythmUnits                                  | 0.5     | 0.73 | 0.57 | 0     | 1.13 | 0     |
-| AvgAOADoc_Kuperman                              | 0.5     | 0.14 | 0.82 | 0     | 0.86 | 0     |
-| AvgAOASen_Cortese                               | 0.49    | 0.13 | 0.83 | 0     | 0.66 | 0     |
-| AvgInferenceDistChain                           | 0.48    | 0.87 | 0.51 | 0     | 0.71 | 0     |
-| WdDiffLemmaStem                                 | 0.48    | 0.4  | 0.62 | 0     | 1.55 | 0     |
-| SenAsson                                        | 0.42    | 0.99 | 0.4  | 0     | 0.15 | 0     |
-| AvgDepsSen_mwe                                  | 0.41    | 0.66 | 0.52 | 0     | 0.07 | 0     |
-| AvgDepsSen_neg                                  | 0.39    | 0.28 | 0.64 | 0     | 0    | 0     |
-| AvgDepsSen_acl                                  | 0.33    | 0.45 | 0.46 | 0     | 0.03 | 0     |
-| LxcSoph                                         | 0.31    | 0.39 | 0.35 | 0     | 0.92 | 0     |
-| AvgAOEDoc_InverseLinearRegressionSlope          | 0.27    | 0.19 | 0.39 | 0     | 0.61 | 0     |
-| AvgAOADoc_Cortese                               | 0.24    | 0.76 | 0.09 | 0     | 0.85 | 0     |
-| WdSylCnt                                        | 0.23    | 0.83 | 0    | 0     | 1.29 | 0     |
-| LangRhythmId                                    | 0.03    | 0.09 | 0.03 | 0     | 0    | 0     |
+| Metric | overall | pls | rf | mars | svm | cube |
+|:---|:---|:---|:---|:---|:---|:---|
+| Content.words | 11.94 | 5.23 | 4.51 | 41.33 | 4.49 | 15.7 |
+| WdEnt | 8.27 | 5.15 | 5.03 | 19.27 | 4.44 | 21.01 |
+| SynSoph | 4.17 | 1.03 | 2.06 | 14.97 | 1.69 | 0 |
+| LxcDiv | 3.24 | 4.93 | 3.5 | 0 | 3.86 | 5.8 |
+| AvgDepsSen_det | 3.18 | 0.25 | 1.12 | 12.65 | 0.94 | 3.38 |
+| TCorefChainDoc | 2.63 | 4 | 2.76 | 0 | 2.45 | 6.76 |
+| AvgChainSpan | 2.28 | 3.64 | 2.57 | 0 | 2.88 | 1.45 |
+| LexChainMaxSp | 2.25 | 3.56 | 2.72 | 0 | 1.98 | 0 |
+| TActCorefChainWd | 2.22 | 0.83 | 0.71 | 7.46 | 0.78 | 6.76 |
+| Sentences | 2.18 | 3.8 | 2.48 | 0 | 2.25 | 0 |
+| AvgNounSen | 2.07 | 0.89 | 1.54 | 4.33 | 0.64 | 6.52 |
+| CharEnt | 1.7 | 3.41 | 1.66 | 0 | 2.16 | 0.97 |
+| RdbltyFlesch | 1.36 | 0.46 | 1.91 | 0 | 1.18 | 5.56 |
+| WdLettStdDev | 1.31 | 2.58 | 1.31 | 0 | 2 | 0 |
+| AvgSenAdjCoh_LeackockChodorow | 1.3 | 2.75 | 1.24 | 0 | 1.87 | 0 |
+| FrqRhythmId | 1.28 | 2.48 | 1.39 | 0 | 1.13 | 0 |
+| AvgDepsSen_aux | 1.25 | 0.94 | 1.69 | 0 | 0.97 | 3.38 |
+| AvgWdLen | 1.24 | 2.36 | 1.26 | 0 | 2.04 | 0 |
+| AvgAOADoc_Bristol | 1.21 | 1.59 | 1.61 | 0 | 0.88 | 0 |
+| AvgDepsSen_compound | 1.2 | 1.17 | 1.78 | 0 | 0.48 | 0 |
+| AvgVoice | 1.2 | 2.75 | 1.13 | 0 | 1.19 | 0 |
+| AvgAOADoc_Shock | 1.16 | 2.54 | 1.13 | 0 | 1.17 | 0 |
+| TCorefChainBigSpan | 1.13 | 2.24 | 1.22 | 0 | 0.78 | 0 |
+| AvgConnSen_addition | 1.07 | 1.31 | 1.29 | 0 | 1.31 | 1.69 |
+| WdDiffWdStem | 1.04 | 2.05 | 1.06 | 0 | 1.35 | 0 |
+| AvgConnSen_logical_connectors | 1.03 | 1.49 | 1.11 | 0 | 1.27 | 2.17 |
+| AvgCorefChain | 1.01 | 2.38 | 0.9 | 0 | 1.32 | 0 |
+| AggPronSen_third_person | 0.98 | 1.18 | 1.23 | 0 | 0.56 | 1.93 |
+| AvgDepsSen_punct | 0.98 | 1.89 | 1.01 | 0 | 1.48 | 0 |
+| AvgDepsSen_dep | 0.95 | 1.01 | 1.31 | 0 | 1.07 | 0 |
+| AvgRhythmUnitStreesSyll | 0.95 | 0.44 | 1.46 | 0 | 0.9 | 1.21 |
+| AvgDepsSen_dobj | 0.95 | 1.12 | 1.04 | 0 | 1.07 | 3.38 |
+| AvgAdjectiveSen | 0.91 | 0.44 | 1.47 | 0 | 0.9 | 0 |
+| SenStdDevWd | 0.9 | 2.04 | 0.69 | 0 | 1.52 | 1.21 |
+| LexChainAvgSpan | 0.87 | 1.85 | 0.77 | 0 | 1.88 | 0 |
+| WdPathCntHypernymTree | 0.86 | 1.46 | 0.94 | 0 | 1.38 | 0 |
+| AvgAOESen_InverseAverage | 0.85 | 0.71 | 1.27 | 0 | 0.81 | 0 |
+| AvgDepsSen_mark | 0.83 | 0.22 | 1.4 | 0 | 1.06 | 0 |
+| WdPolysemyCnt | 0.83 | 0.32 | 1.43 | 0 | 0.39 | 0 |
+| AvgConnSen_reason_and_purpose | 0.82 | 0.35 | 1.3 | 0 | 0.7 | 0.97 |
+| LangRhythmCoeff | 0.8 | 1.15 | 1 | 0 | 0.92 | 0 |
+| AvgConnSen_simple_subordinators | 0.78 | 0.11 | 1.3 | 0 | 1.47 | 0 |
+| AvgDepsSen_xcomp | 0.76 | 0.11 | 1.25 | 0 | 1.6 | 0 |
+| AvgAOASen_Bird | 0.76 | 0.33 | 1.19 | 0 | 0.62 | 0.97 |
+| AvgDepsSen_ccomp | 0.75 | 0.16 | 1.29 | 0 | 0.79 | 0 |
+| RdbltyDaleChall | 0.75 | 2.41 | 0.41 | 0 | 1.07 | 0 |
+| AvgAOEDoc_InflectionPointPolynomial | 0.73 | 0.7 | 1.06 | 0 | 0.65 | 0 |
+| AvgAOESen_IndexAboveThreshold.0.3. | 0.7 | 0.47 | 1.01 | 0 | 1.43 | 0 |
+| AvgAOESen_IndexPolynomialFitAboveThreshold.0.3. | 0.7 | 0.55 | 1.01 | 0 | 1.13 | 0 |
+| AggPronSen_indefinite | 0.7 | 0.09 | 1.07 | 0 | 1.64 | 1.21 |
+| AvgDepsSen_cop | 0.7 | 0.09 | 1.16 | 0 | 1.49 | 0 |
+| AvgNmdEntSen | 0.68 | 0.45 | 1.02 | 0 | 1.07 | 0 |
+| AvgConnSen_contrasts | 0.68 | 0.32 | 1.03 | 0 | 0.59 | 1.21 |
+| AvgConnSen_oppositions | 0.68 | 0.07 | 1.18 | 0 | 0.94 | 0 |
+| AvgDepsSen_advcl | 0.67 | 0.03 | 1.13 | 0 | 1.31 | 0 |
+| AvgAdverbSen | 0.67 | 0.43 | 1.01 | 0 | 1.08 | 0 |
+| AvgAOEDoc_IndexPolynomialFitAboveThreshold.0.3. | 0.66 | 0 | 1.14 | 0 | 1.18 | 0 |
+| AvgDepsSen_nmod | 0.66 | 0.74 | 0.76 | 0 | 1.35 | 1.21 |
+| AvgAOADoc_Bird | 0.65 | 0.95 | 0.77 | 0 | 1.11 | 0 |
+| AvgDepsSen_amod | 0.65 | 0.53 | 0.69 | 0 | 0.9 | 3.86 |
+| AvgConnSen_semi_coordinators | 0.64 | 0.24 | 1.04 | 0 | 0.78 | 0 |
+| WdMaxDpthHypernymTree | 0.62 | 1.46 | 0.46 | 0 | 1.61 | 0 |
+| AvgAOASen_Shock | 0.62 | 1.13 | 0.62 | 0 | 1.34 | 0 |
+| AvgAOASen_Kuperman | 0.6 | 0.15 | 1.01 | 0 | 0.45 | 0.48 |
+| AvgConnSen_temporal_connectors | 0.58 | 0.27 | 0.99 | 0 | 0.01 | 0 |
+| AvgAOASen_Bristol | 0.57 | 0.38 | 0.87 | 0 | 0.67 | 0 |
+| LangRhythmDiameter | 0.56 | 0.65 | 0.81 | 0 | 0.06 | 0 |
+| AvgConnSen_order | 0.52 | 0.29 | 0.7 | 0 | 1 | 1.21 |
+| AvgAOEDoc_IndexAboveThreshold.0.3. | 0.5 | 0.01 | 0.79 | 0 | 1.65 | 0 |
+| AvgRhythmUnits | 0.5 | 0.73 | 0.57 | 0 | 1.13 | 0 |
+| AvgAOADoc_Kuperman | 0.5 | 0.14 | 0.82 | 0 | 0.86 | 0 |
+| AvgAOASen_Cortese | 0.49 | 0.13 | 0.83 | 0 | 0.66 | 0 |
+| AvgInferenceDistChain | 0.48 | 0.87 | 0.51 | 0 | 0.71 | 0 |
+| WdDiffLemmaStem | 0.48 | 0.4 | 0.62 | 0 | 1.55 | 0 |
+| SenAsson | 0.42 | 0.99 | 0.4 | 0 | 0.15 | 0 |
+| AvgDepsSen_mwe | 0.41 | 0.66 | 0.52 | 0 | 0.07 | 0 |
+| AvgDepsSen_neg | 0.39 | 0.28 | 0.64 | 0 | 0 | 0 |
+| AvgDepsSen_acl | 0.33 | 0.45 | 0.46 | 0 | 0.03 | 0 |
+| LxcSoph | 0.31 | 0.39 | 0.35 | 0 | 0.92 | 0 |
+| AvgAOEDoc_InverseLinearRegressionSlope | 0.27 | 0.19 | 0.39 | 0 | 0.61 | 0 |
+| AvgAOADoc_Cortese | 0.24 | 0.76 | 0.09 | 0 | 0.85 | 0 |
+| WdSylCnt | 0.23 | 0.83 | 0 | 0 | 1.29 | 0 |
+| LangRhythmId | 0.03 | 0.09 | 0.03 | 0 | 0 | 0 |
 
 ### ReaderBench Model 2c
 
@@ -2013,92 +2033,92 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
-| Metric                                          | overall | pls  | rf   | mars  | gbm   | svm  | cube  |
-|:------------------------------------------------|:--------|:-----|:-----|:------|:------|:-----|:------|
-| Content.words                                   | 11.99   | 4.55 | 5.81 | 30.16 | 21.71 | 4.24 | 11.11 |
-| WdEnt                                           | 7.28    | 4.3  | 5.74 | 0     | 21.09 | 4.12 | 12.09 |
-| AvgDepsSen_compound                             | 3.97    | 2.07 | 1.98 | 13.22 | 2.22  | 1.52 | 6.82  |
-| AvgWdLen                                        | 3.87    | 2.64 | 2.65 | 7.11  | 4.85  | 2.04 | 7.02  |
-| LxcDiv                                          | 3.77    | 4.06 | 4.13 | 0     | 7.72  | 3.59 | 0.78  |
-| AvgChainSpan                                    | 3.36    | 3.09 | 2.64 | 5.1   | 4.15  | 2.66 | 2.34  |
-| TCorefChainBigSpan                              | 2.64    | 2.23 | 1.48 | 10.59 | 0.43  | 0.93 | 0     |
-| Sentences                                       | 2.37    | 3.33 | 2.15 | 0     | 2.63  | 2.24 | 4.87  |
-| AvgDepsSen_mark                                 | 2.21    | 0.38 | 1.17 | 10.59 | 0.08  | 1.45 | 0     |
-| AvgDepsSen_dobj                                 | 2       | 0.81 | 0.96 | 8.72  | 0.14  | 1.13 | 0.97  |
-| AvgSenAdjCoh_LSA                                | 1.95    | 2.68 | 1.87 | 0     | 3.17  | 2.26 | 0     |
-| AvgCorefChain                                   | 1.94    | 2.2  | 1    | 5.1   | 0.28  | 1.28 | 2.73  |
-| WdDiffWdStem                                    | 1.92    | 2.4  | 1.86 | 0     | 2.95  | 2.09 | 1.56  |
-| LexChainMaxSp                                   | 1.82    | 3.13 | 2.35 | 0     | 1.28  | 2.01 | 0.97  |
-| WdLettStdDev                                    | 1.79    | 3    | 1.66 | 0     | 1.64  | 2.28 | 0.97  |
-| TCorefChainDoc                                  | 1.62    | 3.23 | 1.85 | 0     | 0.17  | 1.92 | 2.14  |
-| CharEnt                                         | 1.59    | 2.56 | 0.9  | 0     | 0.29  | 2.1  | 5.46  |
-| WdSylCnt                                        | 1.53    | 2.45 | 1.7  | 0     | 1.52  | 1.55 | 1.36  |
-| FrqRhythmId                                     | 1.47    | 2.67 | 1.7  | 0     | 1.03  | 1.59 | 0.97  |
-| AvgDepsSen_punct                                | 1.36    | 1.82 | 1.57 | 0     | 0.72  | 1.83 | 2.53  |
-| AvgAOEDoc_InverseLinearRegressionSlope          | 1.32    | 1.31 | 0.73 | 4.26  | 0.24  | 0.89 | 0.39  |
-| RdbltyDaleChall                                 | 1.25    | 1.81 | 1.27 | 0     | 1.04  | 1.02 | 3.51  |
-| AvgAOADoc_Shock                                 | 1.2     | 2.2  | 1.24 | 0     | 0.69  | 1.8  | 0     |
-| LangRhythmCoeff                                 | 1.06    | 1.61 | 1.41 | 0     | 1.03  | 1.24 | 0.19  |
-| LexChainAvgSpan                                 | 1.05    | 1.94 | 1.36 | 0     | 0.16  | 1.66 | 0     |
-| SenAsson                                        | 1.05    | 1.63 | 0.58 | 3.07  | 0.02  | 0.56 | 0     |
-| AvgVoice                                        | 1       | 2.62 | 0.58 | 0     | 0     | 1.36 | 0.39  |
-| AvgNounSen                                      | 0.97    | 1.09 | 1.59 | 0     | 0.47  | 1.06 | 2.14  |
-| WdDiffLemmaStem                                 | 0.94    | 1.65 | 1.01 | 0     | 0.36  | 1.32 | 0.78  |
-| TActCorefChainWd                                | 0.94    | 0.93 | 0.74 | 0     | 1.05  | 0.71 | 4.09  |
-| AvgAOADoc_Cortese                               | 0.93    | 1.16 | 0.9  | 0     | 0.56  | 1.89 | 0.39  |
-| AvgAOASen_Bristol                               | 0.92    | 0.35 | 1.28 | 2.08  | 1.15  | 0.34 | 0.39  |
-| SenStdDevWd                                     | 0.92    | 1.6  | 0.97 | 0     | 0.09  | 1.78 | 0     |
-| AvgDepsSen_xcomp                                | 0.83    | 0.41 | 1.61 | 0     | 1.42  | 0.99 | 0     |
-| AvgAdjectiveSen                                 | 0.83    | 1.24 | 1    | 0     | 0.18  | 1.21 | 1.36  |
-| AvgDepsSen_nmod                                 | 0.81    | 0.16 | 1.23 | 0     | 0.38  | 1.25 | 3.51  |
-| AvgAOADoc_Kuperman                              | 0.8     | 0.7  | 1.18 | 0     | 0.65  | 1.44 | 0.39  |
-| AvgDepsSen_amod                                 | 0.79    | 1.11 | 0.91 | 0     | 0.1   | 1.33 | 1.36  |
-| AvgDepsSen_ccomp                                | 0.78    | 1.06 | 1.41 | 0     | 0.27  | 1.18 | 0     |
-| AvgAOASen_Kuperman                              | 0.78    | 0.78 | 0.83 | 0     | 0.41  | 0.99 | 2.73  |
-| AvgNmdEntSen                                    | 0.78    | 0.93 | 1    | 0     | 1.05  | 1.05 | 0     |
-| AvgAOESen_IndexPolynomialFitAboveThreshold.0.3. | 0.76    | 0.58 | 1.12 | 0     | 0.4   | 0.84 | 2.73  |
-| AvgConnSen_simple_subordinators                 | 0.74    | 0.25 | 0.86 | 0     | 1.12  | 1.52 | 0.39  |
-| AvgPronounSen                                   | 0.72    | 1.09 | 1.13 | 0     | 0.02  | 0.99 | 0.97  |
-| AvgAOASen_Shock                                 | 0.69    | 0.48 | 1.51 | 0     | 0.21  | 1.32 | 0     |
-| AvgConnSen_reason_and_purpose                   | 0.68    | 0.16 | 1.31 | 0     | 0.82  | 1.29 | 0     |
-| AvgAOASen_Cortese                               | 0.66    | 1.25 | 0.45 | 0     | 0.24  | 1.22 | 0     |
-| AvgAOESen_InverseLinearRegressionSlope          | 0.66    | 0.99 | 1.02 | 0     | 0.31  | 0.68 | 0.97  |
-| AvgAOEDoc_InflectionPointPolynomial             | 0.65    | 0.64 | 0.36 | 0     | 0.37  | 0.61 | 3.7   |
-| AvgConnSen_addition                             | 0.65    | 0.88 | 0.88 | 0     | 0.12  | 1.21 | 0.39  |
-| AvgConnSen_order                                | 0.64    | 0.44 | 0.48 | 0     | 0.92  | 1.41 | 0     |
-| AvgInferenceDistChain                           | 0.64    | 0.8  | 0.91 | 0     | 0.7   | 0.83 | 0     |
-| WdPolysemyCnt                                   | 0.62    | 0.27 | 0.93 | 0     | 0.37  | 1.61 | 0     |
-| AvgAOEDoc_IndexPolynomialFitAboveThreshold.0.3. | 0.61    | 0.83 | 0.71 | 0     | 0.07  | 1.07 | 0.97  |
-| AvgRhythmUnits                                  | 0.61    | 0.3  | 1.24 | 0     | 0.32  | 1.3  | 0     |
-| AvgDepsSen_aux                                  | 0.57    | 0.03 | 1.26 | 0     | 0.38  | 1.32 | 0     |
-| SynSoph                                         | 0.57    | 0.59 | 0.85 | 0     | 0.08  | 1.02 | 0.97  |
-| AvgDepsSen_cop                                  | 0.55    | 0.87 | 0.48 | 0     | 0.05  | 1.25 | 0     |
-| AvgRhythmUnitStreesSyll                         | 0.52    | 0.76 | 1.17 | 0     | 0.14  | 0.56 | 0     |
-| AvgDepsSen_advmod                               | 0.48    | 0.33 | 0.6  | 0     | 0.2   | 1.26 | 0     |
-| AvgDepsSen_det                                  | 0.48    | 0.22 | 1.04 | 0     | 0.45  | 0.68 | 0.39  |
-| AggPronSen_third_person                         | 0.47    | 0.86 | 0.8  | 0     | 0.08  | 0.58 | 0     |
-| AvgAOADoc_Bristol                               | 0.45    | 0.36 | 0.71 | 0     | 0.12  | 1.02 | 0.19  |
-| AvgDepsSen_acl                                  | 0.44    | 1.28 | 0.29 | 0     | 0.16  | 0.36 | 0     |
-| AvgAOADoc_Bird                                  | 0.44    | 0.38 | 0.84 | 0     | 0.13  | 0.89 | 0     |
-| WdAvgDpthHypernymTree                           | 0.43    | 0.79 | 0.71 | 0     | 0.06  | 0.54 | 0     |
-| RdbltyFlesch                                    | 0.43    | 0.42 | 1.35 | 0     | 0.03  | 0.44 | 0     |
-| AvgDepsSen_dep                                  | 0.42    | 0.68 | 0.6  | 0     | 0.02  | 0.75 | 0     |
-| AggPronSen_indefinite                           | 0.41    | 0.34 | 0.51 | 0     | 0.14  | 1.05 | 0     |
-| AvgConnSen_semi_coordinators                    | 0.39    | 0    | 1.01 | 0     | 0.13  | 0.92 | 0     |
-| AvgDepsSen_mwe                                  | 0.38    | 0.6  | 1.17 | 0     | 0.1   | 0.07 | 0     |
-| AvgDepsSen_advcl                                | 0.38    | 0.06 | 0.44 | 0     | 0.01  | 1.4  | 0     |
-| AvgDepsSen_neg                                  | 0.37    | 0.51 | 0.97 | 0     | 0.4   | 0.05 | 0     |
-| WdPathCntHypernymTree                           | 0.36    | 0.89 | 0.33 | 0     | 0.19  | 0.35 | 0     |
-| AvgAOESen_IndexAboveThreshold.0.3.              | 0.35    | 0.27 | 0    | 0     | 0.41  | 1.05 | 0     |
-| AvgAOASen_Bird                                  | 0.33    | 0.04 | 0.75 | 0     | 0.59  | 0.42 | 0     |
-| LxcSoph                                         | 0.31    | 0.02 | 0.61 | 0     | 0.16  | 0.18 | 1.95  |
-| AvgConnSen_oppositions                          | 0.26    | 0.11 | 0.98 | 0     | 0.36  | 0    | 0     |
-| LangRhythmDiameter                              | 0.24    | 0.3  | 0.84 | 0     | 0.12  | 0.03 | 0     |
-| AvgConnSen_temporal_connectors                  | 0.17    | 0.23 | 0.58 | 0     | 0.09  | 0.01 | 0     |
-| LangRhythmId                                    | 0.09    | 0.22 | 0.23 | 0     | 0.02  | 0.01 | 0     |
+| Metric | overall | pls | rf | mars | gbm | svm | cube |
+|:---|:---|:---|:---|:---|:---|:---|:---|
+| Content.words | 11.99 | 4.55 | 5.81 | 30.16 | 21.71 | 4.24 | 11.11 |
+| WdEnt | 7.28 | 4.3 | 5.74 | 0 | 21.09 | 4.12 | 12.09 |
+| AvgDepsSen_compound | 3.97 | 2.07 | 1.98 | 13.22 | 2.22 | 1.52 | 6.82 |
+| AvgWdLen | 3.87 | 2.64 | 2.65 | 7.11 | 4.85 | 2.04 | 7.02 |
+| LxcDiv | 3.77 | 4.06 | 4.13 | 0 | 7.72 | 3.59 | 0.78 |
+| AvgChainSpan | 3.36 | 3.09 | 2.64 | 5.1 | 4.15 | 2.66 | 2.34 |
+| TCorefChainBigSpan | 2.64 | 2.23 | 1.48 | 10.59 | 0.43 | 0.93 | 0 |
+| Sentences | 2.37 | 3.33 | 2.15 | 0 | 2.63 | 2.24 | 4.87 |
+| AvgDepsSen_mark | 2.21 | 0.38 | 1.17 | 10.59 | 0.08 | 1.45 | 0 |
+| AvgDepsSen_dobj | 2 | 0.81 | 0.96 | 8.72 | 0.14 | 1.13 | 0.97 |
+| AvgSenAdjCoh_LSA | 1.95 | 2.68 | 1.87 | 0 | 3.17 | 2.26 | 0 |
+| AvgCorefChain | 1.94 | 2.2 | 1 | 5.1 | 0.28 | 1.28 | 2.73 |
+| WdDiffWdStem | 1.92 | 2.4 | 1.86 | 0 | 2.95 | 2.09 | 1.56 |
+| LexChainMaxSp | 1.82 | 3.13 | 2.35 | 0 | 1.28 | 2.01 | 0.97 |
+| WdLettStdDev | 1.79 | 3 | 1.66 | 0 | 1.64 | 2.28 | 0.97 |
+| TCorefChainDoc | 1.62 | 3.23 | 1.85 | 0 | 0.17 | 1.92 | 2.14 |
+| CharEnt | 1.59 | 2.56 | 0.9 | 0 | 0.29 | 2.1 | 5.46 |
+| WdSylCnt | 1.53 | 2.45 | 1.7 | 0 | 1.52 | 1.55 | 1.36 |
+| FrqRhythmId | 1.47 | 2.67 | 1.7 | 0 | 1.03 | 1.59 | 0.97 |
+| AvgDepsSen_punct | 1.36 | 1.82 | 1.57 | 0 | 0.72 | 1.83 | 2.53 |
+| AvgAOEDoc_InverseLinearRegressionSlope | 1.32 | 1.31 | 0.73 | 4.26 | 0.24 | 0.89 | 0.39 |
+| RdbltyDaleChall | 1.25 | 1.81 | 1.27 | 0 | 1.04 | 1.02 | 3.51 |
+| AvgAOADoc_Shock | 1.2 | 2.2 | 1.24 | 0 | 0.69 | 1.8 | 0 |
+| LangRhythmCoeff | 1.06 | 1.61 | 1.41 | 0 | 1.03 | 1.24 | 0.19 |
+| LexChainAvgSpan | 1.05 | 1.94 | 1.36 | 0 | 0.16 | 1.66 | 0 |
+| SenAsson | 1.05 | 1.63 | 0.58 | 3.07 | 0.02 | 0.56 | 0 |
+| AvgVoice | 1 | 2.62 | 0.58 | 0 | 0 | 1.36 | 0.39 |
+| AvgNounSen | 0.97 | 1.09 | 1.59 | 0 | 0.47 | 1.06 | 2.14 |
+| WdDiffLemmaStem | 0.94 | 1.65 | 1.01 | 0 | 0.36 | 1.32 | 0.78 |
+| TActCorefChainWd | 0.94 | 0.93 | 0.74 | 0 | 1.05 | 0.71 | 4.09 |
+| AvgAOADoc_Cortese | 0.93 | 1.16 | 0.9 | 0 | 0.56 | 1.89 | 0.39 |
+| AvgAOASen_Bristol | 0.92 | 0.35 | 1.28 | 2.08 | 1.15 | 0.34 | 0.39 |
+| SenStdDevWd | 0.92 | 1.6 | 0.97 | 0 | 0.09 | 1.78 | 0 |
+| AvgDepsSen_xcomp | 0.83 | 0.41 | 1.61 | 0 | 1.42 | 0.99 | 0 |
+| AvgAdjectiveSen | 0.83 | 1.24 | 1 | 0 | 0.18 | 1.21 | 1.36 |
+| AvgDepsSen_nmod | 0.81 | 0.16 | 1.23 | 0 | 0.38 | 1.25 | 3.51 |
+| AvgAOADoc_Kuperman | 0.8 | 0.7 | 1.18 | 0 | 0.65 | 1.44 | 0.39 |
+| AvgDepsSen_amod | 0.79 | 1.11 | 0.91 | 0 | 0.1 | 1.33 | 1.36 |
+| AvgDepsSen_ccomp | 0.78 | 1.06 | 1.41 | 0 | 0.27 | 1.18 | 0 |
+| AvgAOASen_Kuperman | 0.78 | 0.78 | 0.83 | 0 | 0.41 | 0.99 | 2.73 |
+| AvgNmdEntSen | 0.78 | 0.93 | 1 | 0 | 1.05 | 1.05 | 0 |
+| AvgAOESen_IndexPolynomialFitAboveThreshold.0.3. | 0.76 | 0.58 | 1.12 | 0 | 0.4 | 0.84 | 2.73 |
+| AvgConnSen_simple_subordinators | 0.74 | 0.25 | 0.86 | 0 | 1.12 | 1.52 | 0.39 |
+| AvgPronounSen | 0.72 | 1.09 | 1.13 | 0 | 0.02 | 0.99 | 0.97 |
+| AvgAOASen_Shock | 0.69 | 0.48 | 1.51 | 0 | 0.21 | 1.32 | 0 |
+| AvgConnSen_reason_and_purpose | 0.68 | 0.16 | 1.31 | 0 | 0.82 | 1.29 | 0 |
+| AvgAOASen_Cortese | 0.66 | 1.25 | 0.45 | 0 | 0.24 | 1.22 | 0 |
+| AvgAOESen_InverseLinearRegressionSlope | 0.66 | 0.99 | 1.02 | 0 | 0.31 | 0.68 | 0.97 |
+| AvgAOEDoc_InflectionPointPolynomial | 0.65 | 0.64 | 0.36 | 0 | 0.37 | 0.61 | 3.7 |
+| AvgConnSen_addition | 0.65 | 0.88 | 0.88 | 0 | 0.12 | 1.21 | 0.39 |
+| AvgConnSen_order | 0.64 | 0.44 | 0.48 | 0 | 0.92 | 1.41 | 0 |
+| AvgInferenceDistChain | 0.64 | 0.8 | 0.91 | 0 | 0.7 | 0.83 | 0 |
+| WdPolysemyCnt | 0.62 | 0.27 | 0.93 | 0 | 0.37 | 1.61 | 0 |
+| AvgAOEDoc_IndexPolynomialFitAboveThreshold.0.3. | 0.61 | 0.83 | 0.71 | 0 | 0.07 | 1.07 | 0.97 |
+| AvgRhythmUnits | 0.61 | 0.3 | 1.24 | 0 | 0.32 | 1.3 | 0 |
+| AvgDepsSen_aux | 0.57 | 0.03 | 1.26 | 0 | 0.38 | 1.32 | 0 |
+| SynSoph | 0.57 | 0.59 | 0.85 | 0 | 0.08 | 1.02 | 0.97 |
+| AvgDepsSen_cop | 0.55 | 0.87 | 0.48 | 0 | 0.05 | 1.25 | 0 |
+| AvgRhythmUnitStreesSyll | 0.52 | 0.76 | 1.17 | 0 | 0.14 | 0.56 | 0 |
+| AvgDepsSen_advmod | 0.48 | 0.33 | 0.6 | 0 | 0.2 | 1.26 | 0 |
+| AvgDepsSen_det | 0.48 | 0.22 | 1.04 | 0 | 0.45 | 0.68 | 0.39 |
+| AggPronSen_third_person | 0.47 | 0.86 | 0.8 | 0 | 0.08 | 0.58 | 0 |
+| AvgAOADoc_Bristol | 0.45 | 0.36 | 0.71 | 0 | 0.12 | 1.02 | 0.19 |
+| AvgDepsSen_acl | 0.44 | 1.28 | 0.29 | 0 | 0.16 | 0.36 | 0 |
+| AvgAOADoc_Bird | 0.44 | 0.38 | 0.84 | 0 | 0.13 | 0.89 | 0 |
+| WdAvgDpthHypernymTree | 0.43 | 0.79 | 0.71 | 0 | 0.06 | 0.54 | 0 |
+| RdbltyFlesch | 0.43 | 0.42 | 1.35 | 0 | 0.03 | 0.44 | 0 |
+| AvgDepsSen_dep | 0.42 | 0.68 | 0.6 | 0 | 0.02 | 0.75 | 0 |
+| AggPronSen_indefinite | 0.41 | 0.34 | 0.51 | 0 | 0.14 | 1.05 | 0 |
+| AvgConnSen_semi_coordinators | 0.39 | 0 | 1.01 | 0 | 0.13 | 0.92 | 0 |
+| AvgDepsSen_mwe | 0.38 | 0.6 | 1.17 | 0 | 0.1 | 0.07 | 0 |
+| AvgDepsSen_advcl | 0.38 | 0.06 | 0.44 | 0 | 0.01 | 1.4 | 0 |
+| AvgDepsSen_neg | 0.37 | 0.51 | 0.97 | 0 | 0.4 | 0.05 | 0 |
+| WdPathCntHypernymTree | 0.36 | 0.89 | 0.33 | 0 | 0.19 | 0.35 | 0 |
+| AvgAOESen_IndexAboveThreshold.0.3. | 0.35 | 0.27 | 0 | 0 | 0.41 | 1.05 | 0 |
+| AvgAOASen_Bird | 0.33 | 0.04 | 0.75 | 0 | 0.59 | 0.42 | 0 |
+| LxcSoph | 0.31 | 0.02 | 0.61 | 0 | 0.16 | 0.18 | 1.95 |
+| AvgConnSen_oppositions | 0.26 | 0.11 | 0.98 | 0 | 0.36 | 0 | 0 |
+| LangRhythmDiameter | 0.24 | 0.3 | 0.84 | 0 | 0.12 | 0.03 | 0 |
+| AvgConnSen_temporal_connectors | 0.17 | 0.23 | 0.58 | 0 | 0.09 | 0.01 | 0 |
+| LangRhythmId | 0.09 | 0.22 | 0.23 | 0 | 0.02 | 0.01 | 0 |
 
 ------------------------------------------------------------------------
 
@@ -2143,152 +2163,152 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
-| Metric                                            | overall | pls  | rf   | mars  | gbm   | svm  | enet | cube |
-|---------------------------------------------------|---------|------|------|-------|-------|------|------|------|
-| Content.words                                     | 13.76   | 2    | 2.22 | 32.41 | 16.24 | 2.38 | 4.95 | 8.73 |
-| RB.AvgWdLen                                       | 7.5     | 0.81 | 1.06 | 21.05 | 1.14  | 1.01 | 1.38 | 3.55 |
-| RB.AvgDepsBl_compound                             | 4.66    | 0.89 | 1.01 | 11.15 | 2.17  | 0.45 | 2.45 | 3.09 |
-| RB.WdEnt                                          | 4.59    | 1.7  | 2.06 | 7.03  | 4.52  | 1.75 | 4.27 | 5.73 |
-| RB.LangRhythmId                                   | 3.17    | 0.69 | 0.35 | 8.26  | 0.06  | 0.21 | 2.85 | 0.18 |
-| RB.RdbltyDaleChall                                | 3.15    | 1.27 | 1.24 | 4.63  | 2.86  | 0.95 | 4.05 | 3.27 |
-| RB.AvgUnqWdBl                                     | 2.75    | 1.63 | 1.92 | 4.02  | 0.46  | 1.82 | 0    | 6.45 |
-| RB.LxcDiv                                         | 2.67    | 1.87 | 1.89 | 0     | 11.82 | 2.04 | 3.58 | 4.27 |
-| Sentences                                         | 2.62    | 1.71 | 2.13 | 0     | 5.6   | 1.52 | 4.67 | 5.91 |
-| RB.TCorefChainDoc                                 | 2.35    | 1.99 | 1.91 | 0     | 5.33  | 1.97 | 5.29 | 3.09 |
-| RB.AvgAOADoc_Cortese                              | 1.8     | 0.21 | 0.37 | 3.53  | 0.76  | 0.8  | 2.06 | 1.36 |
-| RB.CAF                                            | 1.78    | 1.83 | 1.52 | 0     | 1.84  | 1.87 | 3.65 | 3.27 |
-| RB.AvgNounNmdEntBl                                | 1.6     | 0.53 | 0.45 | 4.63  | 0.21  | 0.19 | 0    | 0.36 |
-| RB.AvgDepsBl_nsubjpass                            | 1.42    | 0.81 | 0.27 | 3.29  | 0.2   | 0.41 | 1.23 | 0.18 |
-| RB.AvgDepsBl_aux                                  | 1.21    | 1.48 | 1.75 | 0     | 2.12  | 1.53 | 1.3  | 2.36 |
-| RB.TActCorefChainWd                               | 1.06    | 0.33 | 0.95 | 0     | 1.19  | 1.17 | 2.65 | 2    |
-| RB.AvgDepsBl_nsubj                                | 1.05    | 1.67 | 1.78 | 0     | 2.94  | 1.85 | 0    | 2.09 |
-| RB.AvgPronounBl                                   | 0.99    | 1.72 | 1.84 | 0     | 3.59  | 2.06 | 0    | 1.18 |
-| RB.AvgUnqNoundBl                                  | 0.93    | 0.71 | 0.59 | 0     | 0.37  | 0.65 | 2.75 | 1.55 |
-| RB.TCorefChainBigSpan                             | 0.89    | 1.61 | 1.19 | 0     | 0.16  | 1.33 | 2.58 | 0    |
-| RB.AvgAOESen_InflectionPointPolynomial            | 0.87    | 0.97 | 1.18 | 0     | 0.57  | 1.09 | 2.33 | 0.73 |
-| RB.AvgBlScore                                     | 0.83    | 1.46 | 1.28 | 0     | 0.92  | 1.62 | 0    | 2.18 |
-| RB.AvgConnBl_addition                             | 0.81    | 0.99 | 0.83 | 0     | 0.77  | 0.66 | 1.36 | 1.73 |
-| RB.AvgChainSpan                                   | 0.81    | 1.52 | 1.28 | 0     | 2.39  | 1.7  | 0    | 1.27 |
-| RB.AvgPrepositionBl                               | 0.79    | 1.51 | 1.03 | 0     | 0.76  | 1.6  | 0.95 | 1    |
-| RB.AvgUnqPrepositionBl                            | 0.76    | 1.48 | 1.09 | 0     | 0.48  | 1.55 | 0.8  | 1.09 |
-| RB.SenStdDevWd                                    | 0.74    | 0.86 | 1.25 | 0     | 1.41  | 1.28 | 1.45 | 0.36 |
-| RB.AvgAOADoc_Shock                                | 0.72    | 0.86 | 0.94 | 0     | 1.36  | 1.15 | 0.8  | 1.27 |
-| RB.AvgDepsBl_punct                                | 0.68    | 1.26 | 1.34 | 0     | 1     | 1    | 0.35 | 1.18 |
-| RB.AvgCorefChain                                  | 0.68    | 1.19 | 1.03 | 0     | 0.34  | 1.28 | 1.1  | 0.73 |
-| RB.AvgNmdEntSen                                   | 0.67    | 0.27 | 0.42 | 0     | 0.17  | 0.72 | 2.16 | 1    |
-| RB.AvgPronBl_indefinite                           | 0.65    | 1.4  | 1.66 | 0     | 1.98  | 1.31 | 0.13 | 0.27 |
-| RB.AvgDepsBl_det                                  | 0.65    | 1.18 | 0.96 | 0     | 0.43  | 0.97 | 0.92 | 0.91 |
-| RB.AvgDepsBl_dobj                                 | 0.65    | 1.4  | 0.87 | 0     | 0.37  | 1.26 | 0    | 1.73 |
-| RB.SynDiv                                         | 0.6     | 0.64 | 0.7  | 0     | 0.42  | 0.71 | 1.55 | 0.64 |
-| RB.AvgAOEBl_InflectionPointPolynomial             | 0.6     | 0.88 | 0.95 | 0     | 2.01  | 1.2  | 0    | 1.09 |
-| RB.FrqRhythmId                                    | 0.59    | 1.12 | 1.27 | 0     | 0.11  | 0.77 | 1.31 | 0.18 |
-| RB.LangRhythmDiameter                             | 0.58    | 0.18 | 0.35 | 0     | 0.17  | 0.01 | 2.28 | 0.82 |
-| RB.AvgDepsBl_expl                                 | 0.58    | 0.64 | 0.28 | 0     | 0.35  | 0.2  | 1.79 | 0.82 |
-| RB.CharEnt                                        | 0.57    | 1.37 | 1.01 | 0     | 0.53  | 1.35 | 0.86 | 0    |
-| RB.AvgNounSen                                     | 0.55    | 0.74 | 0.91 | 0     | 0.31  | 0.46 | 1.46 | 0.36 |
-| RB.AvgDepsBl_amod                                 | 0.55    | 0.92 | 0.33 | 0     | 0.1   | 0.55 | 1.08 | 1.09 |
-| RB.AvgUnqVerbBl                                   | 0.54    | 1.56 | 1.01 | 0     | 0.48  | 1.48 | 0.16 | 0.36 |
-| RB.AvgUnqPronounBl                                | 0.54    | 1.6  | 0.94 | 0     | 1.5   | 1.7  | 0    | 0    |
-| RB.AvgPronBl_first_person                         | 0.53    | 1.35 | 0.7  | 0     | 0.34  | 1.23 | 0.61 | 0.36 |
-| RB.AvgConnBl_sentence_linking                     | 0.53    | 1.45 | 1.07 | 0     | 0.41  | 1.41 | 0    | 0.64 |
-| RB.LxcSoph                                        | 0.52    | 0.32 | 0.77 | 0     | 0.46  | 0.6  | 0.1  | 2.09 |
-| RB.AvgAOEBl_IndexPolynomialFitAboveThreshold.0.3. | 0.5     | 0.94 | 1.01 | 0     | 0.41  | 1.09 | 0.73 | 0.27 |
-| RB.AvgRhythmUnitStreesSyll                        | 0.49    | 0.65 | 0.67 | 0     | 0.45  | 0.43 | 0.75 | 1    |
-| RB.AvgDepsBl_mark                                 | 0.47    | 1.36 | 0.95 | 0     | 0.08  | 1.19 | 0    | 0.64 |
-| RB.AvgDepsBl_nmod                                 | 0.47    | 1.27 | 0.79 | 0     | 0.43  | 1.1  | 0    | 0.73 |
-| RB.WdDiffLemmaStem                                | 0.45    | 0.64 | 0.88 | 0     | 0.65  | 1.02 | 0.74 | 0.18 |
-| RB.AvgDepsBl_conj                                 | 0.45    | 0.95 | 0.52 | 0     | 0.28  | 0.64 | 0.41 | 0.91 |
-| RB.AvgAOABl_Bird                                  | 0.44    | 0.56 | 0.39 | 0     | 0.58  | 0.57 | 0.96 | 0.55 |
-| RB.AvgPronBl_third_person                         | 0.43    | 1.36 | 1.14 | 0     | 0.33  | 1.26 | 0    | 0.09 |
-| RB.AvgDepsBl_ccomp                                | 0.43    | 0.93 | 0.86 | 0     | 0.04  | 0.47 | 1.06 | 0    |
-| RB.AggPronSen_third_person                        | 0.43    | 0.52 | 0.51 | 0     | 0.11  | 1.01 | 1.15 | 0.18 |
-| RB.AvgDepsSen_punct                               | 0.43    | 0.38 | 0.62 | 0     | 0.19  | 0.94 | 0.81 | 0.64 |
-| RB.AvgConnBl_simple_subordinators                 | 0.42    | 1.31 | 1.02 | 0     | 0.73  | 1.08 | 0    | 0.09 |
-| RB.AvgConnSen_simple_subordinators                | 0.41    | 0.15 | 0.52 | 0     | 0.09  | 0.52 | 1.54 | 0.18 |
-| RB.AvgSenBlCoh_LDA                                | 0.4     | 0.74 | 0.95 | 0     | 0.2   | 1.21 | 0    | 0.73 |
-| RB.AvgDepsBl_xcomp                                | 0.4     | 1.15 | 0.82 | 0     | 0.37  | 0.88 | 0.45 | 0    |
-| RB.AvgCommaBl                                     | 0.4     | 0.72 | 0.45 | 0     | 0.05  | 0.39 | 0.96 | 0.45 |
-| RB.AvgAOASen_Shock                                | 0.39    | 0.4  | 0.74 | 0     | 0.45  | 0.9  | 0.79 | 0.18 |
-| RB.AvgSenBlCoh_word2vec                           | 0.36    | 1.11 | 0.78 | 0     | 0.18  | 1.03 | 0    | 0.27 |
-| RB.WdLettStdDev                                   | 0.34    | 0.72 | 0.63 | 0     | 0.39  | 0.7  | 0.46 | 0.18 |
-| RB.AvgConnBl_temporal_connectors                  | 0.34    | 1.03 | 0.92 | 0     | 0.02  | 0.77 | 0.1  | 0.27 |
-| RB.AvgDepsBl_acl                                  | 0.34    | 0.58 | 0.44 | 0     | 0.07  | 0.2  | 1.19 | 0    |
-| RB.LangRhythmCoeff                                | 0.33    | 0.7  | 0.59 | 0     | 0.25  | 0.66 | 0.61 | 0    |
-| RB.WdSylCnt                                       | 0.33    | 0.38 | 0.9  | 0     | 0.27  | 0.79 | 0.26 | 0.45 |
-| RB.AvgDepsBl_auxpass                              | 0.33    | 0.86 | 0.55 | 0     | 0.01  | 0.5  | 0.7  | 0    |
-| RB.AvgConnBl_oppositions                          | 0.33    | 0.85 | 0.49 | 0     | 0     | 0.42 | 0.63 | 0.18 |
-| RB.AvgAdverbBl                                    | 0.32    | 1.1  | 0.72 | 0     | 0.11  | 0.83 | 0    | 0.18 |
-| RB.AvgConnBl_order                                | 0.32    | 0.73 | 0.27 | 0     | 0.01  | 0.29 | 1    | 0    |
-| RB.AvgAOABl_Bristol                               | 0.31    | 0.75 | 0.29 | 0     | 0.7   | 0.77 | 0.39 | 0    |
-| RB.AvgDepsSen_nmod                                | 0.31    | 0.06 | 0.43 | 0     | 0.11  | 0.34 | 0.45 | 1    |
-| RB.AvgPronounSen                                  | 0.31    | 0.36 | 0.7  | 0     | 0.05  | 0.55 | 0    | 1    |
-| RB.AvgIntraBlCoh_Path                             | 0.3     | 1.14 | 0.3  | 0     | 0.16  | 0.97 | 0    | 0.18 |
-| RB.AvgAOABl_Kuperman                              | 0.3     | 0.51 | 0.51 | 0     | 0.71  | 0.59 | 0.1  | 0.45 |
-| RB.AvgDepsSen_nsubj                               | 0.3     | 0.05 | 0.83 | 0     | 0.04  | 0.49 | 0    | 1.18 |
-| RB.AvgDepsSen_aux                                 | 0.3     | 0.17 | 0.62 | 0     | 0.21  | 0.49 | 0.68 | 0.36 |
-| RB.AvgInferenceDistChain                          | 0.29    | 0.8  | 0.71 | 0     | 0.19  | 0.74 | 0.25 | 0    |
-| RB.AvgConnBl_conditions                           | 0.29    | 0.9  | 0.45 | 0     | 0.15  | 0.49 | 0.44 | 0    |
-| RB.AvgDepsBl_cop                                  | 0.28    | 1.07 | 0.53 | 0     | 0.08  | 0.7  | 0    | 0.18 |
-| RB.RdbltyFlesch                                   | 0.28    | 0.49 | 0.88 | 0     | 0.38  | 0.54 | 0    | 0.45 |
-| RB.AvgConnSen_temporal_connectors                 | 0.28    | 0.28 | 0.82 | 0     | 0.17  | 0.05 | 0.75 | 0.18 |
-| RB.AvgUnqAdjectiveBl                              | 0.27    | 1.2  | 0.24 | 0     | 0.01  | 0.97 | 0.03 | 0    |
-| RB.AvgDepsBl_advcl                                | 0.27    | 1.18 | 0.37 | 0     | 0.08  | 0.9  | 0.01 | 0    |
-| RB.AvgDepsSen_advcl                               | 0.27    | 0.16 | 0.53 | 0     | 0.12  | 0.69 | 0.66 | 0.18 |
-| RB.AggPronSen_indefinite                          | 0.25    | 0.42 | 0.84 | 0     | 0.26  | 1.17 | 0.03 | 0    |
-| RB.WdDiffWdStem                                   | 0.25    | 0.65 | 0.56 | 0     | 0.42  | 0.81 | 0.13 | 0    |
-| RB.AvgDepsBl_neg                                  | 0.24    | 0.45 | 0.08 | 0     | 0.02  | 0.12 | 0.9  | 0    |
-| RB.AvgDepsBl_nummod                               | 0.23    | 0.45 | 0.11 | 0     | 0     | 0.12 | 0.89 | 0    |
-| RB.AvgDepsBl_mwe                                  | 0.22    | 0.29 | 0.46 | 0     | 0     | 0.06 | 0.76 | 0    |
-| RB.AvgDepsSen_amod                                | 0.22    | 0.3  | 0.64 | 0     | 0.32  | 0.72 | 0.22 | 0    |
-| RB.AvgAOASen_Bird                                 | 0.21    | 0.32 | 0.74 | 0     | 0.27  | 0.42 | 0.25 | 0    |
-| RB.AvgPrepositionSen                              | 0.21    | 0.07 | 0.66 | 0     | 0.05  | 0.35 | 0    | 0.73 |
-| RB.AvgConnBl_contrasts                            | 0.21    | 1.04 | 0.19 | 0     | 0.01  | 0.64 | 0    | 0    |
-| RB.AvgAOASen_Kuperman                             | 0.21    | 0.5  | 0.2  | 0     | 0.88  | 0.48 | 0    | 0.18 |
-| RB.AvgDepsSen_xcomp                               | 0.21    | 0.19 | 0.71 | 0     | 0.05  | 1.01 | 0.23 | 0    |
-| RB.AvgDepsBl_root                                 | 0.2     | 0.04 | 0.29 | 0     | 0.02  | 0    | 0.99 | 0    |
-| RB.AvgDepsSen_cop                                 | 0.2     | 0.06 | 0.49 | 0     | 0.28  | 0.36 | 0.6  | 0    |
-| RB.AvgConnSen_reason_and_purpose                  | 0.19    | 0.14 | 0.21 | 0     | 0.11  | 0.61 | 0.53 | 0    |
-| RB.AvgDepsSen_conj                                | 0.19    | 0.14 | 0.56 | 0     | 0.02  | 0.42 | 0    | 0.55 |
-| RB.AvgDepsSen_dobj                                | 0.19    | 0.06 | 0.6  | 0     | 0.23  | 0.38 | 0    | 0.55 |
-| RB.AvgDepsSen_dep                                 | 0.19    | 0.49 | 0.57 | 0     | 0.29  | 0.65 | 0    | 0    |
-| RB.AvgAdverbSen                                   | 0.19    | 0    | 0.72 | 0     | 0.05  | 0.87 | 0    | 0.36 |
-| RB.AvgSenLen                                      | 0.18    | 0.06 | 0.76 | 0     | 0.12  | 0.29 | 0    | 0.45 |
-| RB.AvgPronBl_second_person                        | 0.18    | 0.7  | 0.62 | 0     | 0.01  | 0.3  | 0    | 0    |
-| RB.AvgConnBl_disjunctions                         | 0.18    | 0.73 | 0.25 | 0     | 0.01  | 0.35 | 0.16 | 0    |
-| RB.AvgConnBl_reason_and_purpose                   | 0.18    | 0.64 | 0.26 | 0     | 0.03  | 0.26 | 0.28 | 0    |
-| RB.AggPronSen_second_person                       | 0.18    | 0.32 | 0.47 | 0     | 0.01  | 0.08 | 0.53 | 0    |
-| RB.AvgConnBl_semi_coordinators                    | 0.16    | 0.35 | 0.31 | 0     | 0.01  | 0.09 | 0.43 | 0    |
-| RB.AvgPronBl_interrogative                        | 0.16    | 0.7  | 0.35 | 0     | 0.01  | 0.28 | 0.07 | 0    |
-| RB.AvgAOASen_Bristol                              | 0.15    | 0.41 | 0.39 | 0     | 0.14  | 0.58 | 0    | 0    |
-| RB.AvgDepsSen_ccomp                               | 0.15    | 0.18 | 0.59 | 0     | 0.11  | 0.47 | 0    | 0.18 |
-| RB.AvgDepsBl_iobj                                 | 0.15    | 0.62 | 0.33 | 0     | 0.01  | 0.29 | 0    | 0.09 |
-| RB.AvgDepsSen_det                                 | 0.15    | 0.21 | 0.32 | 0     | 0.24  | 0.07 | 0.12 | 0.36 |
-| RB.AvgConnSen_addition                            | 0.13    | 0.11 | 0.27 | 0     | 0.75  | 0.46 | 0    | 0    |
-| RB.AvgDepsSen_acl                                 | 0.13    | 0.38 | 0.58 | 0     | 0.11  | 0.08 | 0    | 0.09 |
-| RB.AvgDepsSen_mark                                | 0.12    | 0.09 | 0.35 | 0     | 0.04  | 0.36 | 0    | 0.27 |
-| RB.AvgConnSen_oppositions                         | 0.12    | 0.25 | 0.65 | 0     | 0.08  | 0.05 | 0.13 | 0    |
-| RB.AvgDepsBl_dep                                  | 0.11    | 0.58 | 0.04 | 0     | 0.06  | 0.19 | 0.04 | 0    |
-| RB.AvgConnSen_semi_coordinators                   | 0.11    | 0.22 | 0.65 | 0     | 0.23  | 0.04 | 0    | 0    |
-| RB.AvgConnBl_complex_subordinators                | 0.11    | 0.39 | 0.19 | 0     | 0     | 0.12 | 0.19 | 0    |
-| RB.AvgAOASen_Cortese                              | 0.11    | 0.12 | 0.25 | 0     | 0.35  | 0.64 | 0    | 0    |
-| RB.AvgAdjectiveSen                                | 0.1     | 0.09 | 0.4  | 0     | 0.05  | 0.56 | 0    | 0    |
-| RB.AvgDepsSen_iobj                                | 0.07    | 0.16 | 0.45 | 0     | 0.02  | 0.02 | 0    | 0    |
-| RB.AggPronSen_interrogative                       | 0.07    | 0.11 | 0.4  | 0     | 0.21  | 0.01 | 0    | 0    |
-| RB.AvgConnSen_order                               | 0.07    | 0.02 | 0.48 | 0     | 0.13  | 0    | 0    | 0.09 |
-| RB.SenAsson                                       | 0.07    | 0.24 | 0.41 | 0     | 0     | 0.02 | 0    | 0    |
-| RB.AvgConnSen_conditions                          | 0.06    | 0.07 | 0.49 | 0     | 0.08  | 0    | 0    | 0    |
-| RB.AvgDepsBl_csubj                                | 0.06    | 0.02 | 0.31 | 0     | 0.06  | 0    | 0.17 | 0    |
-| RB.AvgDepsSen_neg                                 | 0.06    | 0.17 | 0.4  | 0     | 0.03  | 0.03 | 0    | 0    |
-| RB.AvgDepsBl_parataxis                            | 0.05    | 0.24 | 0.12 | 0     | 0     | 0.04 | 0    | 0    |
-| RB.AvgDepsBl_appos                                | 0.04    | 0.2  | 0.08 | 0     | 0     | 0.04 | 0    | 0    |
-| RB.AvgDepsSen_nummod                              | 0.04    | 0.04 | 0.35 | 0     | 0.02  | 0    | 0    | 0    |
-| RB.AggPronSen_first_person                        | 0.04    | 0.02 | 0.2  | 0     | 0.14  | 0.1  | 0    | 0    |
-| RB.AvgConnSen_disjunctions                        | 0.03    | 0.11 | 0.13 | 0     | 0.04  | 0.01 | 0    | 0    |
-| RB.SenAllit                                       | 0.03    | 0.03 | 0.3  | 0     | 0     | 0    | 0    | 0    |
-| RB.AvgDepsSen_mwe                                 | 0.01    | 0.07 | 0    | 0     | 0     | 0.01 | 0    | 0    |
+| Metric | overall | pls | rf | mars | gbm | svm | enet | cube |
+|----|----|----|----|----|----|----|----|----|
+| Content.words | 13.76 | 2 | 2.22 | 32.41 | 16.24 | 2.38 | 4.95 | 8.73 |
+| RB.AvgWdLen | 7.5 | 0.81 | 1.06 | 21.05 | 1.14 | 1.01 | 1.38 | 3.55 |
+| RB.AvgDepsBl_compound | 4.66 | 0.89 | 1.01 | 11.15 | 2.17 | 0.45 | 2.45 | 3.09 |
+| RB.WdEnt | 4.59 | 1.7 | 2.06 | 7.03 | 4.52 | 1.75 | 4.27 | 5.73 |
+| RB.LangRhythmId | 3.17 | 0.69 | 0.35 | 8.26 | 0.06 | 0.21 | 2.85 | 0.18 |
+| RB.RdbltyDaleChall | 3.15 | 1.27 | 1.24 | 4.63 | 2.86 | 0.95 | 4.05 | 3.27 |
+| RB.AvgUnqWdBl | 2.75 | 1.63 | 1.92 | 4.02 | 0.46 | 1.82 | 0 | 6.45 |
+| RB.LxcDiv | 2.67 | 1.87 | 1.89 | 0 | 11.82 | 2.04 | 3.58 | 4.27 |
+| Sentences | 2.62 | 1.71 | 2.13 | 0 | 5.6 | 1.52 | 4.67 | 5.91 |
+| RB.TCorefChainDoc | 2.35 | 1.99 | 1.91 | 0 | 5.33 | 1.97 | 5.29 | 3.09 |
+| RB.AvgAOADoc_Cortese | 1.8 | 0.21 | 0.37 | 3.53 | 0.76 | 0.8 | 2.06 | 1.36 |
+| RB.CAF | 1.78 | 1.83 | 1.52 | 0 | 1.84 | 1.87 | 3.65 | 3.27 |
+| RB.AvgNounNmdEntBl | 1.6 | 0.53 | 0.45 | 4.63 | 0.21 | 0.19 | 0 | 0.36 |
+| RB.AvgDepsBl_nsubjpass | 1.42 | 0.81 | 0.27 | 3.29 | 0.2 | 0.41 | 1.23 | 0.18 |
+| RB.AvgDepsBl_aux | 1.21 | 1.48 | 1.75 | 0 | 2.12 | 1.53 | 1.3 | 2.36 |
+| RB.TActCorefChainWd | 1.06 | 0.33 | 0.95 | 0 | 1.19 | 1.17 | 2.65 | 2 |
+| RB.AvgDepsBl_nsubj | 1.05 | 1.67 | 1.78 | 0 | 2.94 | 1.85 | 0 | 2.09 |
+| RB.AvgPronounBl | 0.99 | 1.72 | 1.84 | 0 | 3.59 | 2.06 | 0 | 1.18 |
+| RB.AvgUnqNoundBl | 0.93 | 0.71 | 0.59 | 0 | 0.37 | 0.65 | 2.75 | 1.55 |
+| RB.TCorefChainBigSpan | 0.89 | 1.61 | 1.19 | 0 | 0.16 | 1.33 | 2.58 | 0 |
+| RB.AvgAOESen_InflectionPointPolynomial | 0.87 | 0.97 | 1.18 | 0 | 0.57 | 1.09 | 2.33 | 0.73 |
+| RB.AvgBlScore | 0.83 | 1.46 | 1.28 | 0 | 0.92 | 1.62 | 0 | 2.18 |
+| RB.AvgConnBl_addition | 0.81 | 0.99 | 0.83 | 0 | 0.77 | 0.66 | 1.36 | 1.73 |
+| RB.AvgChainSpan | 0.81 | 1.52 | 1.28 | 0 | 2.39 | 1.7 | 0 | 1.27 |
+| RB.AvgPrepositionBl | 0.79 | 1.51 | 1.03 | 0 | 0.76 | 1.6 | 0.95 | 1 |
+| RB.AvgUnqPrepositionBl | 0.76 | 1.48 | 1.09 | 0 | 0.48 | 1.55 | 0.8 | 1.09 |
+| RB.SenStdDevWd | 0.74 | 0.86 | 1.25 | 0 | 1.41 | 1.28 | 1.45 | 0.36 |
+| RB.AvgAOADoc_Shock | 0.72 | 0.86 | 0.94 | 0 | 1.36 | 1.15 | 0.8 | 1.27 |
+| RB.AvgDepsBl_punct | 0.68 | 1.26 | 1.34 | 0 | 1 | 1 | 0.35 | 1.18 |
+| RB.AvgCorefChain | 0.68 | 1.19 | 1.03 | 0 | 0.34 | 1.28 | 1.1 | 0.73 |
+| RB.AvgNmdEntSen | 0.67 | 0.27 | 0.42 | 0 | 0.17 | 0.72 | 2.16 | 1 |
+| RB.AvgPronBl_indefinite | 0.65 | 1.4 | 1.66 | 0 | 1.98 | 1.31 | 0.13 | 0.27 |
+| RB.AvgDepsBl_det | 0.65 | 1.18 | 0.96 | 0 | 0.43 | 0.97 | 0.92 | 0.91 |
+| RB.AvgDepsBl_dobj | 0.65 | 1.4 | 0.87 | 0 | 0.37 | 1.26 | 0 | 1.73 |
+| RB.SynDiv | 0.6 | 0.64 | 0.7 | 0 | 0.42 | 0.71 | 1.55 | 0.64 |
+| RB.AvgAOEBl_InflectionPointPolynomial | 0.6 | 0.88 | 0.95 | 0 | 2.01 | 1.2 | 0 | 1.09 |
+| RB.FrqRhythmId | 0.59 | 1.12 | 1.27 | 0 | 0.11 | 0.77 | 1.31 | 0.18 |
+| RB.LangRhythmDiameter | 0.58 | 0.18 | 0.35 | 0 | 0.17 | 0.01 | 2.28 | 0.82 |
+| RB.AvgDepsBl_expl | 0.58 | 0.64 | 0.28 | 0 | 0.35 | 0.2 | 1.79 | 0.82 |
+| RB.CharEnt | 0.57 | 1.37 | 1.01 | 0 | 0.53 | 1.35 | 0.86 | 0 |
+| RB.AvgNounSen | 0.55 | 0.74 | 0.91 | 0 | 0.31 | 0.46 | 1.46 | 0.36 |
+| RB.AvgDepsBl_amod | 0.55 | 0.92 | 0.33 | 0 | 0.1 | 0.55 | 1.08 | 1.09 |
+| RB.AvgUnqVerbBl | 0.54 | 1.56 | 1.01 | 0 | 0.48 | 1.48 | 0.16 | 0.36 |
+| RB.AvgUnqPronounBl | 0.54 | 1.6 | 0.94 | 0 | 1.5 | 1.7 | 0 | 0 |
+| RB.AvgPronBl_first_person | 0.53 | 1.35 | 0.7 | 0 | 0.34 | 1.23 | 0.61 | 0.36 |
+| RB.AvgConnBl_sentence_linking | 0.53 | 1.45 | 1.07 | 0 | 0.41 | 1.41 | 0 | 0.64 |
+| RB.LxcSoph | 0.52 | 0.32 | 0.77 | 0 | 0.46 | 0.6 | 0.1 | 2.09 |
+| RB.AvgAOEBl_IndexPolynomialFitAboveThreshold.0.3. | 0.5 | 0.94 | 1.01 | 0 | 0.41 | 1.09 | 0.73 | 0.27 |
+| RB.AvgRhythmUnitStreesSyll | 0.49 | 0.65 | 0.67 | 0 | 0.45 | 0.43 | 0.75 | 1 |
+| RB.AvgDepsBl_mark | 0.47 | 1.36 | 0.95 | 0 | 0.08 | 1.19 | 0 | 0.64 |
+| RB.AvgDepsBl_nmod | 0.47 | 1.27 | 0.79 | 0 | 0.43 | 1.1 | 0 | 0.73 |
+| RB.WdDiffLemmaStem | 0.45 | 0.64 | 0.88 | 0 | 0.65 | 1.02 | 0.74 | 0.18 |
+| RB.AvgDepsBl_conj | 0.45 | 0.95 | 0.52 | 0 | 0.28 | 0.64 | 0.41 | 0.91 |
+| RB.AvgAOABl_Bird | 0.44 | 0.56 | 0.39 | 0 | 0.58 | 0.57 | 0.96 | 0.55 |
+| RB.AvgPronBl_third_person | 0.43 | 1.36 | 1.14 | 0 | 0.33 | 1.26 | 0 | 0.09 |
+| RB.AvgDepsBl_ccomp | 0.43 | 0.93 | 0.86 | 0 | 0.04 | 0.47 | 1.06 | 0 |
+| RB.AggPronSen_third_person | 0.43 | 0.52 | 0.51 | 0 | 0.11 | 1.01 | 1.15 | 0.18 |
+| RB.AvgDepsSen_punct | 0.43 | 0.38 | 0.62 | 0 | 0.19 | 0.94 | 0.81 | 0.64 |
+| RB.AvgConnBl_simple_subordinators | 0.42 | 1.31 | 1.02 | 0 | 0.73 | 1.08 | 0 | 0.09 |
+| RB.AvgConnSen_simple_subordinators | 0.41 | 0.15 | 0.52 | 0 | 0.09 | 0.52 | 1.54 | 0.18 |
+| RB.AvgSenBlCoh_LDA | 0.4 | 0.74 | 0.95 | 0 | 0.2 | 1.21 | 0 | 0.73 |
+| RB.AvgDepsBl_xcomp | 0.4 | 1.15 | 0.82 | 0 | 0.37 | 0.88 | 0.45 | 0 |
+| RB.AvgCommaBl | 0.4 | 0.72 | 0.45 | 0 | 0.05 | 0.39 | 0.96 | 0.45 |
+| RB.AvgAOASen_Shock | 0.39 | 0.4 | 0.74 | 0 | 0.45 | 0.9 | 0.79 | 0.18 |
+| RB.AvgSenBlCoh_word2vec | 0.36 | 1.11 | 0.78 | 0 | 0.18 | 1.03 | 0 | 0.27 |
+| RB.WdLettStdDev | 0.34 | 0.72 | 0.63 | 0 | 0.39 | 0.7 | 0.46 | 0.18 |
+| RB.AvgConnBl_temporal_connectors | 0.34 | 1.03 | 0.92 | 0 | 0.02 | 0.77 | 0.1 | 0.27 |
+| RB.AvgDepsBl_acl | 0.34 | 0.58 | 0.44 | 0 | 0.07 | 0.2 | 1.19 | 0 |
+| RB.LangRhythmCoeff | 0.33 | 0.7 | 0.59 | 0 | 0.25 | 0.66 | 0.61 | 0 |
+| RB.WdSylCnt | 0.33 | 0.38 | 0.9 | 0 | 0.27 | 0.79 | 0.26 | 0.45 |
+| RB.AvgDepsBl_auxpass | 0.33 | 0.86 | 0.55 | 0 | 0.01 | 0.5 | 0.7 | 0 |
+| RB.AvgConnBl_oppositions | 0.33 | 0.85 | 0.49 | 0 | 0 | 0.42 | 0.63 | 0.18 |
+| RB.AvgAdverbBl | 0.32 | 1.1 | 0.72 | 0 | 0.11 | 0.83 | 0 | 0.18 |
+| RB.AvgConnBl_order | 0.32 | 0.73 | 0.27 | 0 | 0.01 | 0.29 | 1 | 0 |
+| RB.AvgAOABl_Bristol | 0.31 | 0.75 | 0.29 | 0 | 0.7 | 0.77 | 0.39 | 0 |
+| RB.AvgDepsSen_nmod | 0.31 | 0.06 | 0.43 | 0 | 0.11 | 0.34 | 0.45 | 1 |
+| RB.AvgPronounSen | 0.31 | 0.36 | 0.7 | 0 | 0.05 | 0.55 | 0 | 1 |
+| RB.AvgIntraBlCoh_Path | 0.3 | 1.14 | 0.3 | 0 | 0.16 | 0.97 | 0 | 0.18 |
+| RB.AvgAOABl_Kuperman | 0.3 | 0.51 | 0.51 | 0 | 0.71 | 0.59 | 0.1 | 0.45 |
+| RB.AvgDepsSen_nsubj | 0.3 | 0.05 | 0.83 | 0 | 0.04 | 0.49 | 0 | 1.18 |
+| RB.AvgDepsSen_aux | 0.3 | 0.17 | 0.62 | 0 | 0.21 | 0.49 | 0.68 | 0.36 |
+| RB.AvgInferenceDistChain | 0.29 | 0.8 | 0.71 | 0 | 0.19 | 0.74 | 0.25 | 0 |
+| RB.AvgConnBl_conditions | 0.29 | 0.9 | 0.45 | 0 | 0.15 | 0.49 | 0.44 | 0 |
+| RB.AvgDepsBl_cop | 0.28 | 1.07 | 0.53 | 0 | 0.08 | 0.7 | 0 | 0.18 |
+| RB.RdbltyFlesch | 0.28 | 0.49 | 0.88 | 0 | 0.38 | 0.54 | 0 | 0.45 |
+| RB.AvgConnSen_temporal_connectors | 0.28 | 0.28 | 0.82 | 0 | 0.17 | 0.05 | 0.75 | 0.18 |
+| RB.AvgUnqAdjectiveBl | 0.27 | 1.2 | 0.24 | 0 | 0.01 | 0.97 | 0.03 | 0 |
+| RB.AvgDepsBl_advcl | 0.27 | 1.18 | 0.37 | 0 | 0.08 | 0.9 | 0.01 | 0 |
+| RB.AvgDepsSen_advcl | 0.27 | 0.16 | 0.53 | 0 | 0.12 | 0.69 | 0.66 | 0.18 |
+| RB.AggPronSen_indefinite | 0.25 | 0.42 | 0.84 | 0 | 0.26 | 1.17 | 0.03 | 0 |
+| RB.WdDiffWdStem | 0.25 | 0.65 | 0.56 | 0 | 0.42 | 0.81 | 0.13 | 0 |
+| RB.AvgDepsBl_neg | 0.24 | 0.45 | 0.08 | 0 | 0.02 | 0.12 | 0.9 | 0 |
+| RB.AvgDepsBl_nummod | 0.23 | 0.45 | 0.11 | 0 | 0 | 0.12 | 0.89 | 0 |
+| RB.AvgDepsBl_mwe | 0.22 | 0.29 | 0.46 | 0 | 0 | 0.06 | 0.76 | 0 |
+| RB.AvgDepsSen_amod | 0.22 | 0.3 | 0.64 | 0 | 0.32 | 0.72 | 0.22 | 0 |
+| RB.AvgAOASen_Bird | 0.21 | 0.32 | 0.74 | 0 | 0.27 | 0.42 | 0.25 | 0 |
+| RB.AvgPrepositionSen | 0.21 | 0.07 | 0.66 | 0 | 0.05 | 0.35 | 0 | 0.73 |
+| RB.AvgConnBl_contrasts | 0.21 | 1.04 | 0.19 | 0 | 0.01 | 0.64 | 0 | 0 |
+| RB.AvgAOASen_Kuperman | 0.21 | 0.5 | 0.2 | 0 | 0.88 | 0.48 | 0 | 0.18 |
+| RB.AvgDepsSen_xcomp | 0.21 | 0.19 | 0.71 | 0 | 0.05 | 1.01 | 0.23 | 0 |
+| RB.AvgDepsBl_root | 0.2 | 0.04 | 0.29 | 0 | 0.02 | 0 | 0.99 | 0 |
+| RB.AvgDepsSen_cop | 0.2 | 0.06 | 0.49 | 0 | 0.28 | 0.36 | 0.6 | 0 |
+| RB.AvgConnSen_reason_and_purpose | 0.19 | 0.14 | 0.21 | 0 | 0.11 | 0.61 | 0.53 | 0 |
+| RB.AvgDepsSen_conj | 0.19 | 0.14 | 0.56 | 0 | 0.02 | 0.42 | 0 | 0.55 |
+| RB.AvgDepsSen_dobj | 0.19 | 0.06 | 0.6 | 0 | 0.23 | 0.38 | 0 | 0.55 |
+| RB.AvgDepsSen_dep | 0.19 | 0.49 | 0.57 | 0 | 0.29 | 0.65 | 0 | 0 |
+| RB.AvgAdverbSen | 0.19 | 0 | 0.72 | 0 | 0.05 | 0.87 | 0 | 0.36 |
+| RB.AvgSenLen | 0.18 | 0.06 | 0.76 | 0 | 0.12 | 0.29 | 0 | 0.45 |
+| RB.AvgPronBl_second_person | 0.18 | 0.7 | 0.62 | 0 | 0.01 | 0.3 | 0 | 0 |
+| RB.AvgConnBl_disjunctions | 0.18 | 0.73 | 0.25 | 0 | 0.01 | 0.35 | 0.16 | 0 |
+| RB.AvgConnBl_reason_and_purpose | 0.18 | 0.64 | 0.26 | 0 | 0.03 | 0.26 | 0.28 | 0 |
+| RB.AggPronSen_second_person | 0.18 | 0.32 | 0.47 | 0 | 0.01 | 0.08 | 0.53 | 0 |
+| RB.AvgConnBl_semi_coordinators | 0.16 | 0.35 | 0.31 | 0 | 0.01 | 0.09 | 0.43 | 0 |
+| RB.AvgPronBl_interrogative | 0.16 | 0.7 | 0.35 | 0 | 0.01 | 0.28 | 0.07 | 0 |
+| RB.AvgAOASen_Bristol | 0.15 | 0.41 | 0.39 | 0 | 0.14 | 0.58 | 0 | 0 |
+| RB.AvgDepsSen_ccomp | 0.15 | 0.18 | 0.59 | 0 | 0.11 | 0.47 | 0 | 0.18 |
+| RB.AvgDepsBl_iobj | 0.15 | 0.62 | 0.33 | 0 | 0.01 | 0.29 | 0 | 0.09 |
+| RB.AvgDepsSen_det | 0.15 | 0.21 | 0.32 | 0 | 0.24 | 0.07 | 0.12 | 0.36 |
+| RB.AvgConnSen_addition | 0.13 | 0.11 | 0.27 | 0 | 0.75 | 0.46 | 0 | 0 |
+| RB.AvgDepsSen_acl | 0.13 | 0.38 | 0.58 | 0 | 0.11 | 0.08 | 0 | 0.09 |
+| RB.AvgDepsSen_mark | 0.12 | 0.09 | 0.35 | 0 | 0.04 | 0.36 | 0 | 0.27 |
+| RB.AvgConnSen_oppositions | 0.12 | 0.25 | 0.65 | 0 | 0.08 | 0.05 | 0.13 | 0 |
+| RB.AvgDepsBl_dep | 0.11 | 0.58 | 0.04 | 0 | 0.06 | 0.19 | 0.04 | 0 |
+| RB.AvgConnSen_semi_coordinators | 0.11 | 0.22 | 0.65 | 0 | 0.23 | 0.04 | 0 | 0 |
+| RB.AvgConnBl_complex_subordinators | 0.11 | 0.39 | 0.19 | 0 | 0 | 0.12 | 0.19 | 0 |
+| RB.AvgAOASen_Cortese | 0.11 | 0.12 | 0.25 | 0 | 0.35 | 0.64 | 0 | 0 |
+| RB.AvgAdjectiveSen | 0.1 | 0.09 | 0.4 | 0 | 0.05 | 0.56 | 0 | 0 |
+| RB.AvgDepsSen_iobj | 0.07 | 0.16 | 0.45 | 0 | 0.02 | 0.02 | 0 | 0 |
+| RB.AggPronSen_interrogative | 0.07 | 0.11 | 0.4 | 0 | 0.21 | 0.01 | 0 | 0 |
+| RB.AvgConnSen_order | 0.07 | 0.02 | 0.48 | 0 | 0.13 | 0 | 0 | 0.09 |
+| RB.SenAsson | 0.07 | 0.24 | 0.41 | 0 | 0 | 0.02 | 0 | 0 |
+| RB.AvgConnSen_conditions | 0.06 | 0.07 | 0.49 | 0 | 0.08 | 0 | 0 | 0 |
+| RB.AvgDepsBl_csubj | 0.06 | 0.02 | 0.31 | 0 | 0.06 | 0 | 0.17 | 0 |
+| RB.AvgDepsSen_neg | 0.06 | 0.17 | 0.4 | 0 | 0.03 | 0.03 | 0 | 0 |
+| RB.AvgDepsBl_parataxis | 0.05 | 0.24 | 0.12 | 0 | 0 | 0.04 | 0 | 0 |
+| RB.AvgDepsBl_appos | 0.04 | 0.2 | 0.08 | 0 | 0 | 0.04 | 0 | 0 |
+| RB.AvgDepsSen_nummod | 0.04 | 0.04 | 0.35 | 0 | 0.02 | 0 | 0 | 0 |
+| RB.AggPronSen_first_person | 0.04 | 0.02 | 0.2 | 0 | 0.14 | 0.1 | 0 | 0 |
+| RB.AvgConnSen_disjunctions | 0.03 | 0.11 | 0.13 | 0 | 0.04 | 0.01 | 0 | 0 |
+| RB.SenAllit | 0.03 | 0.03 | 0.3 | 0 | 0 | 0 | 0 | 0 |
+| RB.AvgDepsSen_mwe | 0.01 | 0.07 | 0 | 0 | 0 | 0.01 | 0 | 0 |
 
 ### ReaderBench Model 3exp
 
@@ -2311,144 +2331,144 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
-| Metric                                 | overall | rf   | mars  | gbm   | svm  | enet  | cube  |
-|----------------------------------------|---------|------|-------|-------|------|-------|-------|
-| Content.words                          | 20.83   | 5.13 | 35.84 | 48.17 | 3.43 | 17.49 | 14.66 |
-| RB.AvgWdLen                            | 4.5     | 1.29 | 10.64 | 1.06  | 0.42 | 1.6   | 4.32  |
-| RB.AvgDepsBl_compound                  | 4.11    | 0.71 | 8.06  | 0.36  | 0.06 | 3.36  | 3.92  |
-| RB.AvgConnBl_order                     | 3.63    | 0.6  | 6.17  | 0.15  | 0.21 | 4.43  | 1.81  |
-| RB.SenStdDevWd                         | 3.56    | 1.02 | 5.2   | 0.29  | 1.18 | 4.38  | 2.41  |
-| RB.LangRhythmId                        | 3.46    | 0.96 | 10.64 | 0.29  | 0.26 | 0     | 0.7   |
-| RB.TCorefChainDoc                      | 3.34    | 1.93 | 0     | 4.43  | 2.48 | 7.01  | 3.51  |
-| RB.WdEnt                               | 3.21    | 2.23 | 0     | 1.79  | 2.35 | 6.08  | 5.52  |
-| RB.AggPronSen_first_person             | 2.93    | 0.99 | 8.76  | 0.77  | 0.12 | 0     | 1.1   |
-| Sentences                              | 2.9     | 1.37 | 0     | 2.38  | 1.47 | 6.99  | 2.01  |
-| RB.AvgSenAdjCoh_Path                   | 2.68    | 1.05 | 0     | 1.28  | 1.09 | 5.93  | 3.92  |
-| RB.CAF                                 | 2.51    | 1.33 | 0     | 1.24  | 1.75 | 5.87  | 1.81  |
-| RB.AvgPronBl_third_person              | 2.49    | 0.76 | 7.52  | 0.04  | 0.79 | 0     | 0.2   |
-| RB.AvgBlScore                          | 2.27    | 2.1  | 4.33  | 1.67  | 2.38 | 0     | 3.31  |
-| RB.AvgPronBl_second_person             | 2.03    | 1.17 | 0     | 0.64  | 0.95 | 4.73  | 2.01  |
-| RB.LangRhythmDiameter                  | 1.92    | 0.73 | 2.84  | 0.28  | 0.15 | 2.24  | 1.91  |
-| RB.TActCorefChainWd                    | 1.4     | 0.76 | 0     | 0.47  | 1.04 | 2.97  | 1.81  |
-| RB.TCorefChainBigSpan                  | 1.31    | 0.44 | 0     | 1.17  | 1.63 | 2.75  | 1     |
-| RB.AvgUnqAdjectiveBl                   | 1.06    | 1.01 | 0     | 0.23  | 1.7  | 1.95  | 0.9   |
-| RB.WdDiffWdStem                        | 0.99    | 1.06 | 0     | 1.8   | 0.52 | 2.17  | 0.6   |
-| RB.AvgDepsSen_nmod                     | 0.94    | 0.95 | 0     | 0.52  | 1.14 | 1.67  | 1.2   |
-| RB.AvgDepsBl_expl                      | 0.89    | 0.79 | 0     | 0.42  | 0.42 | 1.86  | 1.2   |
-| RB.RdbltyDaleChall                     | 0.86    | 1.25 | 0     | 0.91  | 0.78 | 1.01  | 2.41  |
-| RB.AvgAOEBl_InflectionPointPolynomial  | 0.77    | 0.72 | 0     | 0.27  | 0.7  | 1.85  | 0.1   |
-| RB.AvgConnBl_temporal_connectors       | 0.76    | 0.91 | 0     | 0.04  | 0.5  | 1.37  | 1.41  |
-| RB.AvgPronBl_indefinite                | 0.75    | 2.03 | 0     | 5.56  | 1.56 | 0     | 1.61  |
-| RB.SynDiv                              | 0.71    | 0.61 | 0     | 0.28  | 1.04 | 1.39  | 0.5   |
-| RB.LxcDiv                              | 0.69    | 1.51 | 0     | 1.57  | 2.14 | 0     | 1.91  |
-| RB.AvgAOASen_Bristol                   | 0.66    | 0.56 | 0     | 0.14  | 0.31 | 1.56  | 0.5   |
-| RB.AvgDepsBl_root                      | 0.65    | 0.09 | 0     | 0.04  | 0.04 | 1.95  | 0     |
-| RB.AvgDepsBl_nsubj                     | 0.62    | 1.9  | 0     | 0.88  | 2.19 | 0     | 1.2   |
-| RB.AvgPronounBl                        | 0.59    | 1.54 | 0     | 0.25  | 1.94 | 0     | 1.61  |
-| RB.AvgPrepositionBl                    | 0.59    | 1.37 | 0     | 1.41  | 2.07 | 0     | 1.31  |
-| RB.AvgUnqNoundBl                       | 0.49    | 0.83 | 0     | 0.41  | 1.02 | 0     | 2.21  |
-| RB.AvgDepsBl_parataxis                 | 0.47    | 0.53 | 0     | 0.01  | 0.15 | 1.26  | 0     |
-| RB.LangRhythmCoeff                     | 0.44    | 0.58 | 0     | 0.33  | 0.4  | 0.93  | 0.2   |
-| RB.AvgUnqPrepositionBl                 | 0.43    | 0.94 | 0     | 0.2   | 2.05 | 0     | 0.6   |
-| RB.AvgAOASen_Bird                      | 0.43    | 0.63 | 0     | 0.4   | 0.79 | 0.63  | 0.5   |
-| RB.WdSylCnt                            | 0.42    | 0.96 | 0     | 0.54  | 0.18 | 0.5   | 1.1   |
-| RB.AvgDepsBl_nmod                      | 0.42    | 1.01 | 0     | 0.52  | 1.59 | 0     | 0.9   |
-| RB.AvgChainSpan                        | 0.41    | 1.04 | 0     | 0.4   | 1.58 | 0     | 0.8   |
-| RB.AvgDepsBl_nummod                    | 0.41    | 0.7  | 0     | 0.01  | 0.21 | 1     | 0     |
-| RB.AvgDepsSen_expl                     | 0.4     | 0.41 | 0     | 0.23  | 0.06 | 1.1   | 0     |
-| RB.AvgPronBl_first_person              | 0.39    | 0.71 | 0     | 0.51  | 0.5  | 0.25  | 1.41  |
-| RB.AvgUnqVerbBl                        | 0.38    | 0.91 | 0     | 0.06  | 1.71 | 0     | 0.6   |
-| RB.AvgDepsBl_aux                       | 0.37    | 0.59 | 0     | 0.19  | 0.93 | 0.4   | 0.5   |
-| RB.AvgAdverbBl                         | 0.33    | 0.6  | 0     | 0.11  | 1.31 | 0     | 0.8   |
-| RB.AvgDepsBl_punct                     | 0.33    | 1.26 | 0     | 0.3   | 1.17 | 0     | 0.5   |
-| RB.AvgNounSen                          | 0.33    | 0.99 | 0     | 0.05  | 0.22 | 0     | 1.81  |
-| RB.LxcSoph                             | 0.32    | 0.79 | 0     | 0.3   | 0.75 | 0     | 1.2   |
-| RB.CharEnt                             | 0.31    | 0.49 | 0     | 1.05  | 1.09 | 0.13  | 0.4   |
-| RB.AvgDepsSen_cop                      | 0.31    | 0.86 | 0     | 0.55  | 0.55 | 0     | 1.2   |
-| RB.AvgDepsBl_mark                      | 0.31    | 1.04 | 0     | 0.56  | 1.59 | 0     | 0     |
-| RB.AvgSenBlCoh_LDA                     | 0.3     | 0.82 | 0     | 0.16  | 1.15 | 0     | 0.6   |
-| RB.RdbltyFlesch                        | 0.29    | 0.47 | 0     | 0.19  | 0.17 | 0     | 1.81  |
-| RB.AvgCorefChain                       | 0.28    | 0.76 | 0     | 0.2   | 1.05 | 0     | 0.6   |
-| RB.AvgDepsBl_dobj                      | 0.28    | 0.92 | 0     | 0.09  | 1.36 | 0     | 0.2   |
-| RB.AvgDepsBl_cop                       | 0.27    | 0.59 | 0     | 0.07  | 0.97 | 0     | 0.7   |
-| RB.AvgDepsBl_det                       | 0.27    | 0.92 | 0     | 0.09  | 1.36 | 0     | 0.1   |
-| RB.AvgDepsSen_mark                     | 0.27    | 0.68 | 0     | 0.19  | 1.12 | 0     | 0.5   |
-| RB.AvgDepsBl_amod                      | 0.26    | 0.58 | 0     | 0.27  | 1.23 | 0     | 0.3   |
-| RB.AvgDepsBl_mwe                       | 0.25    | 0.8  | 0     | 0.09  | 0.61 | 0.3   | 0     |
-| RB.AvgUnqAdverbBl                      | 0.25    | 0.6  | 0     | 0.03  | 1.39 | 0     | 0.1   |
-| RB.AvgPrepositionSen                   | 0.24    | 0.44 | 0     | 0.16  | 0.91 | 0     | 0.6   |
-| RB.AvgConnBl_simple_subordinators      | 0.23    | 0.76 | 0     | 0.05  | 1.22 | 0     | 0     |
-| RB.AvgAOASen_Kuperman                  | 0.23    | 0.53 | 0     | 0.51  | 0.39 | 0.2   | 0.4   |
-| RB.AvgDepsSen_compound                 | 0.23    | 1.22 | 0     | 0.33  | 0.33 | 0     | 0.6   |
-| RB.AvgDepsBl_ccomp                     | 0.22    | 0.51 | 0     | 0.05  | 0.54 | 0.2   | 0.3   |
-| RB.AvgUnqPronounBl                     | 0.22    | 0.46 | 0     | 0     | 1.33 | 0     | 0     |
-| RB.FrqRhythmId                         | 0.22    | 0.94 | 0     | 0.3   | 0.68 | 0.06  | 0.2   |
-| RB.AggPronSen_indefinite               | 0.22    | 0.76 | 0     | 0.37  | 0.93 | 0     | 0.2   |
-| RB.AvgDepsSen_dobj                     | 0.21    | 0.98 | 0     | 0.1   | 0.49 | 0     | 0.5   |
-| RB.AggPronSen_second_person            | 0.2     | 0.81 | 0     | 0.23  | 0.64 | 0     | 0.3   |
-| RB.AvgAOADoc_Shock                     | 0.2     | 0.98 | 0     | 0.42  | 0.82 | 0     | 0     |
-| RB.AvgConnSen_semi_coordinators        | 0.19    | 0.59 | 0     | 0.29  | 0    | 0.38  | 0.1   |
-| RB.AvgConnBl_addition                  | 0.18    | 0.7  | 0     | 0.23  | 0.65 | 0     | 0.2   |
-| RB.AvgRhythmUnitStreesSyll             | 0.18    | 0.89 | 0     | 0.17  | 0.47 | 0     | 0.3   |
-| RB.AvgDepsSen_ccomp                    | 0.18    | 0.31 | 0     | 0.22  | 0.94 | 0     | 0.2   |
-| RB.AvgAdverbSen                        | 0.17    | 0.38 | 0     | 0.06  | 0.99 | 0     | 0     |
-| RB.AvgCommaSen                         | 0.17    | 0.62 | 0     | 0.25  | 0.8  | 0     | 0     |
-| RB.AvgAOEDoc_IndexAboveThreshold.0.3.  | 0.17    | 0.72 | 0     | 0.12  | 0.36 | 0     | 0.5   |
-| RB.AvgConnBl_contrasts                 | 0.17    | 0.46 | 0     | 0.08  | 0.82 | 0     | 0.2   |
-| RB.AvgConnSen_simple_subordinators     | 0.16    | 0.44 | 0     | 0.13  | 0.88 | 0     | 0     |
-| RB.AvgConnBl_reason_and_purpose        | 0.16    | 0.73 | 0     | 0.14  | 0.62 | 0     | 0.1   |
-| RB.AvgAOADoc_Bird                      | 0.16    | 0.79 | 0     | 0.14  | 0.68 | 0     | 0     |
-| RB.AvgDepsSen_amod                     | 0.16    | 0.29 | 0     | 0.25  | 0.5  | 0     | 0.5   |
-| RB.AvgConnBl_oppositions               | 0.16    | 0.65 | 0     | 0.05  | 0.6  | 0.02  | 0.2   |
-| RB.AvgAOABl_Kuperman                   | 0.15    | 0.11 | 0     | 0.18  | 0.45 | 0     | 0.6   |
-| RB.AvgDepsSen_xcomp                    | 0.15    | 0.63 | 0     | 0.06  | 0.73 | 0     | 0     |
-| RB.AvgPronounSen                       | 0.14    | 0.62 | 0     | 0.03  | 0.26 | 0     | 0.4   |
-| RB.AvgDepsBl_advcl                     | 0.14    | 0.21 | 0     | 0.02  | 0.89 | 0     | 0     |
-| RB.AvgInferenceDistChain               | 0.14    | 0.56 | 0     | 0.2   | 0.45 | 0     | 0.2   |
-| RB.AvgNounNmdEntBl                     | 0.14    | 0.49 | 0     | 0.87  | 0.55 | 0     | 0     |
-| RB.AggPronSen_third_person             | 0.14    | 0.65 | 0     | 0.14  | 0.64 | 0     | 0     |
-| RB.WdLettStdDev                        | 0.14    | 0.65 | 0     | 0.18  | 0.63 | 0     | 0     |
-| RB.AvgConnSen_addition                 | 0.13    | 0.47 | 0     | 0.23  | 0.63 | 0     | 0     |
-| RB.AvgNmdEntSen                        | 0.13    | 0.18 | 0     | 0.36  | 0.81 | 0     | 0     |
-| RB.WdDiffLemmaStem                     | 0.12    | 0.71 | 0     | 0.26  | 0.29 | 0     | 0.1   |
-| RB.AvgDepsSen_aux                      | 0.12    | 0.4  | 0     | 0.03  | 0.64 | 0     | 0     |
-| RB.AvgCommaBl                          | 0.12    | 0.66 | 0     | 0.04  | 0.4  | 0     | 0.1   |
-| RB.AvgAOASen_Shock                     | 0.12    | 0.28 | 0     | 0.05  | 0.73 | 0     | 0     |
-| RB.AvgDepsBl_acl                       | 0.12    | 0.47 | 0     | 0.13  | 0.6  | 0     | 0     |
-| RB.AvgAOABl_Cortese                    | 0.12    | 0.28 | 0     | 0.1   | 0.64 | 0     | 0.1   |
-| RB.AvgDepsSen_advcl                    | 0.12    | 0.46 | 0     | 0.25  | 0.59 | 0     | 0     |
-| RB.AvgDepsBl_xcomp                     | 0.12    | 0.23 | 0     | 0.09  | 0.78 | 0     | 0     |
-| RB.AvgConnSen_temporal_connectors      | 0.11    | 0.73 | 0     | 0.06  | 0.09 | 0.06  | 0.1   |
-| RB.AvgAOESen_InflectionPointPolynomial | 0.11    | 0.28 | 0     | 0.11  | 0.52 | 0     | 0.1   |
-| RB.AvgDepsSen_dep                      | 0.11    | 0.49 | 0     | 0.17  | 0.38 | 0     | 0.1   |
-| RB.AvgAOASen_Cortese                   | 0.11    | 0.22 | 0     | 0.17  | 0.66 | 0     | 0     |
-| RB.AvgDepsSen_det                      | 0.11    | 0.14 | 0     | 0.12  | 0.54 | 0     | 0.2   |
-| RB.AvgConnSen_reason_and_purpose       | 0.11    | 0.39 | 0     | 0.12  | 0.58 | 0     | 0     |
-| RB.AvgAOABl_Bristol                    | 0.1     | 0.45 | 0     | 0.15  | 0.37 | 0     | 0.1   |
-| RB.AvgDepsBl_iobj                      | 0.09    | 0.74 | 0     | 0.21  | 0.17 | 0     | 0     |
-| RB.AvgDepsSen_mwe                      | 0.09    | 0.64 | 0     | 0.44  | 0.21 | 0     | 0     |
-| RB.AvgConnSen_order                    | 0.08    | 0.69 | 0     | 0.67  | 0.01 | 0     | 0     |
-| RB.AvgConnSen_oppositions              | 0.08    | 0.63 | 0     | 0.11  | 0.09 | 0     | 0.1   |
-| RB.AvgConnBl_disjunctions              | 0.08    | 0.5  | 0     | 0     | 0.32 | 0     | 0     |
-| RB.AvgConnSen_contrasts                | 0.07    | 0.6  | 0     | 0.11  | 0.11 | 0     | 0     |
-| RB.AvgDepsBl_auxpass                   | 0.07    | 0.56 | 0     | 0.01  | 0.17 | 0     | 0     |
-| RB.AvgDepsSen_neg                      | 0.07    | 0.47 | 0     | 0.31  | 0    | 0     | 0.2   |
-| RB.AvgConnBl_conditions                | 0.07    | 0.49 | 0     | 0.11  | 0.23 | 0     | 0     |
-| RB.AvgDepsBl_neg                       | 0.06    | 0.19 | 0     | 0.03  | 0.23 | 0     | 0.1   |
-| RB.AvgPronBl_interrogative             | 0.06    | 0.54 | 0     | 0.04  | 0.14 | 0     | 0     |
-| RB.SenAsson                            | 0.05    | 0.25 | 0     | 0     | 0.23 | 0     | 0     |
-| RB.AvgConnSen_disjunctions             | 0.05    | 0.55 | 0     | 0.03  | 0.05 | 0     | 0     |
-| RB.AvgConnBl_semi_coordinators         | 0.04    | 0.16 | 0     | 0.1   | 0.16 | 0     | 0     |
-| RB.AvgDepsSen_nummod                   | 0.04    | 0.46 | 0     | 0.03  | 0    | 0     | 0     |
-| RB.AvgDepsSen_acl                      | 0.04    | 0.46 | 0     | 0.01  | 0.01 | 0     | 0     |
-| RB.AvgDepsBl_csubj                     | 0.04    | 0.4  | 0     | 0.01  | 0.05 | 0     | 0     |
-| RB.AvgDepsBl_nsubjpass                 | 0.04    | 0.25 | 0     | 0     | 0.16 | 0     | 0     |
-| RB.AvgDepsBl_appos                     | 0.04    | 0.51 | 0     | 0     | 0.02 | 0     | 0     |
-| RB.AvgDepsBl_dep                       | 0.02    | 0    | 0     | 0.08  | 0.15 | 0     | 0     |
-| RB.SenAllit                            | 0.02    | 0.3  | 0     | 0     | 0    | 0     | 0     |
+| Metric | overall | rf | mars | gbm | svm | enet | cube |
+|----|----|----|----|----|----|----|----|
+| Content.words | 20.83 | 5.13 | 35.84 | 48.17 | 3.43 | 17.49 | 14.66 |
+| RB.AvgWdLen | 4.5 | 1.29 | 10.64 | 1.06 | 0.42 | 1.6 | 4.32 |
+| RB.AvgDepsBl_compound | 4.11 | 0.71 | 8.06 | 0.36 | 0.06 | 3.36 | 3.92 |
+| RB.AvgConnBl_order | 3.63 | 0.6 | 6.17 | 0.15 | 0.21 | 4.43 | 1.81 |
+| RB.SenStdDevWd | 3.56 | 1.02 | 5.2 | 0.29 | 1.18 | 4.38 | 2.41 |
+| RB.LangRhythmId | 3.46 | 0.96 | 10.64 | 0.29 | 0.26 | 0 | 0.7 |
+| RB.TCorefChainDoc | 3.34 | 1.93 | 0 | 4.43 | 2.48 | 7.01 | 3.51 |
+| RB.WdEnt | 3.21 | 2.23 | 0 | 1.79 | 2.35 | 6.08 | 5.52 |
+| RB.AggPronSen_first_person | 2.93 | 0.99 | 8.76 | 0.77 | 0.12 | 0 | 1.1 |
+| Sentences | 2.9 | 1.37 | 0 | 2.38 | 1.47 | 6.99 | 2.01 |
+| RB.AvgSenAdjCoh_Path | 2.68 | 1.05 | 0 | 1.28 | 1.09 | 5.93 | 3.92 |
+| RB.CAF | 2.51 | 1.33 | 0 | 1.24 | 1.75 | 5.87 | 1.81 |
+| RB.AvgPronBl_third_person | 2.49 | 0.76 | 7.52 | 0.04 | 0.79 | 0 | 0.2 |
+| RB.AvgBlScore | 2.27 | 2.1 | 4.33 | 1.67 | 2.38 | 0 | 3.31 |
+| RB.AvgPronBl_second_person | 2.03 | 1.17 | 0 | 0.64 | 0.95 | 4.73 | 2.01 |
+| RB.LangRhythmDiameter | 1.92 | 0.73 | 2.84 | 0.28 | 0.15 | 2.24 | 1.91 |
+| RB.TActCorefChainWd | 1.4 | 0.76 | 0 | 0.47 | 1.04 | 2.97 | 1.81 |
+| RB.TCorefChainBigSpan | 1.31 | 0.44 | 0 | 1.17 | 1.63 | 2.75 | 1 |
+| RB.AvgUnqAdjectiveBl | 1.06 | 1.01 | 0 | 0.23 | 1.7 | 1.95 | 0.9 |
+| RB.WdDiffWdStem | 0.99 | 1.06 | 0 | 1.8 | 0.52 | 2.17 | 0.6 |
+| RB.AvgDepsSen_nmod | 0.94 | 0.95 | 0 | 0.52 | 1.14 | 1.67 | 1.2 |
+| RB.AvgDepsBl_expl | 0.89 | 0.79 | 0 | 0.42 | 0.42 | 1.86 | 1.2 |
+| RB.RdbltyDaleChall | 0.86 | 1.25 | 0 | 0.91 | 0.78 | 1.01 | 2.41 |
+| RB.AvgAOEBl_InflectionPointPolynomial | 0.77 | 0.72 | 0 | 0.27 | 0.7 | 1.85 | 0.1 |
+| RB.AvgConnBl_temporal_connectors | 0.76 | 0.91 | 0 | 0.04 | 0.5 | 1.37 | 1.41 |
+| RB.AvgPronBl_indefinite | 0.75 | 2.03 | 0 | 5.56 | 1.56 | 0 | 1.61 |
+| RB.SynDiv | 0.71 | 0.61 | 0 | 0.28 | 1.04 | 1.39 | 0.5 |
+| RB.LxcDiv | 0.69 | 1.51 | 0 | 1.57 | 2.14 | 0 | 1.91 |
+| RB.AvgAOASen_Bristol | 0.66 | 0.56 | 0 | 0.14 | 0.31 | 1.56 | 0.5 |
+| RB.AvgDepsBl_root | 0.65 | 0.09 | 0 | 0.04 | 0.04 | 1.95 | 0 |
+| RB.AvgDepsBl_nsubj | 0.62 | 1.9 | 0 | 0.88 | 2.19 | 0 | 1.2 |
+| RB.AvgPronounBl | 0.59 | 1.54 | 0 | 0.25 | 1.94 | 0 | 1.61 |
+| RB.AvgPrepositionBl | 0.59 | 1.37 | 0 | 1.41 | 2.07 | 0 | 1.31 |
+| RB.AvgUnqNoundBl | 0.49 | 0.83 | 0 | 0.41 | 1.02 | 0 | 2.21 |
+| RB.AvgDepsBl_parataxis | 0.47 | 0.53 | 0 | 0.01 | 0.15 | 1.26 | 0 |
+| RB.LangRhythmCoeff | 0.44 | 0.58 | 0 | 0.33 | 0.4 | 0.93 | 0.2 |
+| RB.AvgUnqPrepositionBl | 0.43 | 0.94 | 0 | 0.2 | 2.05 | 0 | 0.6 |
+| RB.AvgAOASen_Bird | 0.43 | 0.63 | 0 | 0.4 | 0.79 | 0.63 | 0.5 |
+| RB.WdSylCnt | 0.42 | 0.96 | 0 | 0.54 | 0.18 | 0.5 | 1.1 |
+| RB.AvgDepsBl_nmod | 0.42 | 1.01 | 0 | 0.52 | 1.59 | 0 | 0.9 |
+| RB.AvgChainSpan | 0.41 | 1.04 | 0 | 0.4 | 1.58 | 0 | 0.8 |
+| RB.AvgDepsBl_nummod | 0.41 | 0.7 | 0 | 0.01 | 0.21 | 1 | 0 |
+| RB.AvgDepsSen_expl | 0.4 | 0.41 | 0 | 0.23 | 0.06 | 1.1 | 0 |
+| RB.AvgPronBl_first_person | 0.39 | 0.71 | 0 | 0.51 | 0.5 | 0.25 | 1.41 |
+| RB.AvgUnqVerbBl | 0.38 | 0.91 | 0 | 0.06 | 1.71 | 0 | 0.6 |
+| RB.AvgDepsBl_aux | 0.37 | 0.59 | 0 | 0.19 | 0.93 | 0.4 | 0.5 |
+| RB.AvgAdverbBl | 0.33 | 0.6 | 0 | 0.11 | 1.31 | 0 | 0.8 |
+| RB.AvgDepsBl_punct | 0.33 | 1.26 | 0 | 0.3 | 1.17 | 0 | 0.5 |
+| RB.AvgNounSen | 0.33 | 0.99 | 0 | 0.05 | 0.22 | 0 | 1.81 |
+| RB.LxcSoph | 0.32 | 0.79 | 0 | 0.3 | 0.75 | 0 | 1.2 |
+| RB.CharEnt | 0.31 | 0.49 | 0 | 1.05 | 1.09 | 0.13 | 0.4 |
+| RB.AvgDepsSen_cop | 0.31 | 0.86 | 0 | 0.55 | 0.55 | 0 | 1.2 |
+| RB.AvgDepsBl_mark | 0.31 | 1.04 | 0 | 0.56 | 1.59 | 0 | 0 |
+| RB.AvgSenBlCoh_LDA | 0.3 | 0.82 | 0 | 0.16 | 1.15 | 0 | 0.6 |
+| RB.RdbltyFlesch | 0.29 | 0.47 | 0 | 0.19 | 0.17 | 0 | 1.81 |
+| RB.AvgCorefChain | 0.28 | 0.76 | 0 | 0.2 | 1.05 | 0 | 0.6 |
+| RB.AvgDepsBl_dobj | 0.28 | 0.92 | 0 | 0.09 | 1.36 | 0 | 0.2 |
+| RB.AvgDepsBl_cop | 0.27 | 0.59 | 0 | 0.07 | 0.97 | 0 | 0.7 |
+| RB.AvgDepsBl_det | 0.27 | 0.92 | 0 | 0.09 | 1.36 | 0 | 0.1 |
+| RB.AvgDepsSen_mark | 0.27 | 0.68 | 0 | 0.19 | 1.12 | 0 | 0.5 |
+| RB.AvgDepsBl_amod | 0.26 | 0.58 | 0 | 0.27 | 1.23 | 0 | 0.3 |
+| RB.AvgDepsBl_mwe | 0.25 | 0.8 | 0 | 0.09 | 0.61 | 0.3 | 0 |
+| RB.AvgUnqAdverbBl | 0.25 | 0.6 | 0 | 0.03 | 1.39 | 0 | 0.1 |
+| RB.AvgPrepositionSen | 0.24 | 0.44 | 0 | 0.16 | 0.91 | 0 | 0.6 |
+| RB.AvgConnBl_simple_subordinators | 0.23 | 0.76 | 0 | 0.05 | 1.22 | 0 | 0 |
+| RB.AvgAOASen_Kuperman | 0.23 | 0.53 | 0 | 0.51 | 0.39 | 0.2 | 0.4 |
+| RB.AvgDepsSen_compound | 0.23 | 1.22 | 0 | 0.33 | 0.33 | 0 | 0.6 |
+| RB.AvgDepsBl_ccomp | 0.22 | 0.51 | 0 | 0.05 | 0.54 | 0.2 | 0.3 |
+| RB.AvgUnqPronounBl | 0.22 | 0.46 | 0 | 0 | 1.33 | 0 | 0 |
+| RB.FrqRhythmId | 0.22 | 0.94 | 0 | 0.3 | 0.68 | 0.06 | 0.2 |
+| RB.AggPronSen_indefinite | 0.22 | 0.76 | 0 | 0.37 | 0.93 | 0 | 0.2 |
+| RB.AvgDepsSen_dobj | 0.21 | 0.98 | 0 | 0.1 | 0.49 | 0 | 0.5 |
+| RB.AggPronSen_second_person | 0.2 | 0.81 | 0 | 0.23 | 0.64 | 0 | 0.3 |
+| RB.AvgAOADoc_Shock | 0.2 | 0.98 | 0 | 0.42 | 0.82 | 0 | 0 |
+| RB.AvgConnSen_semi_coordinators | 0.19 | 0.59 | 0 | 0.29 | 0 | 0.38 | 0.1 |
+| RB.AvgConnBl_addition | 0.18 | 0.7 | 0 | 0.23 | 0.65 | 0 | 0.2 |
+| RB.AvgRhythmUnitStreesSyll | 0.18 | 0.89 | 0 | 0.17 | 0.47 | 0 | 0.3 |
+| RB.AvgDepsSen_ccomp | 0.18 | 0.31 | 0 | 0.22 | 0.94 | 0 | 0.2 |
+| RB.AvgAdverbSen | 0.17 | 0.38 | 0 | 0.06 | 0.99 | 0 | 0 |
+| RB.AvgCommaSen | 0.17 | 0.62 | 0 | 0.25 | 0.8 | 0 | 0 |
+| RB.AvgAOEDoc_IndexAboveThreshold.0.3. | 0.17 | 0.72 | 0 | 0.12 | 0.36 | 0 | 0.5 |
+| RB.AvgConnBl_contrasts | 0.17 | 0.46 | 0 | 0.08 | 0.82 | 0 | 0.2 |
+| RB.AvgConnSen_simple_subordinators | 0.16 | 0.44 | 0 | 0.13 | 0.88 | 0 | 0 |
+| RB.AvgConnBl_reason_and_purpose | 0.16 | 0.73 | 0 | 0.14 | 0.62 | 0 | 0.1 |
+| RB.AvgAOADoc_Bird | 0.16 | 0.79 | 0 | 0.14 | 0.68 | 0 | 0 |
+| RB.AvgDepsSen_amod | 0.16 | 0.29 | 0 | 0.25 | 0.5 | 0 | 0.5 |
+| RB.AvgConnBl_oppositions | 0.16 | 0.65 | 0 | 0.05 | 0.6 | 0.02 | 0.2 |
+| RB.AvgAOABl_Kuperman | 0.15 | 0.11 | 0 | 0.18 | 0.45 | 0 | 0.6 |
+| RB.AvgDepsSen_xcomp | 0.15 | 0.63 | 0 | 0.06 | 0.73 | 0 | 0 |
+| RB.AvgPronounSen | 0.14 | 0.62 | 0 | 0.03 | 0.26 | 0 | 0.4 |
+| RB.AvgDepsBl_advcl | 0.14 | 0.21 | 0 | 0.02 | 0.89 | 0 | 0 |
+| RB.AvgInferenceDistChain | 0.14 | 0.56 | 0 | 0.2 | 0.45 | 0 | 0.2 |
+| RB.AvgNounNmdEntBl | 0.14 | 0.49 | 0 | 0.87 | 0.55 | 0 | 0 |
+| RB.AggPronSen_third_person | 0.14 | 0.65 | 0 | 0.14 | 0.64 | 0 | 0 |
+| RB.WdLettStdDev | 0.14 | 0.65 | 0 | 0.18 | 0.63 | 0 | 0 |
+| RB.AvgConnSen_addition | 0.13 | 0.47 | 0 | 0.23 | 0.63 | 0 | 0 |
+| RB.AvgNmdEntSen | 0.13 | 0.18 | 0 | 0.36 | 0.81 | 0 | 0 |
+| RB.WdDiffLemmaStem | 0.12 | 0.71 | 0 | 0.26 | 0.29 | 0 | 0.1 |
+| RB.AvgDepsSen_aux | 0.12 | 0.4 | 0 | 0.03 | 0.64 | 0 | 0 |
+| RB.AvgCommaBl | 0.12 | 0.66 | 0 | 0.04 | 0.4 | 0 | 0.1 |
+| RB.AvgAOASen_Shock | 0.12 | 0.28 | 0 | 0.05 | 0.73 | 0 | 0 |
+| RB.AvgDepsBl_acl | 0.12 | 0.47 | 0 | 0.13 | 0.6 | 0 | 0 |
+| RB.AvgAOABl_Cortese | 0.12 | 0.28 | 0 | 0.1 | 0.64 | 0 | 0.1 |
+| RB.AvgDepsSen_advcl | 0.12 | 0.46 | 0 | 0.25 | 0.59 | 0 | 0 |
+| RB.AvgDepsBl_xcomp | 0.12 | 0.23 | 0 | 0.09 | 0.78 | 0 | 0 |
+| RB.AvgConnSen_temporal_connectors | 0.11 | 0.73 | 0 | 0.06 | 0.09 | 0.06 | 0.1 |
+| RB.AvgAOESen_InflectionPointPolynomial | 0.11 | 0.28 | 0 | 0.11 | 0.52 | 0 | 0.1 |
+| RB.AvgDepsSen_dep | 0.11 | 0.49 | 0 | 0.17 | 0.38 | 0 | 0.1 |
+| RB.AvgAOASen_Cortese | 0.11 | 0.22 | 0 | 0.17 | 0.66 | 0 | 0 |
+| RB.AvgDepsSen_det | 0.11 | 0.14 | 0 | 0.12 | 0.54 | 0 | 0.2 |
+| RB.AvgConnSen_reason_and_purpose | 0.11 | 0.39 | 0 | 0.12 | 0.58 | 0 | 0 |
+| RB.AvgAOABl_Bristol | 0.1 | 0.45 | 0 | 0.15 | 0.37 | 0 | 0.1 |
+| RB.AvgDepsBl_iobj | 0.09 | 0.74 | 0 | 0.21 | 0.17 | 0 | 0 |
+| RB.AvgDepsSen_mwe | 0.09 | 0.64 | 0 | 0.44 | 0.21 | 0 | 0 |
+| RB.AvgConnSen_order | 0.08 | 0.69 | 0 | 0.67 | 0.01 | 0 | 0 |
+| RB.AvgConnSen_oppositions | 0.08 | 0.63 | 0 | 0.11 | 0.09 | 0 | 0.1 |
+| RB.AvgConnBl_disjunctions | 0.08 | 0.5 | 0 | 0 | 0.32 | 0 | 0 |
+| RB.AvgConnSen_contrasts | 0.07 | 0.6 | 0 | 0.11 | 0.11 | 0 | 0 |
+| RB.AvgDepsBl_auxpass | 0.07 | 0.56 | 0 | 0.01 | 0.17 | 0 | 0 |
+| RB.AvgDepsSen_neg | 0.07 | 0.47 | 0 | 0.31 | 0 | 0 | 0.2 |
+| RB.AvgConnBl_conditions | 0.07 | 0.49 | 0 | 0.11 | 0.23 | 0 | 0 |
+| RB.AvgDepsBl_neg | 0.06 | 0.19 | 0 | 0.03 | 0.23 | 0 | 0.1 |
+| RB.AvgPronBl_interrogative | 0.06 | 0.54 | 0 | 0.04 | 0.14 | 0 | 0 |
+| RB.SenAsson | 0.05 | 0.25 | 0 | 0 | 0.23 | 0 | 0 |
+| RB.AvgConnSen_disjunctions | 0.05 | 0.55 | 0 | 0.03 | 0.05 | 0 | 0 |
+| RB.AvgConnBl_semi_coordinators | 0.04 | 0.16 | 0 | 0.1 | 0.16 | 0 | 0 |
+| RB.AvgDepsSen_nummod | 0.04 | 0.46 | 0 | 0.03 | 0 | 0 | 0 |
+| RB.AvgDepsSen_acl | 0.04 | 0.46 | 0 | 0.01 | 0.01 | 0 | 0 |
+| RB.AvgDepsBl_csubj | 0.04 | 0.4 | 0 | 0.01 | 0.05 | 0 | 0 |
+| RB.AvgDepsBl_nsubjpass | 0.04 | 0.25 | 0 | 0 | 0.16 | 0 | 0 |
+| RB.AvgDepsBl_appos | 0.04 | 0.51 | 0 | 0 | 0.02 | 0 | 0 |
+| RB.AvgDepsBl_dep | 0.02 | 0 | 0 | 0.08 | 0.15 | 0 | 0 |
+| RB.SenAllit | 0.02 | 0.3 | 0 | 0 | 0 | 0 | 0 |
 
 ### ReaderBench Model 3per
 
@@ -2470,149 +2490,149 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
-| Metric                                             | overall | pls  | mars  | gbm   | svm  | enet  | cube |
-|----------------------------------------------------|---------|------|-------|-------|------|-------|------|
-| RB.WdEnt                                           | 9.44    | 1.97 | 0     | 16.45 | 2.58 | 14.62 | 8.38 |
-| RB.AvgPrepositionBl                                | 8.44    | 1.96 | 20.57 | 11.55 | 2.48 | 2.8   | 4.83 |
-| Sentences                                          | 6.71    | 1.67 | 19.13 | 4.09  | 1.41 | 4.14  | 5.01 |
-| RB.AvgBlScore                                      | 5.39    | 2    | 0     | 15.75 | 2.73 | 2.76  | 5.92 |
-| RB.CAF                                             | 4.59    | 1.59 | 19.13 | 1.27  | 1.43 | 0     | 2.73 |
-| RB.AvgSenScore                                     | 3.72    | 0.51 | 8.2   | 0.15  | 0.47 | 5.74  | 2    |
-| RB.TCorefChainDoc                                  | 3.36    | 1.97 | 0     | 5.74  | 2.16 | 4.69  | 2.46 |
-| RB.AvgWdLen                                        | 2.49    | 1.32 | 0     | 4.98  | 1.13 | 2.84  | 3.28 |
-| RB.AvgAOADoc_Shock                                 | 2.39    | 1.4  | 8.2   | 1.65  | 1.21 | 0.2   | 1.18 |
-| RB.AvgPronBl_indefinite                            | 2.34    | 1.76 | 0     | 3.91  | 2.01 | 2.57  | 3.73 |
-| RB.RdbltyDaleChall                                 | 2.32    | 0.79 | 0     | 1.32  | 0.68 | 5.11  | 3.73 |
-| RB.AvgDepsBl_compound                              | 2.28    | 0.23 | 7.3   | 0.29  | 0.02 | 1.88  | 2    |
-| RB.AvgUnqNoundBl                                   | 2.11    | 0.75 | 1.47  | 0.3   | 1.41 | 4.17  | 2.64 |
-| RB.AvgConnBl_simple_subordinators                  | 1.75    | 1.76 | 0     | 3.08  | 1.98 | 2.11  | 0.46 |
-| RB.AvgAOESen_InflectionPointPolynomial             | 1.61    | 0.53 | 5.45  | 0.22  | 0.77 | 0.99  | 0.36 |
-| RB.AvgPronBl_interrogative                         | 1.23    | 0.61 | 0     | 0.53  | 0.13 | 2.92  | 2    |
-| RB.AvgDepsBl_nsubj                                 | 1.12    | 1.87 | 0     | 1.87  | 2.47 | 0     | 3.37 |
-| RB.AvgDepsBl_mark                                  | 1.1     | 1.63 | 0     | 0.89  | 1.7  | 1.41  | 1.91 |
-| RB.AvgNmdEntSen                                    | 1.07    | 0.07 | 0     | 0.25  | 0.41 | 2.79  | 0.91 |
-| RB.AvgDepsBl_amod                                  | 1.06    | 0.82 | 0     | 0.33  | 0.41 | 2.72  | 0.64 |
-| RB.AvgCorefChain                                   | 1.04    | 0.95 | 0     | 0.08  | 1.1  | 2.38  | 1    |
-| RB.AvgDepsSen_advmod                               | 1.01    | 0.09 | 0     | 0.22  | 0.22 | 2.68  | 1    |
-| RB.AvgPronBl_first_person                          | 0.96    | 0.7  | 2.97  | 0.06  | 0.27 | 0.75  | 0.64 |
-| RB.LangRhythmCoeff                                 | 0.95    | 0.77 | 0     | 1.43  | 0.81 | 1.35  | 0.73 |
-| RB.AvgAOABl_Bird                                   | 0.93    | 0.47 | 3.59  | 0.46  | 0.63 | 0     | 0    |
-| RB.AvgDepsSen_aux                                  | 0.92    | 0    | 4     | 0.21  | 0.18 | 0     | 0.55 |
-| RB.AvgSenAdjCoh_Path                               | 0.87    | 1.19 | 0     | 2.13  | 1.26 | 0.33  | 0.73 |
-| RB.AvgDepsBl_det                                   | 0.83    | 1.51 | 0     | 0.54  | 1.48 | 1.21  | 0.73 |
-| RB.AvgConnSen_oppositions                          | 0.8     | 0.24 | 0     | 0.41  | 0.01 | 2.1   | 0.46 |
-| RB.AvgAOASen_Shock                                 | 0.8     | 0.62 | 0     | 0.13  | 1.02 | 1.67  | 0.91 |
-| RB.LxcDiv                                          | 0.8     | 1.45 | 0     | 1.85  | 1.4  | 0     | 1.55 |
-| RB.AvgUnqPronounBl                                 | 0.77    | 1.68 | 0     | 0.64  | 1.73 | 0.63  | 1.46 |
-| RB.AvgAOADoc_Cortese                               | 0.69    | 0.02 | 0     | 0.3   | 0.59 | 1.5   | 0.73 |
-| RB.AvgUnqAdjectiveBl                               | 0.69    | 1.13 | 0     | 0.03  | 0.81 | 1.58  | 0.36 |
-| RB.AvgDepsBl_nsubjpass                             | 0.69    | 0.48 | 0     | 0.02  | 0.16 | 2.05  | 0.09 |
-| RB.AvgAOASen_Bird                                  | 0.64    | 0.52 | 0     | 0.31  | 0.39 | 1.46  | 0.46 |
-| RB.AvgDepsBl_cop                                   | 0.63    | 1.09 | 0     | 0.1   | 0.8  | 1.3   | 0.55 |
-| RB.TCorefChainBigSpan                              | 0.6     | 1.53 | 0     | 0.34  | 1.38 | 0.62  | 1    |
-| RB.AvgChainSpan                                    | 0.59    | 1.42 | 0     | 1     | 1.73 | 0     | 0.73 |
-| RB.AvgDepsBl_aux                                   | 0.59    | 1.42 | 0     | 0.59  | 1.36 | 0.5   | 0.64 |
-| RB.AvgUnqPrepositionBl                             | 0.58    | 1.83 | 0     | 0.66  | 2.15 | 0     | 0.64 |
-| RB.AggPronSen_second_person                        | 0.54    | 0.32 | 0     | 0.04  | 0.55 | 1.28  | 0.46 |
-| RB.SynDiv                                          | 0.51    | 1.15 | 0     | 0.48  | 1.14 | 0.52  | 0.46 |
-| RB.CharEnt                                         | 0.49    | 1.19 | 0     | 1.21  | 1.21 | 0     | 0    |
-| RB.AvgAOASen_Bristol                               | 0.48    | 0.35 | 0     | 0.13  | 0.36 | 1.1   | 0.46 |
-| RB.AvgDepsBl_punct                                 | 0.47    | 1.51 | 0     | 0.72  | 1.39 | 0     | 0.64 |
-| RB.AvgDepsBl_nmod                                  | 0.46    | 1.6  | 0     | 0.48  | 1.72 | 0     | 0.55 |
-| RB.AvgUnqVerbBl                                    | 0.43    | 1.51 | 0     | 0.41  | 1.47 | 0     | 0.91 |
-| RB.WdDiffLemmaStem                                 | 0.42    | 0.86 | 0     | 0.43  | 0.9  | 0.48  | 0.18 |
-| RB.AvgDepsSen_mark                                 | 0.42    | 0.28 | 0     | 0.1   | 0.29 | 0.68  | 1.73 |
-| RB.WdDiffWdStem                                    | 0.42    | 0.67 | 0     | 0.31  | 0.66 | 0.71  | 0.18 |
-| RB.AvgPronounBl                                    | 0.41    | 1.67 | 0     | 0.06  | 1.67 | 0     | 1.18 |
-| RB.AvgAOASen_Cortese                               | 0.41    | 0.08 | 0     | 0.15  | 0.3  | 0.88  | 0.73 |
-| RB.AvgConnBl_temporal_connectors                   | 0.41    | 0.71 | 0     | 0.02  | 0.38 | 1.05  | 0    |
-| RB.AvgRhythmUnitStreesSyll                         | 0.38    | 0.09 | 0     | 0.12  | 0.17 | 0.87  | 0.73 |
-| RB.LxcSoph                                         | 0.37    | 0.75 | 0     | 0.68  | 0.65 | 0     | 1.18 |
-| RB.AvgDepsBl_ccomp                                 | 0.34    | 1.38 | 0     | 0.08  | 1.26 | 0.12  | 0.64 |
-| RB.AvgDepsSen_neg                                  | 0.34    | 0.23 | 0     | 0.09  | 0.52 | 0.74  | 0    |
-| RB.AvgPronBl_third_person                          | 0.34    | 1.34 | 0     | 0.39  | 1.16 | 0     | 0.46 |
-| RB.AvgDepsBl_root                                  | 0.33    | 0.09 | 0     | 0.06  | 0    | 1     | 0    |
-| RB.TActCorefChainWd                                | 0.33    | 0.36 | 0     | 0.36  | 0.81 | 0.14  | 0.91 |
-| RB.WdSylCnt                                        | 0.3     | 0.76 | 0     | 0.54  | 0.7  | 0     | 0.64 |
-| RB.AvgUnqAdverbBl                                  | 0.29    | 1.34 | 0     | 0.09  | 1.2  | 0     | 0.64 |
-| RB.AvgDepsSen_punct                                | 0.27    | 0.44 | 0     | 0.09  | 0.16 | 0.68  | 0    |
-| RB.AvgNmdEntBl                                     | 0.26    | 1.25 | 0     | 0.11  | 1.05 | 0     | 0.55 |
-| RB.AvgConnBl_addition                              | 0.25    | 1.13 | 0     | 0.16  | 0.9  | 0     | 0.55 |
-| RB.AvgDepsSen_compound                             | 0.25    | 0.5  | 0     | 0.19  | 0.56 | 0     | 1.37 |
-| RB.AggPronSen_indefinite                           | 0.25    | 0.42 | 0     | 0.24  | 0.9  | 0     | 0.64 |
-| RB.AvgDepsBl_dobj                                  | 0.25    | 1.37 | 0     | 0.02  | 1.15 | 0     | 0.46 |
-| RB.AvgConnBl_order                                 | 0.24    | 0.56 | 0     | 0.03  | 0.21 | 0.59  | 0    |
-| RB.AvgAOADoc_Bristol                               | 0.24    | 0.8  | 0     | 0.28  | 0.89 | 0     | 0.27 |
-| RB.SenStdDevWd                                     | 0.24    | 0.98 | 0     | 0.18  | 1.06 | 0     | 0.18 |
-| RB.FrqRhythmId                                     | 0.23    | 1.1  | 0     | 0.02  | 0.72 | 0.21  | 0.18 |
-| RB.AvgDepsBl_advmod                                | 0.23    | 1.21 | 0     | 0.12  | 0.96 | 0     | 0.27 |
-| RB.AvgDepsBl_advcl                                 | 0.23    | 1.36 | 0     | 0.01  | 1.26 | 0     | 0    |
-| RB.AvgAdverbBl                                     | 0.23    | 1.25 | 0     | 0.1   | 1.01 | 0     | 0.27 |
-| RB.AvgConnBl_logical_connectors                    | 0.22    | 1.14 | 0     | 0.2   | 0.89 | 0     | 0.09 |
-| RB.AvgConnBl_semi_coordinators                     | 0.21    | 0.2  | 0     | 0.02  | 0.03 | 0.56  | 0.18 |
-| RB.AvgPronounSen                                   | 0.21    | 0.33 | 0     | 0.15  | 0.72 | 0     | 0.73 |
-| RB.AvgUnqNmdEntBl                                  | 0.21    | 1    | 0     | 0.18  | 0.65 | 0     | 0.55 |
-| RB.AvgConnSen_simple_subordinators                 | 0.2     | 0.46 | 0     | 0.17  | 0.74 | 0     | 0.46 |
-| RB.AvgSenBlCoh_LDA                                 | 0.2     | 0.59 | 0     | 0.06  | 0.91 | 0.01  | 0.36 |
-| RB.AvgConnBl_reason_and_purpose                    | 0.2     | 1.2  | 0     | 0.09  | 0.96 | 0     | 0    |
-| RB.AvgDepsSen_amod                                 | 0.2     | 0.18 | 0     | 0.18  | 0.62 | 0     | 0.82 |
-| RB.AvgInferenceDistChain                           | 0.19    | 0.33 | 0     | 0.23  | 0.81 | 0     | 0.09 |
-| RB.AvgAOESen_IndexPolynomialFitAboveThreshold.0.3. | 0.19    | 0.68 | 0     | 0.32  | 0.65 | 0     | 0    |
-| RB.AvgSenBlCoh_LSA                                 | 0.19    | 0.97 | 0     | 0.09  | 0.86 | 0     | 0.18 |
-| RB.AvgAOEDoc_InverseAverage                        | 0.18    | 0.62 | 0     | 0.17  | 0.82 | 0     | 0    |
-| RB.AvgAOEBl_IndexAboveThreshold.0.3.               | 0.18    | 0.59 | 0     | 0.17  | 0.71 | 0.06  | 0    |
-| RB.SenAllit                                        | 0.18    | 0.53 | 0     | 0.01  | 0.19 | 0.43  | 0    |
-| RB.AvgDepsSen_dep                                  | 0.18    | 0.19 | 0     | 0.2   | 0.42 | 0     | 0.91 |
-| RB.AvgDepsBl_nummod                                | 0.17    | 0.66 | 0     | 0.11  | 0.32 | 0.24  | 0    |
-| RB.AvgDepsSen_det                                  | 0.16    | 0.21 | 0     | 0.08  | 0.89 | 0     | 0    |
-| RB.AvgDepsBl_conj                                  | 0.16    | 1.02 | 0     | 0.11  | 0.63 | 0     | 0.09 |
-| RB.AvgDepsSen_ccomp                                | 0.16    | 0.3  | 0     | 0.15  | 0.55 | 0     | 0.46 |
-| RB.AvgConnSen_addition                             | 0.15    | 0.01 | 0     | 0.11  | 0.52 | 0     | 0.55 |
-| RB.AvgDepsSen_acl                                  | 0.15    | 0.15 | 0     | 0.13  | 0.01 | 0.36  | 0    |
-| RB.AvgDepsBl_xcomp                                 | 0.14    | 0.89 | 0     | 0.04  | 0.56 | 0     | 0.18 |
-| RB.AvgPronBl_second_person                         | 0.14    | 0.91 | 0     | 0.05  | 0.55 | 0     | 0.18 |
-| RB.AvgAOABl_Kuperman                               | 0.14    | 0.08 | 0     | 0.23  | 0.45 | 0     | 0.18 |
-| RB.AvgNounSen                                      | 0.14    | 0.2  | 0     | 0.03  | 0.22 | 0     | 1.18 |
-| RB.AvgConnBl_contrasts                             | 0.14    | 1.03 | 0     | 0.05  | 0.67 | 0     | 0    |
-| RB.WdLettStdDev                                    | 0.13    | 0.6  | 0     | 0.19  | 0.39 | 0     | 0.09 |
-| RB.AvgDepsBl_neg                                   | 0.13    | 0.3  | 0     | 0.03  | 0.05 | 0.33  | 0    |
-| RB.AvgDepsSen_xcomp                                | 0.13    | 0.06 | 0     | 0.05  | 0.58 | 0     | 0.36 |
-| RB.AvgDepsSen_advcl                                | 0.13    | 0.14 | 0     | 0.13  | 0.66 | 0     | 0    |
-| RB.AvgConnBl_oppositions                           | 0.13    | 0.98 | 0     | 0.03  | 0.54 | 0     | 0.18 |
-| RB.AggPronSen_first_person                         | 0.13    | 0.06 | 0     | 0.22  | 0.56 | 0     | 0    |
-| RB.AggPronSen_third_person                         | 0.12    | 0.38 | 0     | 0.02  | 0.69 | 0     | 0    |
-| RB.AvgDepsSen_dobj                                 | 0.1     | 0.07 | 0     | 0.07  | 0.31 | 0     | 0.46 |
-| RB.AvgAdjectiveSen                                 | 0.1     | 0.04 | 0     | 0.09  | 0.4  | 0     | 0.27 |
-| RB.AvgDepsSen_cop                                  | 0.1     | 0.14 | 0     | 0.04  | 0.59 | 0     | 0    |
-| RB.AvgConnSen_reason_and_purpose                   | 0.09    | 0.05 | 0     | 0.06  | 0.25 | 0     | 0.46 |
-| RB.AvgConnBl_conditions                            | 0.09    | 0.72 | 0     | 0.04  | 0.39 | 0     | 0    |
-| RB.LangRhythmDiameter                              | 0.09    | 0.29 | 0     | 0.13  | 0.06 | 0.15  | 0    |
-| RB.AvgDepsBl_acl                                   | 0.09    | 0.74 | 0     | 0.03  | 0.39 | 0     | 0.09 |
-| RB.AvgAOASen_Kuperman                              | 0.08    | 0.09 | 0     | 0.11  | 0.26 | 0     | 0.18 |
-| RB.AvgConnBl_disjunctions                          | 0.08    | 0.52 | 0     | 0.03  | 0.21 | 0.08  | 0    |
-| RB.AvgDepsSen_nmod                                 | 0.08    | 0.02 | 0     | 0.15  | 0.17 | 0     | 0.27 |
-| RB.AvgCommaBl                                      | 0.08    | 0.78 | 0     | 0.02  | 0.36 | 0     | 0    |
-| RB.AvgDepsBl_mwe                                   | 0.07    | 0.67 | 0     | 0.01  | 0.33 | 0     | 0    |
-| RB.AvgDepsBl_dep                                   | 0.07    | 0.64 | 0     | 0.07  | 0.22 | 0     | 0.09 |
-| RB.AvgConnSen_semi_coordinators                    | 0.06    | 0.13 | 0     | 0.01  | 0.01 | 0.11  | 0.27 |
-| RB.AvgConnSen_conditions                           | 0.05    | 0.01 | 0     | 0.2   | 0    | 0     | 0    |
-| RB.AvgConnBl_conjuncts                             | 0.04    | 0.42 | 0     | 0.01  | 0.14 | 0     | 0    |
-| RB.LangRhythmId                                    | 0.04    | 0.39 | 0     | 0.04  | 0.1  | 0     | 0    |
-| RB.AvgDepsBl_csubj                                 | 0.03    | 0.39 | 0     | 0     | 0.09 | 0     | 0    |
-| RB.AvgDepsBl_iobj                                  | 0.03    | 0.29 | 0     | 0.03  | 0.09 | 0     | 0    |
-| RB.AvgDepsSen_nummod                               | 0.03    | 0.13 | 0     | 0.09  | 0.01 | 0     | 0    |
-| RB.AvgDepsBl_auxpass                               | 0.03    | 0.36 | 0     | 0     | 0.11 | 0     | 0    |
-| RB.AvgDepsBl_expl                                  | 0.03    | 0.29 | 0     | 0     | 0.09 | 0.03  | 0    |
-| RB.SenAsson                                        | 0.03    | 0.37 | 0     | 0.02  | 0.1  | 0     | 0    |
-| RB.AvgCommaSen                                     | 0.03    | 0.14 | 0     | 0.05  | 0.02 | 0     | 0.18 |
-| RB.AvgDepsSen_csubj                                | 0.01    | 0.04 | 0     | 0.02  | 0    | 0     | 0    |
-| RB.AvgConnSen_disjunctions                         | 0.01    | 0.07 | 0     | 0.03  | 0.01 | 0     | 0    |
-| RB.AvgDepsBl_parataxis                             | 0.01    | 0.2  | 0     | 0     | 0.03 | 0     | 0    |
-| RB.AvgConnBl_complex_subordinators                 | 0       | 0.06 | 0     | 0     | 0.01 | 0     | 0    |
-| RB.AvgConnSen_temporal_connectors                  | 0       | 0.01 | 0     | 0.01  | 0    | 0     | 0    |
+| Metric | overall | pls | mars | gbm | svm | enet | cube |
+|----|----|----|----|----|----|----|----|
+| RB.WdEnt | 9.44 | 1.97 | 0 | 16.45 | 2.58 | 14.62 | 8.38 |
+| RB.AvgPrepositionBl | 8.44 | 1.96 | 20.57 | 11.55 | 2.48 | 2.8 | 4.83 |
+| Sentences | 6.71 | 1.67 | 19.13 | 4.09 | 1.41 | 4.14 | 5.01 |
+| RB.AvgBlScore | 5.39 | 2 | 0 | 15.75 | 2.73 | 2.76 | 5.92 |
+| RB.CAF | 4.59 | 1.59 | 19.13 | 1.27 | 1.43 | 0 | 2.73 |
+| RB.AvgSenScore | 3.72 | 0.51 | 8.2 | 0.15 | 0.47 | 5.74 | 2 |
+| RB.TCorefChainDoc | 3.36 | 1.97 | 0 | 5.74 | 2.16 | 4.69 | 2.46 |
+| RB.AvgWdLen | 2.49 | 1.32 | 0 | 4.98 | 1.13 | 2.84 | 3.28 |
+| RB.AvgAOADoc_Shock | 2.39 | 1.4 | 8.2 | 1.65 | 1.21 | 0.2 | 1.18 |
+| RB.AvgPronBl_indefinite | 2.34 | 1.76 | 0 | 3.91 | 2.01 | 2.57 | 3.73 |
+| RB.RdbltyDaleChall | 2.32 | 0.79 | 0 | 1.32 | 0.68 | 5.11 | 3.73 |
+| RB.AvgDepsBl_compound | 2.28 | 0.23 | 7.3 | 0.29 | 0.02 | 1.88 | 2 |
+| RB.AvgUnqNoundBl | 2.11 | 0.75 | 1.47 | 0.3 | 1.41 | 4.17 | 2.64 |
+| RB.AvgConnBl_simple_subordinators | 1.75 | 1.76 | 0 | 3.08 | 1.98 | 2.11 | 0.46 |
+| RB.AvgAOESen_InflectionPointPolynomial | 1.61 | 0.53 | 5.45 | 0.22 | 0.77 | 0.99 | 0.36 |
+| RB.AvgPronBl_interrogative | 1.23 | 0.61 | 0 | 0.53 | 0.13 | 2.92 | 2 |
+| RB.AvgDepsBl_nsubj | 1.12 | 1.87 | 0 | 1.87 | 2.47 | 0 | 3.37 |
+| RB.AvgDepsBl_mark | 1.1 | 1.63 | 0 | 0.89 | 1.7 | 1.41 | 1.91 |
+| RB.AvgNmdEntSen | 1.07 | 0.07 | 0 | 0.25 | 0.41 | 2.79 | 0.91 |
+| RB.AvgDepsBl_amod | 1.06 | 0.82 | 0 | 0.33 | 0.41 | 2.72 | 0.64 |
+| RB.AvgCorefChain | 1.04 | 0.95 | 0 | 0.08 | 1.1 | 2.38 | 1 |
+| RB.AvgDepsSen_advmod | 1.01 | 0.09 | 0 | 0.22 | 0.22 | 2.68 | 1 |
+| RB.AvgPronBl_first_person | 0.96 | 0.7 | 2.97 | 0.06 | 0.27 | 0.75 | 0.64 |
+| RB.LangRhythmCoeff | 0.95 | 0.77 | 0 | 1.43 | 0.81 | 1.35 | 0.73 |
+| RB.AvgAOABl_Bird | 0.93 | 0.47 | 3.59 | 0.46 | 0.63 | 0 | 0 |
+| RB.AvgDepsSen_aux | 0.92 | 0 | 4 | 0.21 | 0.18 | 0 | 0.55 |
+| RB.AvgSenAdjCoh_Path | 0.87 | 1.19 | 0 | 2.13 | 1.26 | 0.33 | 0.73 |
+| RB.AvgDepsBl_det | 0.83 | 1.51 | 0 | 0.54 | 1.48 | 1.21 | 0.73 |
+| RB.AvgConnSen_oppositions | 0.8 | 0.24 | 0 | 0.41 | 0.01 | 2.1 | 0.46 |
+| RB.AvgAOASen_Shock | 0.8 | 0.62 | 0 | 0.13 | 1.02 | 1.67 | 0.91 |
+| RB.LxcDiv | 0.8 | 1.45 | 0 | 1.85 | 1.4 | 0 | 1.55 |
+| RB.AvgUnqPronounBl | 0.77 | 1.68 | 0 | 0.64 | 1.73 | 0.63 | 1.46 |
+| RB.AvgAOADoc_Cortese | 0.69 | 0.02 | 0 | 0.3 | 0.59 | 1.5 | 0.73 |
+| RB.AvgUnqAdjectiveBl | 0.69 | 1.13 | 0 | 0.03 | 0.81 | 1.58 | 0.36 |
+| RB.AvgDepsBl_nsubjpass | 0.69 | 0.48 | 0 | 0.02 | 0.16 | 2.05 | 0.09 |
+| RB.AvgAOASen_Bird | 0.64 | 0.52 | 0 | 0.31 | 0.39 | 1.46 | 0.46 |
+| RB.AvgDepsBl_cop | 0.63 | 1.09 | 0 | 0.1 | 0.8 | 1.3 | 0.55 |
+| RB.TCorefChainBigSpan | 0.6 | 1.53 | 0 | 0.34 | 1.38 | 0.62 | 1 |
+| RB.AvgChainSpan | 0.59 | 1.42 | 0 | 1 | 1.73 | 0 | 0.73 |
+| RB.AvgDepsBl_aux | 0.59 | 1.42 | 0 | 0.59 | 1.36 | 0.5 | 0.64 |
+| RB.AvgUnqPrepositionBl | 0.58 | 1.83 | 0 | 0.66 | 2.15 | 0 | 0.64 |
+| RB.AggPronSen_second_person | 0.54 | 0.32 | 0 | 0.04 | 0.55 | 1.28 | 0.46 |
+| RB.SynDiv | 0.51 | 1.15 | 0 | 0.48 | 1.14 | 0.52 | 0.46 |
+| RB.CharEnt | 0.49 | 1.19 | 0 | 1.21 | 1.21 | 0 | 0 |
+| RB.AvgAOASen_Bristol | 0.48 | 0.35 | 0 | 0.13 | 0.36 | 1.1 | 0.46 |
+| RB.AvgDepsBl_punct | 0.47 | 1.51 | 0 | 0.72 | 1.39 | 0 | 0.64 |
+| RB.AvgDepsBl_nmod | 0.46 | 1.6 | 0 | 0.48 | 1.72 | 0 | 0.55 |
+| RB.AvgUnqVerbBl | 0.43 | 1.51 | 0 | 0.41 | 1.47 | 0 | 0.91 |
+| RB.WdDiffLemmaStem | 0.42 | 0.86 | 0 | 0.43 | 0.9 | 0.48 | 0.18 |
+| RB.AvgDepsSen_mark | 0.42 | 0.28 | 0 | 0.1 | 0.29 | 0.68 | 1.73 |
+| RB.WdDiffWdStem | 0.42 | 0.67 | 0 | 0.31 | 0.66 | 0.71 | 0.18 |
+| RB.AvgPronounBl | 0.41 | 1.67 | 0 | 0.06 | 1.67 | 0 | 1.18 |
+| RB.AvgAOASen_Cortese | 0.41 | 0.08 | 0 | 0.15 | 0.3 | 0.88 | 0.73 |
+| RB.AvgConnBl_temporal_connectors | 0.41 | 0.71 | 0 | 0.02 | 0.38 | 1.05 | 0 |
+| RB.AvgRhythmUnitStreesSyll | 0.38 | 0.09 | 0 | 0.12 | 0.17 | 0.87 | 0.73 |
+| RB.LxcSoph | 0.37 | 0.75 | 0 | 0.68 | 0.65 | 0 | 1.18 |
+| RB.AvgDepsBl_ccomp | 0.34 | 1.38 | 0 | 0.08 | 1.26 | 0.12 | 0.64 |
+| RB.AvgDepsSen_neg | 0.34 | 0.23 | 0 | 0.09 | 0.52 | 0.74 | 0 |
+| RB.AvgPronBl_third_person | 0.34 | 1.34 | 0 | 0.39 | 1.16 | 0 | 0.46 |
+| RB.AvgDepsBl_root | 0.33 | 0.09 | 0 | 0.06 | 0 | 1 | 0 |
+| RB.TActCorefChainWd | 0.33 | 0.36 | 0 | 0.36 | 0.81 | 0.14 | 0.91 |
+| RB.WdSylCnt | 0.3 | 0.76 | 0 | 0.54 | 0.7 | 0 | 0.64 |
+| RB.AvgUnqAdverbBl | 0.29 | 1.34 | 0 | 0.09 | 1.2 | 0 | 0.64 |
+| RB.AvgDepsSen_punct | 0.27 | 0.44 | 0 | 0.09 | 0.16 | 0.68 | 0 |
+| RB.AvgNmdEntBl | 0.26 | 1.25 | 0 | 0.11 | 1.05 | 0 | 0.55 |
+| RB.AvgConnBl_addition | 0.25 | 1.13 | 0 | 0.16 | 0.9 | 0 | 0.55 |
+| RB.AvgDepsSen_compound | 0.25 | 0.5 | 0 | 0.19 | 0.56 | 0 | 1.37 |
+| RB.AggPronSen_indefinite | 0.25 | 0.42 | 0 | 0.24 | 0.9 | 0 | 0.64 |
+| RB.AvgDepsBl_dobj | 0.25 | 1.37 | 0 | 0.02 | 1.15 | 0 | 0.46 |
+| RB.AvgConnBl_order | 0.24 | 0.56 | 0 | 0.03 | 0.21 | 0.59 | 0 |
+| RB.AvgAOADoc_Bristol | 0.24 | 0.8 | 0 | 0.28 | 0.89 | 0 | 0.27 |
+| RB.SenStdDevWd | 0.24 | 0.98 | 0 | 0.18 | 1.06 | 0 | 0.18 |
+| RB.FrqRhythmId | 0.23 | 1.1 | 0 | 0.02 | 0.72 | 0.21 | 0.18 |
+| RB.AvgDepsBl_advmod | 0.23 | 1.21 | 0 | 0.12 | 0.96 | 0 | 0.27 |
+| RB.AvgDepsBl_advcl | 0.23 | 1.36 | 0 | 0.01 | 1.26 | 0 | 0 |
+| RB.AvgAdverbBl | 0.23 | 1.25 | 0 | 0.1 | 1.01 | 0 | 0.27 |
+| RB.AvgConnBl_logical_connectors | 0.22 | 1.14 | 0 | 0.2 | 0.89 | 0 | 0.09 |
+| RB.AvgConnBl_semi_coordinators | 0.21 | 0.2 | 0 | 0.02 | 0.03 | 0.56 | 0.18 |
+| RB.AvgPronounSen | 0.21 | 0.33 | 0 | 0.15 | 0.72 | 0 | 0.73 |
+| RB.AvgUnqNmdEntBl | 0.21 | 1 | 0 | 0.18 | 0.65 | 0 | 0.55 |
+| RB.AvgConnSen_simple_subordinators | 0.2 | 0.46 | 0 | 0.17 | 0.74 | 0 | 0.46 |
+| RB.AvgSenBlCoh_LDA | 0.2 | 0.59 | 0 | 0.06 | 0.91 | 0.01 | 0.36 |
+| RB.AvgConnBl_reason_and_purpose | 0.2 | 1.2 | 0 | 0.09 | 0.96 | 0 | 0 |
+| RB.AvgDepsSen_amod | 0.2 | 0.18 | 0 | 0.18 | 0.62 | 0 | 0.82 |
+| RB.AvgInferenceDistChain | 0.19 | 0.33 | 0 | 0.23 | 0.81 | 0 | 0.09 |
+| RB.AvgAOESen_IndexPolynomialFitAboveThreshold.0.3. | 0.19 | 0.68 | 0 | 0.32 | 0.65 | 0 | 0 |
+| RB.AvgSenBlCoh_LSA | 0.19 | 0.97 | 0 | 0.09 | 0.86 | 0 | 0.18 |
+| RB.AvgAOEDoc_InverseAverage | 0.18 | 0.62 | 0 | 0.17 | 0.82 | 0 | 0 |
+| RB.AvgAOEBl_IndexAboveThreshold.0.3. | 0.18 | 0.59 | 0 | 0.17 | 0.71 | 0.06 | 0 |
+| RB.SenAllit | 0.18 | 0.53 | 0 | 0.01 | 0.19 | 0.43 | 0 |
+| RB.AvgDepsSen_dep | 0.18 | 0.19 | 0 | 0.2 | 0.42 | 0 | 0.91 |
+| RB.AvgDepsBl_nummod | 0.17 | 0.66 | 0 | 0.11 | 0.32 | 0.24 | 0 |
+| RB.AvgDepsSen_det | 0.16 | 0.21 | 0 | 0.08 | 0.89 | 0 | 0 |
+| RB.AvgDepsBl_conj | 0.16 | 1.02 | 0 | 0.11 | 0.63 | 0 | 0.09 |
+| RB.AvgDepsSen_ccomp | 0.16 | 0.3 | 0 | 0.15 | 0.55 | 0 | 0.46 |
+| RB.AvgConnSen_addition | 0.15 | 0.01 | 0 | 0.11 | 0.52 | 0 | 0.55 |
+| RB.AvgDepsSen_acl | 0.15 | 0.15 | 0 | 0.13 | 0.01 | 0.36 | 0 |
+| RB.AvgDepsBl_xcomp | 0.14 | 0.89 | 0 | 0.04 | 0.56 | 0 | 0.18 |
+| RB.AvgPronBl_second_person | 0.14 | 0.91 | 0 | 0.05 | 0.55 | 0 | 0.18 |
+| RB.AvgAOABl_Kuperman | 0.14 | 0.08 | 0 | 0.23 | 0.45 | 0 | 0.18 |
+| RB.AvgNounSen | 0.14 | 0.2 | 0 | 0.03 | 0.22 | 0 | 1.18 |
+| RB.AvgConnBl_contrasts | 0.14 | 1.03 | 0 | 0.05 | 0.67 | 0 | 0 |
+| RB.WdLettStdDev | 0.13 | 0.6 | 0 | 0.19 | 0.39 | 0 | 0.09 |
+| RB.AvgDepsBl_neg | 0.13 | 0.3 | 0 | 0.03 | 0.05 | 0.33 | 0 |
+| RB.AvgDepsSen_xcomp | 0.13 | 0.06 | 0 | 0.05 | 0.58 | 0 | 0.36 |
+| RB.AvgDepsSen_advcl | 0.13 | 0.14 | 0 | 0.13 | 0.66 | 0 | 0 |
+| RB.AvgConnBl_oppositions | 0.13 | 0.98 | 0 | 0.03 | 0.54 | 0 | 0.18 |
+| RB.AggPronSen_first_person | 0.13 | 0.06 | 0 | 0.22 | 0.56 | 0 | 0 |
+| RB.AggPronSen_third_person | 0.12 | 0.38 | 0 | 0.02 | 0.69 | 0 | 0 |
+| RB.AvgDepsSen_dobj | 0.1 | 0.07 | 0 | 0.07 | 0.31 | 0 | 0.46 |
+| RB.AvgAdjectiveSen | 0.1 | 0.04 | 0 | 0.09 | 0.4 | 0 | 0.27 |
+| RB.AvgDepsSen_cop | 0.1 | 0.14 | 0 | 0.04 | 0.59 | 0 | 0 |
+| RB.AvgConnSen_reason_and_purpose | 0.09 | 0.05 | 0 | 0.06 | 0.25 | 0 | 0.46 |
+| RB.AvgConnBl_conditions | 0.09 | 0.72 | 0 | 0.04 | 0.39 | 0 | 0 |
+| RB.LangRhythmDiameter | 0.09 | 0.29 | 0 | 0.13 | 0.06 | 0.15 | 0 |
+| RB.AvgDepsBl_acl | 0.09 | 0.74 | 0 | 0.03 | 0.39 | 0 | 0.09 |
+| RB.AvgAOASen_Kuperman | 0.08 | 0.09 | 0 | 0.11 | 0.26 | 0 | 0.18 |
+| RB.AvgConnBl_disjunctions | 0.08 | 0.52 | 0 | 0.03 | 0.21 | 0.08 | 0 |
+| RB.AvgDepsSen_nmod | 0.08 | 0.02 | 0 | 0.15 | 0.17 | 0 | 0.27 |
+| RB.AvgCommaBl | 0.08 | 0.78 | 0 | 0.02 | 0.36 | 0 | 0 |
+| RB.AvgDepsBl_mwe | 0.07 | 0.67 | 0 | 0.01 | 0.33 | 0 | 0 |
+| RB.AvgDepsBl_dep | 0.07 | 0.64 | 0 | 0.07 | 0.22 | 0 | 0.09 |
+| RB.AvgConnSen_semi_coordinators | 0.06 | 0.13 | 0 | 0.01 | 0.01 | 0.11 | 0.27 |
+| RB.AvgConnSen_conditions | 0.05 | 0.01 | 0 | 0.2 | 0 | 0 | 0 |
+| RB.AvgConnBl_conjuncts | 0.04 | 0.42 | 0 | 0.01 | 0.14 | 0 | 0 |
+| RB.LangRhythmId | 0.04 | 0.39 | 0 | 0.04 | 0.1 | 0 | 0 |
+| RB.AvgDepsBl_csubj | 0.03 | 0.39 | 0 | 0 | 0.09 | 0 | 0 |
+| RB.AvgDepsBl_iobj | 0.03 | 0.29 | 0 | 0.03 | 0.09 | 0 | 0 |
+| RB.AvgDepsSen_nummod | 0.03 | 0.13 | 0 | 0.09 | 0.01 | 0 | 0 |
+| RB.AvgDepsBl_auxpass | 0.03 | 0.36 | 0 | 0 | 0.11 | 0 | 0 |
+| RB.AvgDepsBl_expl | 0.03 | 0.29 | 0 | 0 | 0.09 | 0.03 | 0 |
+| RB.SenAsson | 0.03 | 0.37 | 0 | 0.02 | 0.1 | 0 | 0 |
+| RB.AvgCommaSen | 0.03 | 0.14 | 0 | 0.05 | 0.02 | 0 | 0.18 |
+| RB.AvgDepsSen_csubj | 0.01 | 0.04 | 0 | 0.02 | 0 | 0 | 0 |
+| RB.AvgConnSen_disjunctions | 0.01 | 0.07 | 0 | 0.03 | 0.01 | 0 | 0 |
+| RB.AvgDepsBl_parataxis | 0.01 | 0.2 | 0 | 0 | 0.03 | 0 | 0 |
+| RB.AvgConnBl_complex_subordinators | 0 | 0.06 | 0 | 0 | 0.01 | 0 | 0 |
+| RB.AvgConnSen_temporal_connectors | 0 | 0.01 | 0 | 0.01 | 0 | 0 | 0 |
 
 ------------------------------------------------------------------------
 
@@ -2658,8 +2678,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:----------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -2783,8 +2803,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:----------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -2908,8 +2928,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | all   | gbm   | pls  | svm  | enet  | rf   | mars  | cube  |
 |:----------|:------|:------|:-----|:-----|:------|:-----|:------|:------|
@@ -3033,8 +3053,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, …
 
@@ -3216,8 +3236,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, …
 
@@ -3398,8 +3418,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 PC1 = scores on 1st principal component extracted, …
 
@@ -3564,7 +3584,7 @@ components are displayed.
 ### General Description
 
 Coh-Metrix Model 2 is a simplified version of [Model
-1](#coh-metrix-model-1). Model 2 is recommended for use over Model 1.
+1](#cohmetrix-model-1). Model 2 is recommended for use over Model 1.
 
 Coh-Metrix Model 2 is an ensemble (formed by averaging predicted quality
 scores) of the three sub-models described below.
@@ -3601,8 +3621,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | overall | pls  | rf    | mars  | gbm   | svm  | cube  |
 |:----------|:--------|:-----|:------|:------|:------|:-----|:------|
@@ -3702,8 +3722,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | overall | mars  | gbm  | svm  | cube  |
 |:----------|:--------|:------|:-----|:-----|:------|
@@ -3803,8 +3823,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | overall | pls  | mars  | gbm   | svm  |
 |:----------|:--------|:-----|:------|:------|:-----|
@@ -3925,8 +3945,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | overall | pls  | gbm   | mars  | enet  | cube  |
 |-----------|---------|------|-------|-------|-------|-------|
@@ -4037,8 +4057,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | overall | mars  | pls  | gbm   | cube  |
 |-----------|---------|-------|------|-------|-------|
@@ -4146,8 +4166,8 @@ ensemble model.
 
 #### Metric Importance in Each Algorithm and Ensemble
 
-Each column sums to 100 (so values can be interpreted as % contribution
-to the model).
+Each column sums to approximately 100, allowing for rounding (values
+describe relative contribution to the model).
 
 | Metric    | overall | pls  | mars  | gbm   | cube  |
 |-----------|---------|------|-------|-------|-------|
@@ -4245,12 +4265,12 @@ to the model).
 
 ### General Description
 
-Total Words Written(TWW) scores are generated directly from the GAMET
+Total Words Written (TWW) scores are generated directly from the GAMET
 word count score. Words Spelled Correctly (WSC) scores are generated by
 subtracting the GAMET misspelling score from the GAMET word count score.
 
 Correct Word Sequences (CWS) and Correct Minus Incorrect Word Sequences
-(CIWS) scores are based on emsemble models originally trained to predict
+(CIWS) scores are based on ensemble models originally trained to predict
 CBM scores on 7 min narrative writing samples (“I once had a magic
 pencil and …”) from students in the fall, winter, and spring of Grades
 2-5 (Mercer et al., 2019). More details on the sample are available in

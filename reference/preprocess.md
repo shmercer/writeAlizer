@@ -43,10 +43,16 @@ scaled features plus the `ID` column.
 
 ## Details
 
-\*\*Offline/examples:\*\* Examples use a built-in 'example' model seeded
-in a temporary directory via
-`writeAlizer::wa_seed_example_models("example")`, so no downloads are
-attempted and checks stay fast.
+Models 2 and 3 center and scale features using the data supplied in this
+call. Changing the scoring group can change a text's score. A single row
+or features with no variation can produce missing values. Model 1 and
+GAMET pass the input through to their saved models without this
+additional scaling.
+
+The 'example' model is for demonstrating the workflow only. Its
+preprocessing needs no downloads; prediction requires
+[`wa_seed_example_models()`](https://shmercer.github.io/writeAlizer/reference/wa_seed_example_models.md)
+first.
 
 ## Examples
 

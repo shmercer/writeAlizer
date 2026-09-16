@@ -1,10 +1,10 @@
 # Report optional model dependencies (no installation performed)
 
-Discovers package dependencies for model fitting from the package
-\`Suggests\` field. This function \*\*never installs\*\* packages. It
-reports which packages are required and which are currently missing, and
-prints a ready-to-copy command you can run to install the missing ones
-manually.
+Reports optional packages from the package \`Suggests\` field, including
+model, documentation, and testing packages. This function \*\*never
+installs\*\* packages. It reports which packages are required and which
+are currently missing, and prints a ready-to-copy command you can run to
+install the missing ones manually.
 
 ## Usage
 
@@ -36,10 +36,11 @@ command.
 
 ## Details
 
-You can add or override discovered packages for testing or CI with
+You can add to the discovered packages for testing or CI with
 \`options(writeAlizer.required_pkgs = c("pkgA", "pkgB (\>= 1.2.3)"))\`.
 Any version qualifiers you include are preserved in the \`required\`
 output, but stripped for the availability check in \`missing\`.
+Installed versions are not compared against those qualifiers.
 
 ## Examples
 
@@ -48,9 +49,4 @@ md <- model_deps()
 #> ✔ All required packages are installed: caretEnsemble, Cubist, curl, earth, gbm, glmnet, kernlab, knitr, pls, randomForest, rmarkdown, testthat, withr
 md$missing
 #> character(0)
-
-#> ✖ Missing required packages:
-#> • thispkgdoesnotexist123
-#> • another.fake
-#> install.packages(c("thispkgdoesnotexist123", "another.fake"))
 ```

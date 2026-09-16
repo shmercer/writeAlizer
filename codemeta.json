@@ -329,7 +329,7 @@
       "sameAs": "https://doi.org/10.32614/CRAN.package.writeAlizer"
     }
   ],
-  "releaseNotes": "https://github.com/shmercer/writeAlizer/blob/main/NEWS.md",
+  "releaseNotes": "https://github.com/shmercer/writeAlizer/blob/master/NEWS.md",
   "readme": "https://github.com/shmercer/writeAlizer/blob/master/README.md",
   "contIntegration": ["https://github.com/shmercer/writeAlizer/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/shmercer/writeAlizer"],
   "developmentStatus": "https://www.repostatus.org/#active",

@@ -119,6 +119,8 @@ Also see the list of code [contributors](https://github.com/shmercer/writeAlizer
 
 ### Journal Articles
 
+Keller-Margulis, M. A., Mercer, S. H., Matta, M., & Duran, B. (2026). *Identifying optimal indicators of performance using automated written-expression curriculum-based measurement: An examination of genre effects* [Preprint]. EdArXiv. https://osf.io/preprints/edarxiv/36dn5_v1/
+
 Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2025). Improving written-expression curriculum-based measurement feasibility with automated writing evaluation programs. *School Psychology, 40*(6), 707–717. https://doi.org/10.1037/spq0000691
 
 Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2023). Implications of bias in automated writing quality scores for fair and equitable assessment decisions. *School Psychology, 38*, 173–181. https://doi.org/10.1037/spq0000517

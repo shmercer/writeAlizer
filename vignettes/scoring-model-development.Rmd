@@ -2053,11 +2053,11 @@ Each column sums to approximately 100, allowing for rounding (values describe re
 
 ReaderBench Model 3, recommended for current use, is an ensemble (formed by averaging predicted quality scores) of three genre-specific models, detailed below.  
 
-The models were trained on ReaderBench scores from 15 min narrative, expository, and persuasive writing samples from students in Grades 2-5 to predict holistic writing quality on the samples (theta scores calculated from paired comparisons).
+The models were trained on ReaderBench scores from 15 min narrative, expository, and persuasive writing samples from students in Grades 3–5 to predict holistic writing quality on the samples (theta scores calculated from paired comparisons) [@Keller-Margulis2026].
 
 Highly correlated ReaderBench metrics (_r_ > |.90|) were excluded during pre-processing (see section on [Scoring Model Development](#scoring-model-development) for more details).
 
-More details on the sample will be provided once peer review is complete on the main study using this model.
+See [@Keller-Margulis2026] for additional details on the study sample, writing tasks, human scoring, and model-development procedure.
 
 ## ReaderBench Model 3narr
 
@@ -3825,11 +3825,11 @@ Each column sums to approximately 100, allowing for rounding (values describe re
 
 Coh-Metrix Model 3, recommended for current use, is an ensemble (formed by averaging predicted quality scores) of three genre-specific models, detailed below.  
 
-The models were trained on Coh-Metrix scores from 15 min narrative, expository, and persuasive writing samples from students in Grades 2-5 to predict holistic writing quality on the samples (theta scores calculated from paired comparisons).
+The models were trained on Coh-Metrix scores from 15 min narrative, expository, and persuasive writing samples from students in Grades 3–5 to predict holistic writing quality on the samples (theta scores calculated from paired comparisons) [@Keller-Margulis2026].
 
 Highly correlated CohMetrix metrics (_r_ > |.90|) were excluded during pre-processing (see section on [Scoring Model Development](#scoring-model-development) for more details).
 
-More details on the sample will be provided once peer review is complete on the main study using this model.
+The training sample, writing tasks, and paired-comparison writing-quality criterion are described in [@Keller-Margulis2026].
 
 ## CohMetrix Model 3narr
 

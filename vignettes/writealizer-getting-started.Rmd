@@ -205,6 +205,8 @@ ReaderBench Model 3 keys also accept an explicit `_v2` suffix; the output column
 | `coh_mod2` | `pred_coh_mod2a` through `pred_coh_mod2c` | `pred_coh_mod2_mean` |
 | `coh_mod1` | `pred_coh_mod1a` through `pred_coh_mod1f` | `pred_coh_mod1_mean` |
 
+The ReaderBench and Coh-Metrix Model 3 families were trained on the same Grades 3–5 sample of 15-minute narrative, expository, and persuasive writing described in [@Keller-Margulis2026].
+
 Model 2 is a simplified version of Model 1. Published Model 1 applications include [@Keller-Margulis2021; @Matta2022].
 
 ### GAMET and the offline demonstration

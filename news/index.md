@@ -2,6 +2,8 @@
 
 ## writeAlizer 1.7.4 (2026-09-16)
 
+CRAN release: 2026-09-16
+
 ### Bug fixes
 
 - Preserved text IDs and missing numeric values during import, and added

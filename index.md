@@ -185,6 +185,12 @@ this package.
 
 ### Journal Articles
 
+Keller-Margulis, M. A., Mercer, S. H., Matta, M., & Duran, B. (2026).
+*Identifying optimal indicators of performance using automated
+written-expression curriculum-based measurement: An examination of genre
+effects* \[Preprint\]. EdArXiv.
+<https://osf.io/preprints/edarxiv/36dn5_v1/>
+
 Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2025). Improving
 written-expression curriculum-based measurement feasibility with
 automated writing evaluation programs. *School Psychology, 40*(6),

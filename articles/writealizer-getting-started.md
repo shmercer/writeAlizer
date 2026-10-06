@@ -270,6 +270,10 @@ handles multi-paragraph compositions. Published applications include
 | `coh_mod2` | `pred_coh_mod2a` through `pred_coh_mod2c` | `pred_coh_mod2_mean` |
 | `coh_mod1` | `pred_coh_mod1a` through `pred_coh_mod1f` | `pred_coh_mod1_mean` |
 
+The ReaderBench and Coh-Metrix Model 3 families were trained on the same
+Grades 3–5 sample of 15-minute narrative, expository, and persuasive
+writing described in (Keller-Margulis et al., 2026).
+
 Model 2 is a simplified version of Model 1. Published Model 1
 applications include (Keller-Margulis et al., 2021; Matta et al., 2022).
 
@@ -560,6 +564,12 @@ automated text evaluation tools for written-expression curriculum-based
 measurement: A comparison study. *Reading and Writing: An
 Interdisciplinary Journal*, *34*, 2461–2480.
 <https://doi.org/10.1007/s11145-021-10153-6>
+
+Keller-Margulis, M. A., Mercer, S. H., Matta, M., & Duran, B. (2026).
+*Identifying optimal indicators of performance using automated
+written-expression curriculum-based measurement: An examination of genre
+effects* \[Preprint\]. EdArXiv.
+<https://osf.io/preprints/edarxiv/36dn5_v1/>
 
 Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2025). Improving
 written-expression curriculum-based measurement feasibility with

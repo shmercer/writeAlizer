@@ -2131,16 +2131,16 @@ by averaging predicted quality scores) of three genre-specific models,
 detailed below.
 
 The models were trained on ReaderBench scores from 15 min narrative,
-expository, and persuasive writing samples from students in Grades 2-5
+expository, and persuasive writing samples from students in Grades 3–5
 to predict holistic writing quality on the samples (theta scores
-calculated from paired comparisons).
+calculated from paired comparisons) (Keller-Margulis et al., 2026).
 
 Highly correlated ReaderBench metrics (*r* \> \|.90\|) were excluded
 during pre-processing (see section on [Scoring Model
 Development](#scoring-model-development) for more details).
 
-More details on the sample will be provided once peer review is complete
-on the main study using this model.
+See (Keller-Margulis et al., 2026) for additional details on the study
+sample, writing tasks, human scoring, and model-development procedure.
 
 ### ReaderBench Model 3narr
 
@@ -3914,16 +3914,17 @@ by averaging predicted quality scores) of three genre-specific models,
 detailed below.
 
 The models were trained on Coh-Metrix scores from 15 min narrative,
-expository, and persuasive writing samples from students in Grades 2-5
+expository, and persuasive writing samples from students in Grades 3–5
 to predict holistic writing quality on the samples (theta scores
-calculated from paired comparisons).
+calculated from paired comparisons) (Keller-Margulis et al., 2026).
 
 Highly correlated CohMetrix metrics (*r* \> \|.90\|) were excluded
 during pre-processing (see section on [Scoring Model
 Development](#scoring-model-development) for more details).
 
-More details on the sample will be provided once peer review is complete
-on the main study using this model.
+The training sample, writing tasks, and paired-comparison
+writing-quality criterion are described in (Keller-Margulis et al.,
+2026).
 
 ### CohMetrix Model 3narr
 
@@ -4330,6 +4331,12 @@ automated text evaluation tools for written-expression curriculum-based
 measurement: A comparison study. *Reading and Writing: An
 Interdisciplinary Journal*, *34*, 2461–2480.
 <https://doi.org/10.1007/s11145-021-10153-6>
+
+Keller-Margulis, M. A., Mercer, S. H., Matta, M., & Duran, B. (2026).
+*Identifying optimal indicators of performance using automated
+written-expression curriculum-based measurement: An examination of genre
+effects* \[Preprint\]. EdArXiv.
+<https://osf.io/preprints/edarxiv/36dn5_v1/>
 
 Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2022). Evaluating
 validity and bias for hand-calculated and automated written expression

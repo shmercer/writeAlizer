@@ -259,6 +259,9 @@ handles multi-paragraph compositions. Published applications include
 (Keller-Margulis et al., 2021; Matta et al., 2022; Mercer & Cannon,
 2022) for Model 1 and (Matta et al., 2023) for Model 2.
 
+Published applications of the ReaderBench Model 3 (`rb_mod3`) models
+include (Keller-Margulis et al., 2026; Matta et al., 2026).
+
 ### Coh-Metrix
 
 | Model | Prediction columns | Overall mean |
@@ -575,6 +578,11 @@ Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2025). Improving
 written-expression curriculum-based measurement feasibility with
 automated writing evaluation programs. *School Psychology*, *40*(6),
 707–717. <https://doi.org/10.1037/spq0000691>
+
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2026). *Screening
+elementary writing with AI: Evidence for ChatGPT as a feasible
+alternative to human ratings and specialized scoring models*. Social
+Science Research Network. <https://doi.org/10.2139/ssrn.7630098>
 
 Matta, M., Mercer, S. H., & Keller-Margulis, M. A. (2022). Evaluating
 validity and bias for hand-calculated and automated written expression

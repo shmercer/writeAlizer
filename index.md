@@ -191,6 +191,11 @@ written-expression curriculum-based measurement: An examination of genre
 effects* \[Preprint\]. EdArXiv.
 <https://osf.io/preprints/edarxiv/36dn5_v1/>
 
+Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2026). *Screening
+elementary writing with AI: Evidence for ChatGPT as a feasible
+alternative to human ratings and specialized scoring models*. Social
+Science Research Network. <https://doi.org/10.2139/ssrn.7630098>
+
 Matta, M., Keller-Margulis, M. A., & Mercer, S. H. (2025). Improving
 written-expression curriculum-based measurement feasibility with
 automated writing evaluation programs. *School Psychology, 40*(6),

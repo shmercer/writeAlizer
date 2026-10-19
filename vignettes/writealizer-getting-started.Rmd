@@ -194,6 +194,8 @@ The tables below use exact output names. Every result also contains `ID`. On a s
 
 ReaderBench Model 3 keys also accept an explicit `_v2` suffix; the output column names remain the same. Model 2 simplifies Model 1 and handles multi-paragraph compositions. Published applications include [@Keller-Margulis2021; @Matta2022; @Mercer2022] for Model 1 and [@Matta2023] for Model 2.
 
+Published applications of the ReaderBench Model 3 (`rb_mod3`) models include [@Keller-Margulis2026; @Matta2026].
+
 ### Coh-Metrix
 
 | Model | Prediction columns | Overall mean |
